@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">HelloOboe</string>
+    <string name="title_text">Envelope Maker</string>
+    <string name="new_envelope_button">New Envelope</string>
+    <string name="load_envelope_button">Load Envelope</string>
+    <string name="settings_button">Settings</string>
+    <string name="load_file_text">Load Envelope</string>
+</resources>
