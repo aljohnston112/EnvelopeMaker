@@ -3,9 +3,3 @@
 //
 
 #include "EnvelopeMaker.h"
-
-
-std::vector<float> EnvelopeMaker::make(int index){
-    std::vector<float> data{};
-
-}
