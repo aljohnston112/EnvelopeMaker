@@ -31,9 +31,14 @@ public class TitleActivity extends AppCompatActivity {
         }
         */
 
-        CreateStream();
-        LoadData();
-
+        createStream();
+        if(isFloat()) {
+            float[] data = loadDataFloat();
+            FunctionView functionView = new FunctionView(this);
+            functionView.setData(0, 1000, data);
+        } else{
+            short[] data = loadDataShort();
+        }
         // DestroyStream();
 
     }
@@ -68,9 +73,13 @@ public class TitleActivity extends AppCompatActivity {
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native void CreateStream();
+    public native void createStream();
 
-    public native void DestroyStream();
+    public native void destroyStream();
 
-    public native float[] LoadData();
+    public native boolean isFloat();
+
+    public native float[] loadDataFloat();
+
+    public native short[] loadDataShort();
 }

@@ -2,8 +2,8 @@
 // Created by Al on 7/7/2020.
 //
 
-#ifndef HELLOOBOE_ENVELOPEMAKER_H
-#define HELLOOBOE_ENVELOPEMAKER_H
+#ifndef HELLOOBOE_WAVEMAKER_H
+#define HELLOOBOE_WAVEMAKER_H
 
 #include "AmplitudeEnvelope.h"
 #include "FrequencyEnvelope.h"
@@ -11,7 +11,7 @@
 
 #include <list>
 
-struct EnvelopeMaker {
+struct WaveMaker {
 
     void push_back(AmplitudeEnvelope ae) { amps.push_back(ae); };
 
@@ -55,4 +55,4 @@ private:
     std::list<FrequencyEnvelope> freqs{};
 };
 
-#endif //HELLOOBOE_ENVELOPEMAKER_H
+#endif //HELLOOBOE_WAVEMAKER_H

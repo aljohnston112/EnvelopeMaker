@@ -6,6 +6,7 @@
 #define HELLOOBOE_AMPLITUDEENVELOPE_H
 
 #include <vector>
+#include "../Functions/Function.h"
 
 struct AmplitudeEnvelope {
     AmplitudeEnvelope(const std::vector<double> ampsIn) {
@@ -15,6 +16,7 @@ struct AmplitudeEnvelope {
     std::vector<double> *getAmplitudes() { return &amps; };
 private:
     std::vector<double> amps;
+    Function* function;
 };
 
 #endif //HELLOOBOE_AMPLITUDEENVELOPE_H

@@ -12,3 +12,4 @@ std::vector<double> Function::f(double x0, double x1, int points) {
     }
     return out;
 }
+

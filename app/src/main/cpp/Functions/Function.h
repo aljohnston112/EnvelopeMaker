@@ -8,9 +8,13 @@
 #include <vector>
 
 struct Function {
+
     std::vector<double> f(double x0, double x1, int points);
 
     virtual double f(double x) = 0;
+
+private:
+    std::vector<std::pair<double, double>> points{};
 };
 
 #endif //HELLOOBOE_FUNCTION_H

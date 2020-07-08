@@ -3,8 +3,8 @@
 //
 #include "DataGeneration/SineWave.h"
 #include "AudioStreamHolder.h"
-#include "DataGeneration/Linear.h"
-#include "DataGeneration/Quadratic.h"
+#include "Functions/Linear.h"
+#include "Functions/Quadratic.h"
 #include <jni.h>
 #include <string>
 #include <unistd.h>
@@ -16,13 +16,13 @@ AudioStreamHolder *as;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_hellooboe_TitleActivity_CreateStream(JNIEnv *env, jobject /*this*/) {
+Java_com_example_hellooboe_TitleActivity_createStream(JNIEnv *env, jobject /*this*/) {
     as = new AudioStreamHolder();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_hellooboe_TitleActivity_DestroyStream(JNIEnv *env, jobject /*this*/) {
+Java_com_example_hellooboe_TitleActivity_destroyStream(JNIEnv *env, jobject /*this*/) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Destroying stream");
     as->getManagedStream()->requestStop();
     as->getManagedStream()->close();
@@ -30,8 +30,14 @@ Java_com_example_hellooboe_TitleActivity_DestroyStream(JNIEnv *env, jobject /*th
 }
 
 extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_example_hellooboe_TitleActivity_isFloat(JNIEnv *env, jobject thiz) {
+    return as->takesFloat();
+}
+
+extern "C"
 JNIEXPORT jfloatArray  JNICALL
-Java_com_example_hellooboe_TitleActivity_LoadData(JNIEnv *env, jobject /*this*/ ma) {
+Java_com_example_hellooboe_TitleActivity_loadDataFloat(JNIEnv *env, jobject /*this*/ ma) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading data");
     jfloatArray ret;
     if (as->takesFloat()) {
@@ -39,8 +45,19 @@ Java_com_example_hellooboe_TitleActivity_LoadData(JNIEnv *env, jobject /*this*/ 
         ret = env->NewFloatArray(data.size());
         jsize size = env->GetArrayLength(ret);
         env->SetFloatArrayRegion(ret, 0, size, data.data());
-    } else {
-        as->LoadData<int16_t>();
+    }
+    return ret;
+}
+
+extern "C"
+JNIEXPORT jshortArray JNICALL
+Java_com_example_hellooboe_TitleActivity_loadDataShort(JNIEnv *env, jobject thiz) {
+    jshortArray ret;
+    if (!as->takesFloat()) {
+        std::vector<int16_t> data = as->LoadData<int16_t >();
+        ret = env->NewShortArray(data.size());
+        jsize size = env->GetArrayLength(ret);
+        env->SetShortArrayRegion(ret, 0, size, data.data());
     }
     return ret;
 }
@@ -67,4 +84,3 @@ void AudioStreamHolder::initAudioStream(oboe::AudioStreamBuilder asb) {
     int bytePerSample = managedStream->getBytesPerSample();
     isFloat = bytePerSample != 2;
 }
-

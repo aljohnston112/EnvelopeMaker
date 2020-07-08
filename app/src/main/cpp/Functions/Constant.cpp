@@ -11,3 +11,4 @@ Constant::Constant(double cnst) {
 double Constant::f(double x) {
     return c;
 }
+

@@ -24,17 +24,18 @@ add_library( # Sets the name of the library.
         DataGeneration/SineWave.h
         DataGeneration/AmplitudeEnvelope.cpp
         DataGeneration/FrequencyEnvelope.cpp
-        DataGeneration/Function.cpp
-        DataGeneration/Constant.cpp
-        DataGeneration/Linear.cpp
-        DataGeneration/Quadratic.cpp
-        DataGeneration/Cubic.cpp
-        DataGeneration/NthRoot.cpp
-        DataGeneration/Exponential.cpp
-        DataGeneration/Logarithm.cpp
-        DataGeneration/Power.cpp
-        DataGeneration/Sine.cpp
-        DataGeneration/EnvelopeMaker.cpp
+        Functions/Function.cpp
+        Functions/Constant.cpp
+        Functions/Linear.cpp
+        Functions/Quadratic.cpp
+        Functions/Cubic.cpp
+        Functions/NthRoot.cpp
+        Functions/Exponential.cpp
+        Functions/Logarithm.cpp
+        Functions/Power.cpp
+        Functions/Sine.cpp
+        DataGeneration/WaveMaker.cpp
+        FileHandling/SaveFiles.cpp
         )
 
 # Searches for a specified prebuilt library and stores the path as a

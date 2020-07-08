@@ -7,12 +7,12 @@
 
 #include <oboe/Oboe.h>
 #include "CallBackHandling/AudioStreamCallbackSub.h"
-#include "DataGeneration/Quadratic.h"
-#include "DataGeneration/NthRoot.h"
-#include "DataGeneration/Exponential.h"
-#include "DataGeneration/Logarithm.h"
-#include "DataGeneration/Sine.h"
-#include "DataGeneration/Linear.h"
+#include "Functions/Quadratic.h"
+#include "Functions/NthRoot.h"
+#include "Functions/Exponential.h"
+#include "Functions/Logarithm.h"
+#include "Functions/Sine.h"
+#include "Functions/Linear.h"
 
 struct AudioStreamHolder {
     AudioStreamHolder();
@@ -26,25 +26,32 @@ struct AudioStreamHolder {
         double magnitude = 0.5;
         double frequency = 444.0;
         double radians = 0.0;
-        double seconds = 0.5;
+        double seconds = 2.0;
         int samplesPerSecond = managedStream->getSampleRate();
         int points = length(seconds, samplesPerSecond);
         double x0 = 0.0;
         double y0 = 222.0;
         double x1 = 8.0;
         double y1 = 444.0;
-        double xv = 0.5;
-        double yv = 1.0;
 
         Exponential exponential{std::pair{x0, y0}, std::pair{x1, y1}};
         FrequencyEnvelope frequencyEnvelope{exponential.Function::f(x0, x1, points)};
-        auto data = make<T>(magnitude, frequencyEnvelope, radians, samplesPerSecond);
+
+        x0 = 0.0;
+        y0 = 1.0;
+        x1 = 8.0;
+        y1 = 0.0;
+
+        Linear linear{std::pair{x0, y0}, std::pair{x1, y1}};
+        AmplitudeEnvelope amplitudeEnvelope{linear.Function::f(x0, x1, points)};
+
+        auto data = make<T>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond);
         if (std::is_same<T, float>::value) {
             callback.getCcf().insert(
-                    make<float>(magnitude, frequencyEnvelope, radians, samplesPerSecond));
+                    make<float>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond));
         } else if (std::is_same<T, int16_t>::value) {
             callback.getCci().insert(
-                    make<int16_t>(magnitude, frequencyEnvelope, radians, samplesPerSecond));
+                    make<int16_t>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond));
         }
         return data;
     };
