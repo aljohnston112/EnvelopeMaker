@@ -15,7 +15,7 @@ public class Triangle {
             // This matrix member variable provides a hook to manipulate
             // the coordinates of objects that use this vertex shader.
             "uniform mat4 uMVPMatrix;   \n" +
-            "attribute vec4 vPosition;" +
+                    "attribute vec4 vPosition;" +
                     "void main() {" +
                     // The matrix must be included as part of gl_Position
                     // Note that the uMVPMatrix factor *must be first* in order
@@ -37,13 +37,13 @@ public class Triangle {
     static final int COORDS_PER_VERTEX = 3;
 
     static float triangleCoords[] = {   // in counterclockwise order:
-            0.0f,  0.622008459f, 0.0f, // top
+            0.0f, 0.622008459f, 0.0f, // top
             -0.5f, -0.311004243f, 0.0f, // bottom left
             0.5f, -0.311004243f, 0.0f  // bottom right
     };
 
     // Set color with red, green, blue and alpha (opacity) values
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
+    float color[] = {0.63671875f, 0.76953125f, 0.22265625f, 1.0f};
 
     private final int mProgram;
 
@@ -85,7 +85,7 @@ public class Triangle {
         GLES20.glLinkProgram(mProgram);
     }
 
-    public static int loadShader(int type, String shaderCode){
+    public static int loadShader(int type, String shaderCode) {
 
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)

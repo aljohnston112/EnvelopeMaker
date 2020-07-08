@@ -8,7 +8,9 @@
 #include "Function.h"
 
 struct Cubic : public Function {
-    Cubic(std::pair<double, double> p0, std::pair<double, double> vertex, std::pair<double, double> vertex2);
+    Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
+          std::pair<double, double> vertex2);
+
     double f(double x);
 
 private:

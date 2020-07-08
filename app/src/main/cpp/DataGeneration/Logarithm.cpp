@@ -24,19 +24,20 @@ Logarithm::Logarithm(std::pair<double, double> p0, std::pair<double, double> p1)
                 "pairs passed to Logarithm constructor can't be solved due to a first value being 0");
     }
     if (x1 != 0) {
-    a = (y0 - y1) / std::log((x0 / x1));
-} else {
+        a = (y0 - y1) / std::log((x0 / x1));
+    } else {
         a = (y1 - y0) / std::log((x1 / x0));
     }
 
-    if(x0 != 1) {
-        b = y0 - (a*std::log(x0));
+    if (x0 != 1) {
+        b = y0 - (a * std::log(x0));
     } else {
-        b = y1 = (a*std::log(x1));
+        b = y1 = (a * std::log(x1));
     }
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "a:%.20f", a);
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
-double Logarithm::f(double x){
-    return a*log(x)+b;
+
+double Logarithm::f(double x) {
+    return a * log(x) + b;
 }

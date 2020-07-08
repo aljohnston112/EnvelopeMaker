@@ -54,7 +54,7 @@ public class TitleActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public void onLoadButtonClicked(View view){
+    public void onLoadButtonClicked(View view) {
         Intent loadFileIntent = new Intent(this, LoadFileActivity.class);
         startActivity(loadFileIntent);
     }

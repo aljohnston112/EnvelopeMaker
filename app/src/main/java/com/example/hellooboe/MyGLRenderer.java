@@ -10,7 +10,7 @@ import javax.microedition.khronos.opengles.GL10;
 class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private Triangle mTriangle;
-    private Square   mSquare;
+    private Square mSquare;
 
     // vPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] vPMatrix = new float[16];

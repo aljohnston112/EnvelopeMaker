@@ -9,7 +9,6 @@
 #include <string>
 #include <unistd.h>
 #include <android/log.h>
-#include <stdlib.h>
 #include <utility>
 #include <vector>
 
@@ -35,7 +34,7 @@ JNIEXPORT jfloatArray  JNICALL
 Java_com_example_hellooboe_TitleActivity_LoadData(JNIEnv *env, jobject /*this*/ ma) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading data");
     jfloatArray ret;
-    if(as->takesFloat()) {
+    if (as->takesFloat()) {
         std::vector<float> data = as->LoadData<float>();
         ret = env->NewFloatArray(data.size());
         jsize size = env->GetArrayLength(ret);

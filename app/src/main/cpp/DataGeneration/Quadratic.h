@@ -10,6 +10,7 @@
 
 struct Quadratic : public Function {
     Quadratic(std::pair<double, double> p0, std::pair<double, double> vertex);
+
     double f(double x);
 
 private:
