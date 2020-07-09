@@ -32,8 +32,8 @@ public class TitleActivity extends AppCompatActivity {
         NativeMethods.createStream();
         if(NativeMethods.isFloat()) {
             float[] data = NativeMethods.loadDataFloat();
-            FunctionView functionView = new FunctionView(this);
-            functionView.setData(NativeMethods.getMinAmp(), NativeMethods.getMaxAmp(), data);
+
+           // functionView.setData(NativeMethods.getMinAmp(), NativeMethods.getMaxAmp(), data);
         } else{
             short[] data = NativeMethods.loadDataShort();
         }
@@ -55,6 +55,11 @@ public class TitleActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    public void onNewButtonClicked(View view) {
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        startActivity(mainIntent);
     }
 
     public void onLoadButtonClicked(View view) {

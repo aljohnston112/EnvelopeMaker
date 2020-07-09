@@ -4,11 +4,17 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 public class FunctionView extends View {
 
     Paint color = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    float height = 0;
+    float width = 0;
 
     private int minY = 0;
 
@@ -20,19 +26,34 @@ public class FunctionView extends View {
 
     public FunctionView(Context context) {
         super(context);
+
+    }
+
+    public FunctionView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        // Account for padding
+        float xpad = (float)(getPaddingLeft() + getPaddingRight());
+        float ypad = (float)(getPaddingTop() + getPaddingBottom());
+
+        width = (float)w - xpad;
+        height = (float)h - ypad;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         color.setColor(Color.GREEN);
-        int height = canvas.getHeight();
-        int width = canvas.getWidth();
         if(NativeMethods.isFloat()){
             double xScale = ((double)width)/((double)dataF.length);
             double yScale = ((double)height)/((double)(maxY-minY));
