@@ -17,6 +17,11 @@ Power::Power(std::pair<double, double> p0, std::pair<double, double> p1) {
         throw std::logic_error(
                 "pairs passed to Power constructor can't be solved due to both first values being 0 or a second values being 0");
     }
+    addPoints({p0, p1});
+    double min = std::min<double>({y0, y1});
+    double max = std::max<double>({y0, y1});
+    setMin(min);
+    setMax(max);
     if ((x0 != 0)) {
         a = pow(pow(y0, x0), (1.0 / (x0 * y1)));
     } else {

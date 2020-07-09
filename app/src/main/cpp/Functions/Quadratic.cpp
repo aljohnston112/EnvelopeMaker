@@ -16,6 +16,11 @@ Quadratic::Quadratic(std::pair<double, double> p0,
         throw std::logic_error(
                 "pairs passed to Quadratic constructor must not have the same first values");
     }
+    addPoints({p0, vertex});
+    double min = std::min<double>({y0, yv});
+    double max = std::max<double>({y0, yv});
+    setMin(min);
+    setMax(max);
     a = (yv - y0) / ((xv * xv) - (x0 * x0) + ((2.0 * xv) * (x0 - xv)));
     b = -2.0 * a * xv;
     c = y0 - (a * (x0 * x0)) - (b * x0);

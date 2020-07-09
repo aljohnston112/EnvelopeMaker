@@ -14,8 +14,6 @@ public class TitleActivity extends AppCompatActivity {
         System.loadLibrary("native-lib");
     }
 
-    DrawableLinear drawableLinear;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,4 +80,9 @@ public class TitleActivity extends AppCompatActivity {
     public native float[] loadDataFloat();
 
     public native short[] loadDataShort();
+
+    public native double getMin();
+
+    public native double getMax();
+
 }

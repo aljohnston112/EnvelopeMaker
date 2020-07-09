@@ -23,6 +23,11 @@ Logarithm::Logarithm(std::pair<double, double> p0, std::pair<double, double> p1)
         throw std::logic_error(
                 "pairs passed to Logarithm constructor can't be solved due to a first value being 0");
     }
+    addPoints({p0, p1});
+    double min = std::min<double>({y0, y1});
+    double max = std::max<double>({y0, y1});
+    setMin(min);
+    setMax(max);
     if (x1 != 0) {
         a = (y0 - y1) / std::log((x0 / x1));
     } else {

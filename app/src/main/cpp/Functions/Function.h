@@ -13,8 +13,21 @@ struct Function {
 
     virtual double f(double x) = 0;
 
+    void setMax(double mmax){if(mmax > max){max = mmax;}};
+    void setMin(double mmin){if(mmin < min){min = mmin;}};
+
+    double getMax(){return max;};
+    double getMin(){return min;};
+
+    void addPoint(std::pair<double, double> point){points.push_back(point);};
+    void addPoints(std::vector<std::pair<double, double>> ppoints){for(auto p : ppoints){points.push_back(p);}};
+
+    const std::vector<std::pair<double, double>> const * getPoints() const {return &points;};
+
 private:
     std::vector<std::pair<double, double>> points{};
+    double max = 0;
+    double min = 0;
 };
 
 #endif //HELLOOBOE_FUNCTION_H

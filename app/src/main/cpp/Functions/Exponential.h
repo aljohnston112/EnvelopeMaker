@@ -16,6 +16,7 @@ private:
     // a*(e^(x))+b
     double a;
     double b;
+
 };
 
 #endif //HELLOOBOE_EXPONENTIAL_H

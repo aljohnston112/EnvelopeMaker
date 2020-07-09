@@ -14,6 +14,7 @@ struct AmplitudeEnvelope {
     };
 
     std::vector<double> *getAmplitudes() { return &amps; };
+
 private:
     std::vector<double> amps;
     Function* function;

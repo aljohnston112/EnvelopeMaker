@@ -18,7 +18,11 @@ Sine::Sine(std::pair<double, double> p0, std::pair<double, double> p1) {
         throw std::logic_error(
                 "pairs passed to Sine constructor can't be solved due to both first values being 0");
     }
-
+    addPoints({p0, p1});
+    double min = std::min<double>({y0, y1});
+    double max = std::max<double>({y0, y1});
+    setMin(min);
+    setMax(max);
     if ((std::sin(x0)) - (std::sin(x1)) != 0) {
         a = (y0 - y1) / (sin(x0) - sin(x1));
     } else {

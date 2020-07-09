@@ -62,6 +62,18 @@ Java_com_example_hellooboe_TitleActivity_loadDataShort(JNIEnv *env, jobject thiz
     return ret;
 }
 
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_hellooboe_TitleActivity_getMin(JNIEnv *env, jobject thiz) {
+    // TODO: implement getMin()
+}
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_hellooboe_TitleActivity_getMax(JNIEnv *env, jobject thiz) {
+    // TODO: implement getMax()
+}
+
 AudioStreamHolder::AudioStreamHolder() {
     initAudioStream(builder);
     managedStream->requestStart();

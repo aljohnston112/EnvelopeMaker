@@ -3,6 +3,7 @@
 //
 
 #include <android/log.h>
+#include <list>
 #include "Cubic.h"
 
 Cubic::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
@@ -18,6 +19,11 @@ Cubic::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
         throw std::logic_error(
                 "pairs passed to Cubic constructor must not have the same first values");
     }
+    addPoints({p0, vertex, vertex2});
+    double min = std::min<double>({y0, yv0, yv1});
+    double max = std::max<double>({y0, yv0, yv1});
+    setMin(min);
+    setMax(max);
     double m = ((x0 * x0 * xv1) + (xv0 * xv0 * x0) + (xv1 * xv1 * xv0)) -
                ((xv0 * xv0 * xv1) + (x0 * x0 * xv0) + (xv1 * xv1 * x0));
     //TODO lots of algebra

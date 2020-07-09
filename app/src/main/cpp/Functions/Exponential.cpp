@@ -15,6 +15,11 @@ Exponential::Exponential(std::pair<double, double> p0, std::pair<double, double>
         throw std::logic_error(
                 "pairs passed to Exponential constructor can't be solve due to both x values or both y values being 0");
     }
+    addPoints({p0, p1});
+    double min = std::min<double>({y0, y1});
+    double max = std::max<double>({y0, y1});
+    setMin(min);
+    setMax(max);
     a = (y0 - y1) / (std::exp(x0) - std::exp(x1));
     b = y0 - (a * std::exp(x0));
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "a:%.20f", a);
