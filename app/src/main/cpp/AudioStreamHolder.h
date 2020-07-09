@@ -15,6 +15,14 @@
 #include "Functions/Linear.h"
 
 struct AudioStreamHolder {
+    double minA;
+
+    double maxA;
+
+    double minF;
+
+    double maxF;
+
     AudioStreamHolder();
 
     const oboe::ManagedStream &getManagedStream() const { return managedStream; };

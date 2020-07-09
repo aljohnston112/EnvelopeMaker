@@ -50,6 +50,38 @@ struct WaveMaker {
         }
     }
 
+    double getMaxAmp(){
+        std::vector<double> ampsList;
+        for(auto a : amps){
+            ampsList.push_back(a.getMax());
+        }
+        return *(std::max_element(ampsList.begin(), ampsList.end()));
+    };
+
+    double getMaxFreq(){
+        std::vector<double> freqsList;
+        for(auto f : freqs){
+            freqsList.push_back(f.getMax());
+        }
+        return *(std::max_element(freqsList.begin(), freqsList.end()));
+    };
+
+    double getMinAmp(){
+        std::vector<double> ampsList;
+        for(auto a : amps){
+            ampsList.push_back(a.getMin());
+        }
+        return *(std::min_element(ampsList.begin(), ampsList.end()));
+    };
+
+    double getMinFreq(){
+        std::vector<double> freqsList;
+        for(auto f : freqs){
+            freqsList.push_back(f.getMin());
+        }
+        return *(std::min_element(freqsList.begin(), freqsList.end()));
+    };
+
 private:
     std::list<AmplitudeEnvelope> amps{};
     std::list<FrequencyEnvelope> freqs{};

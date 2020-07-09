@@ -7,8 +7,9 @@
 
 #include <vector>
 #include "../Functions/Function.h"
+#include "Envelope.h"
 
-struct AmplitudeEnvelope {
+struct AmplitudeEnvelope : Envelope {
     AmplitudeEnvelope(const std::vector<double> ampsIn) {
         amps = ampsIn;
     };
@@ -17,7 +18,6 @@ struct AmplitudeEnvelope {
 
 private:
     std::vector<double> amps;
-    Function* function;
 };
 
 #endif //HELLOOBOE_AMPLITUDEENVELOPE_H

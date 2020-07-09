@@ -29,13 +29,13 @@ public class TitleActivity extends AppCompatActivity {
         }
         */
 
-        createStream();
-        if(isFloat()) {
-            float[] data = loadDataFloat();
+        NativeMethods.createStream();
+        if(NativeMethods.isFloat()) {
+            float[] data = NativeMethods.loadDataFloat();
             FunctionView functionView = new FunctionView(this);
-            functionView.setData(0, 1000, data);
+            functionView.setData(NativeMethods.getMinAmp(), NativeMethods.getMaxAmp(), data);
         } else{
-            short[] data = loadDataShort();
+            short[] data = NativeMethods.loadDataShort();
         }
         // DestroyStream();
 
@@ -66,23 +66,5 @@ public class TitleActivity extends AppCompatActivity {
     public void log(String message) {
         Log.i("Main", message);
     }
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native void createStream();
-
-    public native void destroyStream();
-
-    public native boolean isFloat();
-
-    public native float[] loadDataFloat();
-
-    public native short[] loadDataShort();
-
-    public native double getMin();
-
-    public native double getMax();
 
 }

@@ -6,8 +6,9 @@
 #define HELLOOBOE_FREQUENCYENVELOPE_H
 
 #include <vector>
+#include "Envelope.h"
 
-struct FrequencyEnvelope {
+struct FrequencyEnvelope : Envelope {
     FrequencyEnvelope(const std::vector<double> freqsIn) {
         freqs = freqsIn;
     };

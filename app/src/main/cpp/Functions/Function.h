@@ -22,7 +22,7 @@ struct Function {
     void addPoint(std::pair<double, double> point){points.push_back(point);};
     void addPoints(std::vector<std::pair<double, double>> ppoints){for(auto p : ppoints){points.push_back(p);}};
 
-    const std::vector<std::pair<double, double>> const * getPoints() const {return &points;};
+    std::vector<std::pair<double, double>> * getPoints() {return &points;};
 
 private:
     std::vector<std::pair<double, double>> points{};

@@ -16,28 +16,25 @@ AudioStreamHolder *as;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_hellooboe_TitleActivity_createStream(JNIEnv *env, jobject /*this*/) {
+Java_com_example_hellooboe_NativeMethods_createStream(JNIEnv *env, jobject thiz) {
     as = new AudioStreamHolder();
 }
-
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_hellooboe_TitleActivity_destroyStream(JNIEnv *env, jobject /*this*/) {
+Java_com_example_hellooboe_NativeMethods_destroyStream(JNIEnv *env, jobject thiz) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Destroying stream");
     as->getManagedStream()->requestStop();
     as->getManagedStream()->close();
     delete (as);
 }
-
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_example_hellooboe_TitleActivity_isFloat(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_isFloat(JNIEnv *env, jobject thiz) {
     return as->takesFloat();
 }
-
 extern "C"
-JNIEXPORT jfloatArray  JNICALL
-Java_com_example_hellooboe_TitleActivity_loadDataFloat(JNIEnv *env, jobject /*this*/ ma) {
+JNIEXPORT jfloatArray JNICALL
+Java_com_example_hellooboe_NativeMethods_loadDataFloat(JNIEnv *env, jobject thiz) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading data");
     jfloatArray ret;
     if (as->takesFloat()) {
@@ -48,10 +45,9 @@ Java_com_example_hellooboe_TitleActivity_loadDataFloat(JNIEnv *env, jobject /*th
     }
     return ret;
 }
-
 extern "C"
 JNIEXPORT jshortArray JNICALL
-Java_com_example_hellooboe_TitleActivity_loadDataShort(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_loadDataShort(JNIEnv *env, jobject thiz) {
     jshortArray ret;
     if (!as->takesFloat()) {
         std::vector<int16_t> data = as->LoadData<int16_t >();
@@ -61,17 +57,25 @@ Java_com_example_hellooboe_TitleActivity_loadDataShort(JNIEnv *env, jobject thiz
     }
     return ret;
 }
-
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_example_hellooboe_TitleActivity_getMin(JNIEnv *env, jobject thiz) {
-    // TODO: implement getMin()
+Java_com_example_hellooboe_NativeMethods_getMinAmp(JNIEnv *env, jobject thiz) {
+    return as->minA;
 }
-
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_example_hellooboe_TitleActivity_getMax(JNIEnv *env, jobject thiz) {
-    // TODO: implement getMax()
+Java_com_example_hellooboe_NativeMethods_getMaxAmp(JNIEnv *env, jobject thiz) {
+    return as->maxA;
+}
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_hellooboe_NativeMethods_getMinFreq(JNIEnv *env, jobject thiz) {
+    return as->minF;
+}
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_hellooboe_NativeMethods_getMaxFreq(JNIEnv *env, jobject thiz) {
+    return as->maxF;
 }
 
 AudioStreamHolder::AudioStreamHolder() {
