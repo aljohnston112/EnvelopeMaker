@@ -30,11 +30,11 @@ public class TitleActivity extends AppCompatActivity {
         */
 
         NativeMethods.createStream();
-        if(NativeMethods.isFloat()) {
+        if (NativeMethods.isFloat()) {
             float[] data = NativeMethods.loadDataFloat();
 
-           // functionView.setData(NativeMethods.getMinAmp(), NativeMethods.getMaxAmp(), data);
-        } else{
+            // functionView.setData(NativeMethods.getMinAmp(), NativeMethods.getMaxAmp(), data);
+        } else {
             short[] data = NativeMethods.loadDataShort();
         }
         // DestroyStream();

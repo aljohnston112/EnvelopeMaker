@@ -35,7 +35,7 @@ inline int length(double seconds, int samplesPerSecond) {
  */
 template<typename T>
 inline std::vector<T> make(double magnitude, double frequency, double radians, double seconds,
-                    int samplesPerSecond) {
+                           int samplesPerSecond) {
     long samples = length(seconds, samplesPerSecond);
     std::vector<T> wave{};
     for (int i = 0; i < samples; i++) {
@@ -47,7 +47,8 @@ inline std::vector<T> make(double magnitude, double frequency, double radians, d
 
 template<typename T>
 std::vector<T>
-inline make(AmplitudeEnvelope amplitudeEnvelope, double frequency, double radians, int samplesPerSecond) {
+inline
+make(AmplitudeEnvelope amplitudeEnvelope, double frequency, double radians, int samplesPerSecond) {
     double amplitude = 1.0;
     std::vector<double> *amps = amplitudeEnvelope.getAmplitudes();
     double seconds = (double) (amps->size()) / samplesPerSecond;
@@ -67,7 +68,8 @@ inline make(AmplitudeEnvelope amplitudeEnvelope, double frequency, double radian
 
 template<typename T>
 std::vector<T>
-inline make(double magnitude, FrequencyEnvelope frequencyEnvelope, double radians, int samplesPerSecond) {
+inline
+make(double magnitude, FrequencyEnvelope frequencyEnvelope, double radians, int samplesPerSecond) {
     std::vector<double> *freqs = frequencyEnvelope.getFrequencies();
     double rads = radians;
     double seconds = 1.0 / samplesPerSecond;
@@ -83,7 +85,8 @@ inline make(double magnitude, FrequencyEnvelope frequencyEnvelope, double radian
 
 template<typename T>
 std::vector<T>
-inline make(AmplitudeEnvelope amplitudeEnvelope, FrequencyEnvelope frequencyEnvelope, double radians,
+inline
+make(AmplitudeEnvelope amplitudeEnvelope, FrequencyEnvelope frequencyEnvelope, double radians,
      int samplesPerSecond) {
     if (amplitudeEnvelope.getAmplitudes()->size() != frequencyEnvelope.getFrequencies()->size()) {
         throw std::logic_error(

@@ -50,7 +50,7 @@ JNIEXPORT jshortArray JNICALL
 Java_com_example_hellooboe_NativeMethods_loadDataShort(JNIEnv *env, jobject thiz) {
     jshortArray ret;
     if (!as->takesFloat()) {
-        std::vector<int16_t> data = as->LoadData<int16_t >();
+        std::vector<int16_t> data = as->LoadData<int16_t>();
         ret = env->NewShortArray(data.size());
         jsize size = env->GetArrayLength(ret);
         env->SetShortArrayRegion(ret, 0, size, data.data());

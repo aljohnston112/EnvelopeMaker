@@ -13,16 +13,23 @@ struct Function {
 
     virtual double f(double x) = 0;
 
-    void setMax(double mmax){if(mmax > max){max = mmax;}};
-    void setMin(double mmin){if(mmin < min){min = mmin;}};
+    void setMax(double mmax) { if (mmax > max) { max = mmax; }};
 
-    double getMax(){return max;};
-    double getMin(){return min;};
+    void setMin(double mmin) { if (mmin < min) { min = mmin; }};
 
-    void addPoint(std::pair<double, double> point){points.push_back(point);};
-    void addPoints(std::vector<std::pair<double, double>> ppoints){for(auto p : ppoints){points.push_back(p);}};
+    double getMax() { return max; };
 
-    std::vector<std::pair<double, double>> * getPoints() {return &points;};
+    double getMin() { return min; };
+
+    void addPoint(std::pair<double, double> point) { points.push_back(point); };
+
+    void addPoints(std::vector<std::pair<double, double>> ppoints) {
+        for (auto p : ppoints) {
+            points.push_back(p);
+        }
+    };
+
+    std::vector<std::pair<double, double>> *getPoints() { return &points; };
 
 private:
     std::vector<std::pair<double, double>> points{};

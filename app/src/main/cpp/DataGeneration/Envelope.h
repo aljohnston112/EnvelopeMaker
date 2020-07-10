@@ -7,11 +7,12 @@
 
 #include "../Functions/Function.h"
 
-struct Envelope{
-    double getMin(){return function->getMin();};
-    double getMax(){return function->getMax();};
+struct Envelope {
+    double getMin() { return function->getMin(); };
+
+    double getMax() { return function->getMax(); };
 private:
-    Function* function;
+    Function *function;
 
 };
 

@@ -2,6 +2,7 @@ package com.example.hellooboe;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.Funct
     // Create new views (invoked by the layout manager)
     @Override
     public MainActivityAdapter.FunctionViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
+                                                                     int viewType) {
         // create a new view
         FunctionView v = (FunctionView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.function_holder, parent, false);
@@ -46,10 +47,8 @@ class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.Funct
     public void onBindViewHolder(MainActivityAdapter.FunctionViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-    //TODO set the data
-        holder.functionView = views.get(position);
-        holder.functionView.invalidate();
-        holder.functionView.requestLayout();
+        //TODO set the data
+        // holder.functionView = views.get(position);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

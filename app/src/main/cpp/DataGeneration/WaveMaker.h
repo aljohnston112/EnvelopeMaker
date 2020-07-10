@@ -33,7 +33,7 @@ struct WaveMaker {
                 if (freq->getFrequencies()->size() != 0) {
                     data.insert(data.size() - 1,
                                 ::make<T>(amp->getAmplitudes(), freq->getFrequencies(), radians,
-                                        samplesPerSecond));
+                                          samplesPerSecond));
                 } else {
                     for (int i = 0; i < amp->getAmplitudes()->size(); i++) {
                         data.push_back(0.0);
@@ -44,39 +44,39 @@ struct WaveMaker {
                 if (freq->getFrequencies()->size() != 0) {
                     data.insert(data.size() - 1,
                                 ::make<T>(amplitude, freq->getFrequencies(), radians,
-                                        samplesPerSecond));
+                                          samplesPerSecond));
                 }
             }
         }
     }
 
-    double getMaxAmp(){
+    double getMaxAmp() {
         std::vector<double> ampsList;
-        for(auto a : amps){
+        for (auto a : amps) {
             ampsList.push_back(a.getMax());
         }
         return *(std::max_element(ampsList.begin(), ampsList.end()));
     };
 
-    double getMaxFreq(){
+    double getMaxFreq() {
         std::vector<double> freqsList;
-        for(auto f : freqs){
+        for (auto f : freqs) {
             freqsList.push_back(f.getMax());
         }
         return *(std::max_element(freqsList.begin(), freqsList.end()));
     };
 
-    double getMinAmp(){
+    double getMinAmp() {
         std::vector<double> ampsList;
-        for(auto a : amps){
+        for (auto a : amps) {
             ampsList.push_back(a.getMin());
         }
         return *(std::min_element(ampsList.begin(), ampsList.end()));
     };
 
-    double getMinFreq(){
+    double getMinFreq() {
         std::vector<double> freqsList;
-        for(auto f : freqs){
+        for (auto f : freqs) {
             freqsList.push_back(f.getMin());
         }
         return *(std::min_element(freqsList.begin(), freqsList.end()));

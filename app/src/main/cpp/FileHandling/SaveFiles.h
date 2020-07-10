@@ -9,7 +9,7 @@
 #include <string>
 #include "../DataGeneration/WaveMaker.h"
 
-struct SaveFiles{
+struct SaveFiles {
     bool insert(std::string name, WaveMaker env) {
         if (envs.find(name) == envs.end()) {
             envs.insert(std::pair{name, env});
