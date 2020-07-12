@@ -36,10 +36,3 @@ AudioStreamCallbackSub::onAudioReady(oboe::AudioStream *audioStream, void *audio
     return oboe::DataCallbackResult::Continue;
 }
 
-CallbackContainerF &AudioStreamCallbackSub::getCcf() {
-    return ccf;
-}
-
-CallbackContainerI &AudioStreamCallbackSub::getCci() {
-    return cci;
-}

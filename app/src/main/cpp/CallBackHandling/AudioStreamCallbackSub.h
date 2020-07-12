@@ -22,9 +22,13 @@ struct AudioStreamCallbackSub : public oboe::AudioStreamCallback {
 
     void onErrorAfterClose(oboe::AudioStream *, oboe::Result) override;
 
-    CallbackContainerF &getCcf();
+    void insertF(std::vector<float> data){
+        ccf.insert(data);
+    }
 
-    CallbackContainerI &getCci();
+    void insertI(std::vector<int16_t> data){
+        cci.insert(data);
+    }
 
 private:
     CallbackContainerF ccf{};

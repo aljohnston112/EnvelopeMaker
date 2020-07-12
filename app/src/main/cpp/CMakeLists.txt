@@ -19,12 +19,10 @@ add_library( # Sets the name of the library.
         # Provides a relative path to your source file(s).
         AudioStreamHolder.cpp
         CallBackHandling/AudioStreamCallbackSub.cpp
-        CallBackHandling/CallbackContainerF.cpp
         CallBackHandling/CallbackContainerI.cpp
+        CallBackHandling/CallbackContainerF.cpp
         DataGeneration/SineWave.h
         DataGeneration/Envelope.h
-        DataGeneration/AmplitudeEnvelope.cpp
-        DataGeneration/FrequencyEnvelope.cpp
         Functions/Function.cpp
         Functions/Constant.cpp
         Functions/Linear.cpp
@@ -35,7 +33,6 @@ add_library( # Sets the name of the library.
         Functions/Logarithm.cpp
         Functions/Power.cpp
         Functions/Sine.cpp
-        DataGeneration/WaveMaker.cpp
         FileHandling/SaveFiles.cpp
         )
 
@@ -76,4 +73,3 @@ add_subdirectory(${OBOE_DIR} ./oboe)
 # This allows targets compiled with this CMake (application code)
 # to see public Oboe headers, in order to access its API.
 include_directories(${OBOE_DIR}/include)
-

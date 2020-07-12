@@ -1,10 +1,7 @@
 package com.example.hellooboe;
 
 public class NativeMethods {
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
+
     public static native void createStream();
 
     public static native void destroyStream();
@@ -22,4 +19,5 @@ public class NativeMethods {
     public static native double getMinFreq();
 
     public static native double getMaxFreq();
+
 }

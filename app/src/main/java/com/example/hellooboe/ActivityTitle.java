@@ -7,9 +7,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class TitleActivity extends AppCompatActivity {
+public class ActivityTitle extends AppCompatActivity {
 
-    // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
     }
@@ -17,7 +16,7 @@ public class TitleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.title_screen);
+        setContentView(R.layout.activity_title);
         /*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
             AudioManager myAudioMgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -28,45 +27,28 @@ public class TitleActivity extends AppCompatActivity {
             native_setDefaultStreamValues(defaultSampleRate, defaultFramesPerBurst);
         }
         */
-
         NativeMethods.createStream();
         if (NativeMethods.isFloat()) {
             float[] data = NativeMethods.loadDataFloat();
 
-            // functionView.setData(NativeMethods.getMinAmp(), NativeMethods.getMaxAmp(), data);
         } else {
             short[] data = NativeMethods.loadDataShort();
         }
-        // DestroyStream();
-
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    protected void onDestroy() {
+        super.onDestroy();
+        NativeMethods.destroyStream();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void onButtonTitleNewClicked(View view) {
+        startActivity(new Intent(this, ActivityMain.class));
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onButtonTitleLoadClicked(View view) {
+        startActivity(new Intent(this, ActivityLoadFile.class));
     }
-
-    public void onNewButtonClicked(View view) {
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        startActivity(mainIntent);
-    }
-
-    public void onLoadButtonClicked(View view) {
-        Intent loadFileIntent = new Intent(this, LoadFileActivity.class);
-        startActivity(loadFileIntent);
-    }
-
 
     public void log(String message) {
         Log.i("Main", message);

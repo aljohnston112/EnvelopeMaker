@@ -15,6 +15,7 @@
 #include "Functions/Linear.h"
 
 struct AudioStreamHolder {
+
     double minA;
 
     double maxA;
@@ -25,7 +26,15 @@ struct AudioStreamHolder {
 
     AudioStreamHolder();
 
-    const oboe::ManagedStream &getManagedStream() const { return managedStream; };
+    ~AudioStreamHolder();
+
+    void requestStopStream() {
+        managedStream->requestStop();
+    }
+
+    void closeStream(){
+        managedStream->close();
+    }
 
     bool takesFloat() { return isFloat; };
 
@@ -55,22 +64,21 @@ struct AudioStreamHolder {
 
         auto data = make<T>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond);
         if (std::is_same<T, float>::value) {
-            callback.getCcf().insert(
+            callback.insertF(
                     make<float>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond));
         } else if (std::is_same<T, int16_t>::value) {
-            callback.getCci().insert(
+            callback.insertI(
                     make<int16_t>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond));
         }
         return data;
     };
 
 private:
-    oboe::AudioStreamBuilder builder;
     oboe::ManagedStream managedStream;
     AudioStreamCallbackSub callback;
     bool isFloat;
 
-    void initAudioStream(oboe::AudioStreamBuilder asb);
+    void initAudioStream();
 };
 
 #endif //HELLOOBOE_AUDIOSTREAMHOLDER_H

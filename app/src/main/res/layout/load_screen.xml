@@ -13,7 +13,7 @@
         android:text="@string/load_file_text"
         android:textColor="@android:color/black"
         app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/load_recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_view_load_file"
         app:layout_constraintDimensionRatio="8:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/load_recycler_view"
+        android:id="@+id/recycler_view_load_file"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -16,25 +16,25 @@ AudioStreamHolder *as;
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_hellooboe_NativeMethods_createStream(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_createStream(JNIEnv *env, jclass thiz) {
     as = new AudioStreamHolder();
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_hellooboe_NativeMethods_destroyStream(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_destroyStream(JNIEnv *env, jclass thiz) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Destroying stream");
-    as->getManagedStream()->requestStop();
-    as->getManagedStream()->close();
+    as->requestStopStream();
+    as->closeStream();
     delete (as);
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_example_hellooboe_NativeMethods_isFloat(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_isFloat(JNIEnv *env, jclass thiz) {
     return as->takesFloat();
 }
 extern "C"
 JNIEXPORT jfloatArray JNICALL
-Java_com_example_hellooboe_NativeMethods_loadDataFloat(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_loadDataFloat(JNIEnv *env, jclass thiz) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading data");
     jfloatArray ret;
     if (as->takesFloat()) {
@@ -47,7 +47,7 @@ Java_com_example_hellooboe_NativeMethods_loadDataFloat(JNIEnv *env, jobject thiz
 }
 extern "C"
 JNIEXPORT jshortArray JNICALL
-Java_com_example_hellooboe_NativeMethods_loadDataShort(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_loadDataShort(JNIEnv *env, jclass thiz) {
     jshortArray ret;
     if (!as->takesFloat()) {
         std::vector<int16_t> data = as->LoadData<int16_t>();
@@ -59,39 +59,43 @@ Java_com_example_hellooboe_NativeMethods_loadDataShort(JNIEnv *env, jobject thiz
 }
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_example_hellooboe_NativeMethods_getMinAmp(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_getMinAmp(JNIEnv *env, jclass thiz) {
     return as->minA;
 }
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_example_hellooboe_NativeMethods_getMaxAmp(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_getMaxAmp(JNIEnv *env, jclass thiz) {
     return as->maxA;
 }
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_example_hellooboe_NativeMethods_getMinFreq(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_getMinFreq(JNIEnv *env, jclass thiz) {
     return as->minF;
 }
 extern "C"
 JNIEXPORT jdouble JNICALL
-Java_com_example_hellooboe_NativeMethods_getMaxFreq(JNIEnv *env, jobject thiz) {
+Java_com_example_hellooboe_NativeMethods_getMaxFreq(JNIEnv *env, jclass thiz) {
     return as->maxF;
 }
 
 AudioStreamHolder::AudioStreamHolder() {
-    initAudioStream(builder);
+    initAudioStream();
     managedStream->requestStart();
 }
 
-void AudioStreamHolder::initAudioStream(oboe::AudioStreamBuilder asb) {
-    asb.setDirection(oboe::Direction::Output);
-    asb.setPerformanceMode(oboe::PerformanceMode::LowLatency);
-    asb.setSharingMode(oboe::SharingMode::Exclusive);
-    asb.setFormat(oboe::AudioFormat::Float);
-    asb.setChannelCount(oboe::ChannelCount::Mono);
-    asb.setCallback(&callback);
-    oboe::Result result = asb.openManagedStream(managedStream);
+AudioStreamHolder::~AudioStreamHolder() {
+    managedStream->requestStop();
+}
 
+void AudioStreamHolder::initAudioStream() {
+    oboe::AudioStreamBuilder builder{};
+    builder.setDirection(oboe::Direction::Output);
+    builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
+    builder.setSharingMode(oboe::SharingMode::Exclusive);
+    builder.setFormat(oboe::AudioFormat::Float);
+    builder.setChannelCount(oboe::ChannelCount::Mono);
+    builder.setCallback(&callback);
+    oboe::Result result = builder.openManagedStream(managedStream);
     if (result != oboe::Result::OK) {
         __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Failed to create stream");
     } else {

@@ -10,24 +10,24 @@
         android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/llrows"
+        android:id="@+id/linear_layout_main_rows"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <include
             android:id="@+id/layout1"
-            layout="@layout/function_holder">
+            layout="@layout/main_row">
         </include>
 
         <include
             android:id="@+id/layout2"
-            layout="@layout/function_holder">
+            layout="@layout/main_row">
         </include>
 
         <include
             android:id="@+id/layout3"
-            layout="@layout/function_holder">
+            layout="@layout/main_row">
         </include>
     </LinearLayout>
     </HorizontalScrollView>
