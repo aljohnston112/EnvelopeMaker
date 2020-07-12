@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
@@ -17,13 +18,13 @@ public class FunctionView extends View {
 
     private double maxY = 10;
 
-    private float[] dataF = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private float[] dataF = {0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 10};
 
-    private short[] dataS = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    private short[] dataS = {0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 10};
 
-    private int height;
+    private int height = 100;
 
-    private int width;
+    private int width = 100;
 
     public FunctionView(Context context) {
         super(context);
