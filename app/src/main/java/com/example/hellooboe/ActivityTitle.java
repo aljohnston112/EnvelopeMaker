@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityTitle extends AppCompatActivity {
 
+    static final String TITLE_TEXT_SIZE = "com.example.TITLE_TEXT_SIZE";
+    static final String TITLE_BUNDLE = "com.example.TITLE_BUNDLE";
+
     static {
         System.loadLibrary("native-lib");
     }
@@ -48,6 +51,10 @@ public class ActivityTitle extends AppCompatActivity {
 
     public void onButtonTitleLoadClicked(View view) {
         startActivity(new Intent(this, ActivityLoadFile.class));
+    }
+
+    public void onButtonTitleSettingsClicked(View view) {
+        startActivity(new Intent(this, ActivitySettings.class));
     }
 
     public void log(String message) {

@@ -5,4 +5,6 @@
     <string name="load_envelope_button">Load Envelope</string>
     <string name="settings_button">Settings</string>
     <string name="load_file_text">Load Envelope</string>
+    <string name="settings_text">Settings</string>
+
 </resources>
