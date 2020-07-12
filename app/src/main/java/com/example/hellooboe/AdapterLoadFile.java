@@ -10,17 +10,6 @@ public class AdapterLoadFile extends RecyclerView.Adapter<AdapterLoadFile.LoadFi
 
     private String[] fileNames;
 
-    public static class LoadFileItem extends RecyclerView.ViewHolder {
-
-        public TextView textViewFileName;
-
-        public LoadFileItem(TextView textView) {
-            super(textView);
-            textViewFileName = textView;
-        }
-
-    }
-
     public AdapterLoadFile(String[] fileNames) {
         this.fileNames = fileNames;
     }
@@ -41,6 +30,17 @@ public class AdapterLoadFile extends RecyclerView.Adapter<AdapterLoadFile.LoadFi
     @Override
     public int getItemCount() {
         return fileNames.length;
+    }
+
+    public static class LoadFileItem extends RecyclerView.ViewHolder {
+
+        public TextView textViewFileName;
+
+        public LoadFileItem(TextView textView) {
+            super(textView);
+            textViewFileName = textView;
+        }
+
     }
 
 

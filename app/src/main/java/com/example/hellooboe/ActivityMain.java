@@ -1,10 +1,10 @@
 package com.example.hellooboe;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -18,24 +18,24 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void init() {
-        linearLayoutMainRows = (LinearLayout)findViewById(R.id.linear_layout_main_rows);
+        linearLayoutMainRows = (LinearLayout) findViewById(R.id.linear_layout_main_rows);
     }
 
-    public void addView(ViewFunction viewFunction, int channel, int columnIndex){
-        ((LinearLayout)linearLayoutMainRows.getChildAt(channel))
+    public void addView(ViewFunction viewFunction, int channel, int columnIndex) {
+        ((LinearLayout) linearLayoutMainRows.getChildAt(channel))
                 .addView(viewFunction, columnIndex);
     }
 
-    public void addChannel(int channel){
+    public void addChannel(int channel) {
         linearLayoutMainRows.addView(LayoutInflater.from(this)
                 .inflate(R.layout.main_row, null), channel);
     }
 
-    public void removeViewFunction(int channel, int columnIndex){
-        ((LinearLayout)linearLayoutMainRows.getChildAt(channel)).removeViewAt(columnIndex);
+    public void removeViewFunction(int channel, int columnIndex) {
+        ((LinearLayout) linearLayoutMainRows.getChildAt(channel)).removeViewAt(columnIndex);
     }
 
-    public void removeChannel(int channel){
+    public void removeChannel(int channel) {
         linearLayoutMainRows.removeViewAt(channel);
     }
 

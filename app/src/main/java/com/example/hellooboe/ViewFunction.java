@@ -11,12 +11,9 @@ import androidx.annotation.Nullable;
 
 public class ViewFunction<T> extends View {
 
-    private int height;
-
-    private int width;
-
     Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-
+    private int height;
+    private int width;
     private double minY = 0;
 
     private double maxY = 10;
@@ -35,7 +32,7 @@ public class ViewFunction<T> extends View {
         init();
     }
 
-    private void init(){
+    private void init() {
         setBackgroundColor(Color.WHITE);
         lineColor.setColor(Color.BLUE);
     }
@@ -78,7 +75,7 @@ public class ViewFunction<T> extends View {
                 || ((MeasureSpec.getMode(w) | MeasureSpec.UNSPECIFIED) == MeasureSpec.UNSPECIFIED)) {
             w = preferredWidth;
         }
-        if(w == 0){
+        if (w == 0) {
             w = MeasureSpec.getSize(heightMeasureSpec);
         }
         int preferredHeight = (int) Math.round((double) w / xtoYRatio);

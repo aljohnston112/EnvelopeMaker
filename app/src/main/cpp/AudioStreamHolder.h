@@ -32,7 +32,7 @@ struct AudioStreamHolder {
         managedStream->requestStop();
     }
 
-    void closeStream(){
+    void closeStream() {
         managedStream->close();
     }
 
