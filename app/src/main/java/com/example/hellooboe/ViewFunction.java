@@ -198,6 +198,7 @@ public class ViewFunction extends View {
 
 
     void setAddNew() {
+
         isAdd = true;
     }
 
