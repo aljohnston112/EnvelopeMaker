@@ -9,125 +9,195 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-public class ViewFunction<T> extends View {
+/**
+ * This class draws a square and draws lines between points passed into the setData() methods.
+ */
+public class ViewFunction extends View {
 
     Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private int height;
+    Paint borderColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+    boolean isConstant;
+    boolean isAdd;
     private int width;
-    private double minY = 0;
-
     private double maxY = 10;
+    // View height and width
+    private int height;
+    // The min and max y values
+    private double minY = 0;
+    // The points to draw lines between
+    private float[] dataF = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1};
+    private short[] dataS = {0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 1};
 
-    private float[] dataF = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-
-    private short[] dataS = {0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 10};
-
+    /**
+     * Creates a ViewFunction.
+     *
+     * @param context
+     */
     public ViewFunction(Context context) {
         super(context);
         init();
     }
 
+    /**
+     * Creates a ViewFunction.
+     *
+     * @param context
+     * @param attrs
+     */
     public ViewFunction(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
+    /**
+     * Initializes this ViewFunction
+     */
     private void init() {
-        setBackgroundColor(Color.WHITE);
-        lineColor.setColor(Color.BLUE);
+        isConstant = false;
+        setBackgroundColor(Color.BLUE);
+        lineColor.setColor(Color.WHITE);
+        lineColor.setStrokeWidth(2);
+        borderColor.setStrokeWidth(4);
+        borderColor.setColor(Color.WHITE);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        //super.onSizeChanged(w, h, oldw, oldh);
-        double xtoYRatio = 1.0;
-        if (NativeMethods.isFloat()) {
-            xtoYRatio = ((double) dataF.length) / (maxY - minY);
-        } else {
-            xtoYRatio = ((double) dataS.length) / (maxY - minY);
-
+        double xtoYRatio = getXToYRatio();
+        if (isAdd) {
+            xtoYRatio = 1;
         }
-        width = w;
-        height = (int) Math.round((double) w / xtoYRatio);
-        if (height > h || height == Double.POSITIVE_INFINITY) {
+        width = (int) Math.round((double) h * xtoYRatio);
+        height = h;
+        if (width > w) {
+            width = w;
+        }
+        if (isConstant) {
+            width = w;
             height = h;
-        }
-        if (w % 2 == 1) {
-            w--;
         }
         invalidate();
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        double xtoYRatio = 1.0;
+    /**
+     * Get the XtoYRatio to keep drawing to scale.
+     */
+    public double getXToYRatio() {
+        double xtoYRatio;
         if (NativeMethods.isFloat()) {
             xtoYRatio = ((double) dataF.length) / (maxY - minY);
         } else {
             xtoYRatio = ((double) dataS.length) / (maxY - minY);
+
         }
-        int preferredWidth = (int) Math.round(MeasureSpec.getSize(heightMeasureSpec) * (double) xtoYRatio);
-        int w = resolveSizeAndState(preferredWidth
-                , widthMeasureSpec, 1);
-        if (((preferredWidth <= MeasureSpec.getSize(w))
-                && (MeasureSpec.getMode(w) | MeasureSpec.EXACTLY) != MeasureSpec.EXACTLY)
-                || ((MeasureSpec.getMode(w) | MeasureSpec.UNSPECIFIED) == MeasureSpec.UNSPECIFIED)) {
-            w = preferredWidth;
+        return xtoYRatio;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int w = width;
+        int h = height;
+        // Get width based on height
+        double xtoYRatio = getXToYRatio();
+        if (isAdd) {
+            xtoYRatio = 1;
         }
-        if (w == 0) {
-            w = MeasureSpec.getSize(heightMeasureSpec);
+        w = (int) Math.round(MeasureSpec.getSize(heightMeasureSpec) * xtoYRatio);
+        if (w > MeasureSpec.getSize(widthMeasureSpec)) {
+            w = (resolveSizeAndState(w
+                    , widthMeasureSpec, getMeasuredState()) | MEASURED_SIZE_MASK);
         }
-        int preferredHeight = (int) Math.round((double) w / xtoYRatio);
-        int h = resolveSizeAndState(preferredHeight
-                , heightMeasureSpec, 1);
-        if (((h | View.MEASURED_STATE_TOO_SMALL) != View.MEASURED_STATE_TOO_SMALL) && preferredHeight != Double.POSITIVE_INFINITY) {
-            h = preferredHeight;
+        if (w > (int) Math.round(MeasureSpec.getSize(heightMeasureSpec) * xtoYRatio)) {
+            w = (int) Math.round(MeasureSpec.getSize(heightMeasureSpec) * xtoYRatio);
         }
-        if (w % 2 == 1) {
-            w--;
-        }
-        width = w;
-        height = h;
+        h = MeasureSpec.getSize(heightMeasureSpec);
         setMeasuredDimension(w, h);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         height = canvas.getHeight();
         width = canvas.getWidth();
-        double xScale = 1.0;
-        double yScale = ((double) height) / ((double) (maxY - minY));
-        if (NativeMethods.isFloat()) {
-            xScale = ((double) width) / ((double) dataF.length - 1);
+        // Draw the border
+        canvas.drawLine(0, 0, width, 0, borderColor);
+        canvas.drawLine(width, 0, width, height, borderColor);
+        canvas.drawLine(width, height, 0, height, borderColor);
+        canvas.drawLine(0, height, 0, 0, borderColor);
+        if (!isAdd) {
+            double xScale = 1.0;
+            if (NativeMethods.isFloat()) {
+                xScale = ((double) width) / ((double) dataF.length - 1);
+            } else {
+                xScale = ((double) width) / ((double) dataS.length - 1);
+            }
+            double yScale = ((double) height) / ((double) (maxY - minY));
             for (int i = 1; i < dataF.length; i++) {
                 canvas.drawLine((float) (((double) i - 1) * xScale), (float) (height - ((((double) dataF[i - 1]) * yScale) - minY)),
                         (float) (((double) i) * xScale), (float) (height - ((((double) dataF[i]) * yScale) - minY)),
                         lineColor);
             }
         } else {
-            xScale = ((double) width) / ((double) dataS.length - 1);
-            for (int i = 1; i < dataS.length; i++) {
-                canvas.drawLine((float) (((double) i - 1) * xScale), (float) (height - ((((double) dataS[i - 1]) * yScale) - minY)),
-                        (float) (((double) i) * xScale), (float) (height - ((((double) dataS[i]) * yScale) - minY)),
-                        lineColor);
-            }
+            canvas.drawRect((int) Math.round(width / 3.0), 0, (int) Math.round(2.0 * width / 3.0), height, lineColor);
+            canvas.drawRect(0, (int) Math.round(height / 3.0), height, (int) Math.round(2.0 * width / 3.0), lineColor);
         }
     }
 
-    void setDataF(double miny, double maxy, float[] values) {
+    void setData(double miny, double maxy, float[] values) {
         this.minY = minY;
         this.maxY = maxY;
         this.dataF = values;
         invalidate();
     }
 
-    void setDataS(double miny, double maxy, short[] values) {
+    void setData(double miny, double maxy, short[] values) {
         this.minY = minY;
         this.maxY = maxY;
         this.dataS = values;
         invalidate();
+    }
+
+    void setDefaultAmp(boolean on, boolean isFloat, int samples) {
+        if (on) {
+            if (isFloat) {
+                dataF = new float[samples];
+                for (int i = 0; i < samples; i++) {
+                    dataF[i] = 1;
+                }
+            } else {
+                dataS = new short[samples];
+                for (int i = 0; i < samples; i++) {
+                    dataS[i] = 1;
+                }
+            }
+        } else {
+            if (isFloat) {
+                dataF = new float[samples];
+                for (int i = 0; i < samples; i++) {
+                    dataF[i] = 0;
+                }
+            } else {
+                dataS = new short[samples];
+                for (int i = 0; i < samples; i++) {
+                    dataS[i] = 0;
+                }
+            }
+        }
+        width = samples;
+        height = samples;
+        isConstant = true;
+        invalidate();
+    }
+
+    int getNumSamples(boolean isFloat) {
+        if (isFloat) {
+            return dataF.length;
+        } else {
+            return dataS.length;
+        }
+    }
+
+    void setAddNew() {
+        isAdd = true;
     }
 
 }

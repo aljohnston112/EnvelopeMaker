@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityMain extends AppCompatActivity {
 
-    LinearLayout linearLayoutMainRows;
+    LinearLayout linearLayoutAmpRow;
+    LinearLayout linearLayoutFreqRow;
+    boolean isFloat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,25 +20,41 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void init() {
-        linearLayoutMainRows = (LinearLayout) findViewById(R.id.linear_layout_main_rows);
+        isFloat = NativeMethods.isFloat();
+        linearLayoutAmpRow = (LinearLayout) findViewById(R.id.ampRow);
+        linearLayoutFreqRow = (LinearLayout) findViewById(R.id.freqRow);
+        ViewFunction viewFunction = new ViewFunction(this);
+        linearLayoutAmpRow.addView(viewFunction);
+        ViewFunction viewFunction2 = new ViewFunction(this);
+        boolean ampIsOn = true;
+        viewFunction2.setDefaultAmp(ampIsOn, isFloat, viewFunction.getNumSamples(isFloat));
+        linearLayoutFreqRow.addView(viewFunction2);
+
+        ViewFunction viewFunction3 = new ViewFunction(this);
+        viewFunction3.setAddNew();
+        linearLayoutAmpRow.addView(viewFunction3);
+        ViewFunction viewFunction4 = new ViewFunction(this);
+        viewFunction4.setAddNew();
+        linearLayoutFreqRow.addView(viewFunction4);
+
     }
 
     public void addView(ViewFunction viewFunction, int channel, int columnIndex) {
-        ((LinearLayout) linearLayoutMainRows.getChildAt(channel))
+        ((LinearLayout) linearLayoutAmpRow.getChildAt(channel))
                 .addView(viewFunction, columnIndex);
     }
 
     public void addChannel(int channel) {
-        linearLayoutMainRows.addView(LayoutInflater.from(this)
+        linearLayoutAmpRow.addView(LayoutInflater.from(this)
                 .inflate(R.layout.main_row, null), channel);
     }
 
     public void removeViewFunction(int channel, int columnIndex) {
-        ((LinearLayout) linearLayoutMainRows.getChildAt(channel)).removeViewAt(columnIndex);
+        ((LinearLayout) linearLayoutAmpRow.getChildAt(channel)).removeViewAt(columnIndex);
     }
 
     public void removeChannel(int channel) {
-        linearLayoutMainRows.removeViewAt(channel);
+        linearLayoutAmpRow.removeViewAt(channel);
     }
 
 }

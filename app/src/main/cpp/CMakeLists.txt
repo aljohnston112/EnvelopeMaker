@@ -61,7 +61,7 @@ target_link_libraries( # Specifies the target library.
         ${log-lib})
 
 # Set the path to the Oboe directory.
-set(OBOE_DIR C:/Users/Al/Documents/Programming/Git/oboe)
+set(OBOE_DIR C:/Users/aljoh/Documents/Programming/Github/oboe)
 
 # Add the Oboe library as a subdirectory in your project.
 # add_subdirectory tells CMake to look in this directory to
