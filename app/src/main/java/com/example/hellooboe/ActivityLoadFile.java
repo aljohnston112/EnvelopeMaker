@@ -8,25 +8,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivityLoadFile extends AppCompatActivity {
 
-    private RecyclerView recyclerViewLoadFile;
-    private RecyclerView.Adapter recylerViewAdapterLoadFile;
-    private RecyclerView.LayoutManager recylerViewLayoutManagerLoadFile;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.load_screen);
+        setContentView(R.layout.activity_load);
         setUpRecyclerView();
     }
 
     private void setUpRecyclerView() {
-        recyclerViewLoadFile = (RecyclerView) findViewById(R.id.recycler_view_load_file);
-        recylerViewLayoutManagerLoadFile = new LinearLayoutManager(this);
-        recyclerViewLoadFile.setLayoutManager(recylerViewLayoutManagerLoadFile);
+        RecyclerView recyclerViewLoadFile = (RecyclerView) findViewById(R.id.recycler_view_load_file);
+        RecyclerView.LayoutManager linearLayoutManagerLoadFile = new LinearLayoutManager(this);
+        recyclerViewLoadFile.setLayoutManager(linearLayoutManagerLoadFile);
         //TODO Load strings from c++ SaveFiles
-        String[] myDataset = {"a", "b", "c", "d", "e"};
-        recylerViewAdapterLoadFile = new AdapterLoadFile(myDataset);
-        recyclerViewLoadFile.setAdapter(recylerViewAdapterLoadFile);
+        String[] saveFileNames = {"a", "b", "c", "d", "e"};
+        RecyclerView.Adapter recyclerViewAdapterLoadFile = new AdapterLoadFile(saveFileNames);
+        recyclerViewLoadFile.setAdapter(recyclerViewAdapterLoadFile);
     }
 
 }

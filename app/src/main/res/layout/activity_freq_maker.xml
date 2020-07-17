@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraint_layout_freq"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button_create"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="@string/confirm_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancel"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_max_freq" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/cancel_button"
+        app:layout_constraintBottom_toBottomOf="@+id/button_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_create"
+        app:layout_constraintTop_toTopOf="@+id/button_create" />
+
+    <TextView
+        android:id="@+id/text_view_freq_title"
+        style="@style/TextAppearance.MdcTypographyStyles.Headline4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/frequency_envelope"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_freq_function"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_start_freq"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:hint="@string/start_freq_text"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_freq_length"
+        app:layout_constraintEnd_toStartOf="@+id/text_input_layout_end_freq"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_freq_function">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_start_freq"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_end_freq"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/end_freq_text"
+        app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_start_freq"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/text_input_layout_start_freq"
+        app:layout_constraintTop_toTopOf="@+id/text_input_layout_start_freq">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_end_freq"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_freq_function"
+        style="@style/TextAppearance.MdcTypographyStyles.DropDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:labelFor="@id/auto_complete_text_view_freq_function"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_start_freq"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_freq_title"
+        app:placeholderText="@string/pick_a_function_text">
+
+        <AutoCompleteTextView
+            android:id="@+id/auto_complete_text_view_freq_function"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_freq_length"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/length_seconds_text"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_max_freq"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_start_freq">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_freq_length"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_min_freq"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:hint="@string/min_freq_text"
+        app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_max_freq"
+        app:layout_constraintEnd_toStartOf="@+id/text_input_layout_max_freq"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_input_layout_max_freq">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_min_freq"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_max_freq"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/max_freq_text"
+        app:layout_constraintBottom_toTopOf="@+id/button_create"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/text_input_layout_min_freq"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_freq_length">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_max_freq"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

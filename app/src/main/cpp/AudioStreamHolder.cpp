@@ -29,7 +29,7 @@ Java_com_example_hellooboe_NativeMethods_destroyStream(JNIEnv *env, jclass thiz)
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_example_hellooboe_NativeMethods_isFloat(JNIEnv *env, jclass thiz) {
+Java_com_example_hellooboe_NativeMethods_audioDataIsFloat(JNIEnv *env, jclass thiz) {
     return as->takesFloat();
 }
 extern "C"

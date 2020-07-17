@@ -2,15 +2,17 @@ package com.example.hellooboe;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class ActivityMain extends AppCompatActivity {
 
     LinearLayout linearLayoutAmpRow;
     LinearLayout linearLayoutFreqRow;
-    boolean isFloat;
+    boolean audioDataIsFloat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,23 +22,16 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void init() {
-        isFloat = NativeMethods.isFloat();
-        linearLayoutAmpRow = (LinearLayout) findViewById(R.id.ampRow);
-        linearLayoutFreqRow = (LinearLayout) findViewById(R.id.freqRow);
-        ViewFunction viewFunction = new ViewFunction(this);
-        linearLayoutAmpRow.addView(viewFunction);
-        ViewFunction viewFunction2 = new ViewFunction(this);
-        boolean ampIsOn = true;
-        viewFunction2.setDefaultAmp(ampIsOn, isFloat, viewFunction.getNumSamples(isFloat));
-        linearLayoutFreqRow.addView(viewFunction2);
-
-        ViewFunction viewFunction3 = new ViewFunction(this);
-        viewFunction3.setAddNew();
-        linearLayoutAmpRow.addView(viewFunction3);
-        ViewFunction viewFunction4 = new ViewFunction(this);
-        viewFunction4.setAddNew();
-        linearLayoutFreqRow.addView(viewFunction4);
-
+        ((Toolbar) findViewById(R.id.toolbar_main)).inflateMenu(R.menu.menu_main);
+        audioDataIsFloat = NativeMethods.audioDataIsFloat();
+        linearLayoutAmpRow = (LinearLayout) findViewById(R.id.linear_layout_amp_row);
+        linearLayoutFreqRow = (LinearLayout) findViewById(R.id.linear_layout_freq_row);
+        ViewFunction viewFunctionAmp = new ViewFunction(this, true);
+        viewFunctionAmp.setAsAddNew();
+        linearLayoutAmpRow.addView(viewFunctionAmp);
+        ViewFunction viewFunctionFreq = new ViewFunction(this, false);
+        viewFunctionFreq.setAsAddNew();
+        linearLayoutFreqRow.addView(viewFunctionFreq);
     }
 
     public void addView(ViewFunction viewFunction, int channel, int columnIndex) {
@@ -46,7 +41,7 @@ public class ActivityMain extends AppCompatActivity {
 
     public void addChannel(int channel) {
         linearLayoutAmpRow.addView(LayoutInflater.from(this)
-                .inflate(R.layout.main_row, null), channel);
+                .inflate(R.layout.linear_layout_row, null), channel);
     }
 
     public void removeViewFunction(int channel, int columnIndex) {
@@ -55,6 +50,12 @@ public class ActivityMain extends AppCompatActivity {
 
     public void removeChannel(int channel) {
         linearLayoutAmpRow.removeViewAt(channel);
+    }
+
+    public void longClicked() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        MenuItem registrar = toolbar.getMenu().findItem(R.id.action_copy);
+        registrar.setVisible(true);
     }
 
 }

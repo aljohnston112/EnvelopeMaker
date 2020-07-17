@@ -6,7 +6,7 @@ public class NativeMethods {
 
     public static native void destroyStream();
 
-    public static native boolean isFloat();
+    public static native boolean audioDataIsFloat();
 
     public static native float[] loadDataFloat();
 

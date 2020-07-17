@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AdapterLoadFile extends RecyclerView.Adapter<AdapterLoadFile.LoadFileItem> {
@@ -15,11 +16,11 @@ public class AdapterLoadFile extends RecyclerView.Adapter<AdapterLoadFile.LoadFi
     }
 
     @Override
+    @NonNull
     public LoadFileItem onCreateViewHolder(ViewGroup parent, int viewType) {
         TextView textViewLoadFile = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.load_file_item, parent, false);
-        LoadFileItem loadFileItem = new LoadFileItem(textViewLoadFile);
-        return loadFileItem;
+                .inflate(R.layout.text_view_load_file, parent, false);
+        return new LoadFileItem(textViewLoadFile);
     }
 
     @Override
@@ -36,13 +37,12 @@ public class AdapterLoadFile extends RecyclerView.Adapter<AdapterLoadFile.LoadFi
 
         public TextView textViewFileName;
 
-        public LoadFileItem(TextView textView) {
-            super(textView);
-            textViewFileName = textView;
+        public LoadFileItem(TextView textViewFileName) {
+            super(textViewFileName);
+            this.textViewFileName = textViewFileName;
         }
 
     }
-
 
 }
 

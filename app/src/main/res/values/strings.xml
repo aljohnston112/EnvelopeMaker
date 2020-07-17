@@ -1,4 +1,6 @@
 <resources>
+
+    <!---->
     <string name="app_name">HelloOboe</string>
     <string name="title_text">Envelope Maker</string>
     <string name="new_envelope_button">New Envelope</string>
@@ -6,5 +8,44 @@
     <string name="settings_button">Settings</string>
     <string name="load_file_text">Load Envelope</string>
     <string name="settings_text">Settings</string>
+    <string name="amplitude_envelope">Amplitude Envelope</string>
+    <string name="frequency_envelope">Frequency Envelope</string>
+
+    <!--For activity_*_maker-->
+    <!--For activity_*_maker's Spinner-->
+    <string name="pick_a_function_text">Pick a function</string>
+    <string name="start_amp_text">Starting amplitude</string>
+    <!--For activity_*_maker's text layout's hints-->
+    <string name="end_amp_text">Ending amplitude</string>
+    <string name="start_freq_text">Starting frequency</string>
+    <string name="end_freq_text">Ending frequency</string>
+    <string name="length_seconds_text">Length in seconds</string>
+    <string name="min_amp_text">Minimum amplitude</string>
+    <string name="max_amp_text">Maximum amplitude</string>
+    <string name="min_freq_text">Minimum frequency</string>
+    <string name="max_freq_text">Maximum frequency</string>
+    <string name="start_amp_edit_text">amplitude</string>
+    <!--For activity_*_maker's edit texts hints-->
+    <string name="end_amp_edit_text">amplitude</string>
+    <string name="start_freq_edit_text">frequency</string>
+    <string name="end_freq_edit_text">frequency</string>
+    <string name="length_seconds_edit_text">seconds</string>
+    <string name="min_amp_edit_text">amplitude</string>
+    <string name="max_amp_edit_text">amplitude</string>
+    <string name="min_freq_edit_text">frequency</string>
+    <string name="max_freq_edit_text">frequency</string>
+    <string name="confirm_button">Create</string>
+    <!--For activity_*_maker's buttons-->
+    <string name="cancel_button">Cancel</string>
+    <string-array name="functions">
+        <item>Constant</item>
+        <item>Exponential</item>
+        <item>Linear</item>
+        <item>Logarithm</item>
+        <item>Nth Root</item>
+        <item>Power</item>
+        <item>Quadratic</item>
+        <item>Sine</item>
+    </string-array>
 
 </resources>
