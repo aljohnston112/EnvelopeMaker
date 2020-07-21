@@ -153,8 +153,8 @@ Java_com_example_hellooboe_NativeMethods_loadConstant(JNIEnv *env, jclass clazz,
         env->SetFloatArrayRegion(outData, 0, size, data.data());
     }
     return outData;
-
-}extern "C"
+}
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_hellooboe_NativeMethods_audioDataIsFloat(JNIEnv *env, jclass clazz) {
     return audioStreamHolder->audioDataIsFloat();
