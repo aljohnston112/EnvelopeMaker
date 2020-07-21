@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraint_layout_amp"
     android:layout_width="match_parent"
@@ -17,7 +18,8 @@
         app:layout_constraintEnd_toStartOf="@+id/button_cancel"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_max_amp" />
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_max_amp"
+        android:onClick="onButtonAmpMakerCreate"/>
 
     <Button
         android:id="@+id/button_cancel"
@@ -50,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
+        app:errorEnabled="true"
         android:hint="@string/start_amp_text"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_amp_length"
         app:layout_constraintEnd_toStartOf="@+id/text_input_layout_end_amp"
@@ -58,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_amp_function">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_text_start_amp"
+            android:id="@+id/text_input_edit_start_amp"
             style="@style/TextAppearance.MdcTypographyStyles.Body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,6 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
         android:hint="@string/end_amp_text"
         app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_start_amp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,10 +98,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
+        android:hint="@string/pick_a_function_text"
         android:labelFor="@id/auto_complete_text_view_amp_function"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_start_amp"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_amp_title"
-        app:placeholderText="@string/pick_a_function_text">
+        app:layout_constraintTop_toBottomOf="@+id/text_view_amp_title">
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_text_view_amp_function"
@@ -114,6 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
         android:hint="@string/length_seconds_text"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_max_amp"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_start_amp">
@@ -133,6 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
+        app:errorEnabled="true"
         android:hint="@string/min_amp_text"
         app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_max_amp"
         app:layout_constraintEnd_toStartOf="@+id/text_input_layout_max_amp"
@@ -155,6 +162,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
         android:hint="@string/max_amp_text"
         app:layout_constraintBottom_toTopOf="@+id/button_create"
         app:layout_constraintEnd_toEndOf="parent"

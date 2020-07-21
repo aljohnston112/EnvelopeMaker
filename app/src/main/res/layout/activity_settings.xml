@@ -7,12 +7,13 @@
 
     <TextView
         android:id="@+id/text_view_settings"
-        style="@style/TextAppearance.MdcTypographyStyles.Headline4"
+        style="@style/TextAppearance.MdcTypographyStyles.Headline3"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:gravity="center"
         android:text="@string/settings_text"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

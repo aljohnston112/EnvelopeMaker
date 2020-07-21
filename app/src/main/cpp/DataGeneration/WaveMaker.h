@@ -7,27 +7,58 @@
 
 #include "AmplitudeEnvelope.h"
 #include "FrequencyEnvelope.h"
-#include "SineWave.h"
+#include "SineWaveMaker.h"
 
 #include <list>
+#include <android/log.h>
 
+template <typename T>
 struct WaveMaker {
 
-    void push_back(AmplitudeEnvelope ae) { amps.push_back(ae); };
+    WaveMaker() : amps(), freqs() {};
 
-    void push_back(FrequencyEnvelope ae) { freqs.push_back(ae); };
+    void push_back(AmplitudeEnvelope<T> ae) { amps.push_back(ae); };
 
-    void erase(std::list<AmplitudeEnvelope>::iterator index) { amps.erase(index); }
+    void push_back(FrequencyEnvelope<T> fe) { freqs.push_back(fe); };
 
-    void erase(std::list<FrequencyEnvelope>::iterator index) { freqs.erase(index); }
+    void insert(AmplitudeEnvelope<T>& ae, int index) {
+        if(index < 0 || index > amps.size()){
+            throw std::range_error("index passed to insert() was out of bounds");
+        }
+        auto iterator = amps.begin();
+        for(int i = 0; i < index; i++){
+            iterator++;
+        }
+        try {
+            amps.insert(iterator, ae);
+        } catch (std::exception& exception){
+            std::string message{exception.what()};
+            __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", message.c_str());
+        } catch(...){
+            __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Oh no");
+        }
+    };
 
-    template<typename T>
+    void insert(FrequencyEnvelope<T>& fe, int index) {
+        if(index < 0 || index > freqs.size()) {
+            throw std::range_error("index passed to insert() was out of bounds");
+        }
+        auto iterator = freqs.begin();
+        for(int i = 0; i < index; i++){
+            iterator++;
+        }
+        freqs.insert(iterator, fe); };
+
+    void erase(typename std::list<AmplitudeEnvelope<T>>::iterator index) { amps.erase(index); }
+
+    void erase(typename std::list<FrequencyEnvelope<T>>::iterator index) { freqs.erase(index); }
+
     std::vector<T> make(int index, int samplesPerSecond) {
         double radians = 0;
         std::vector<float> data{};
         auto amp = amps.begin();
         auto freq = freqs.begin();
-        double amplitude = 1.0;
+        double amplitude;
         for (int i = 0; i < amps.size(); i++) {
             if (amp->getAmplitudes()->size() != 0) {
                 if (freq->getFrequencies()->size() != 0) {
@@ -35,7 +66,7 @@ struct WaveMaker {
                                 ::make<T>(amp->getAmplitudes(), freq->getFrequencies(), radians,
                                           samplesPerSecond));
                 } else {
-                    for (int i = 0; i < amp->getAmplitudes()->size(); i++) {
+                    for (int j = 0; j < amp->getAmplitudes()->size(); j++) {
                         data.push_back(0.0);
                     }
                 }
@@ -51,7 +82,7 @@ struct WaveMaker {
     }
 
     double getMaxAmp() {
-        std::vector<double> ampsList;
+        std::vector<double> ampsList{};
         for (auto a : amps) {
             ampsList.push_back(a.getMax());
         }
@@ -59,7 +90,7 @@ struct WaveMaker {
     };
 
     double getMaxFreq() {
-        std::vector<double> freqsList;
+        std::vector<double> freqsList{};
         for (auto f : freqs) {
             freqsList.push_back(f.getMax());
         }
@@ -67,7 +98,7 @@ struct WaveMaker {
     };
 
     double getMinAmp() {
-        std::vector<double> ampsList;
+        std::vector<double> ampsList{};
         for (auto a : amps) {
             ampsList.push_back(a.getMin());
         }
@@ -75,7 +106,7 @@ struct WaveMaker {
     };
 
     double getMinFreq() {
-        std::vector<double> freqsList;
+        std::vector<double> freqsList{};
         for (auto f : freqs) {
             freqsList.push_back(f.getMin());
         }
@@ -83,8 +114,8 @@ struct WaveMaker {
     };
 
 private:
-    std::list<AmplitudeEnvelope> amps{};
-    std::list<FrequencyEnvelope> freqs{};
+    std::list<AmplitudeEnvelope<T>> amps;
+    std::list<FrequencyEnvelope<T>> freqs;
 };
 
 #endif //HELLOOBOE_WAVEMAKER_H

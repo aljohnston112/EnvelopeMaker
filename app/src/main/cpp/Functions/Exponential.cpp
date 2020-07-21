@@ -26,6 +26,6 @@ Exponential::Exponential(std::pair<double, double> p0, std::pair<double, double>
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double Exponential::f(double x) {
+double Exponential::fun(double x) {
     return (a * exp(x)) + b;
 }

@@ -11,7 +11,8 @@ struct Envelope {
     double getMin() { return function->getMin(); };
 
     double getMax() { return function->getMax(); };
-private:
+
+protected:
     Function *function;
 
 };

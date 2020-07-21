@@ -29,6 +29,6 @@ Quadratic::Quadratic(std::pair<double, double> p0,
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "c:%.20f", c);
 }
 
-double Quadratic::f(double x) {
+double Quadratic::fun(double x) {
     return (a * x * x) + (b * x) + c;
 }

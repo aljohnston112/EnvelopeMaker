@@ -23,6 +23,6 @@ Linear::Linear(std::pair<double, double> p0, std::pair<double, double> p1) {
     b = p0.second - (a * p0.first);
 }
 
-double Linear::f(double x) {
+double Linear::fun(double x) {
     return (a * x) + b;
 }

@@ -10,7 +10,7 @@
 struct Sine : public Function {
     Sine(std::pair<double, double> p0, std::pair<double, double> p1);
 
-    double f(double x);
+    double fun(double x);
 
 private:
     // a*sin(x)+b

@@ -34,6 +34,6 @@ NthRoot::NthRoot(std::pair<double, double> p0, std::pair<double, double> p1) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double NthRoot::f(double x) {
+double NthRoot::fun(double x) {
     return a * pow(x, (1.0 / b));
 }

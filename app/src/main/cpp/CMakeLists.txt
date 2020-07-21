@@ -21,7 +21,7 @@ add_library( # Sets the name of the library.
         CallBackHandling/AudioStreamCallbackSub.cpp
         CallBackHandling/CallbackContainerI.cpp
         CallBackHandling/CallbackContainerF.cpp
-        DataGeneration/SineWave.h
+        DataGeneration/SineWaveMaker.h
         DataGeneration/Envelope.h
         Functions/Function.cpp
         Functions/Constant.cpp

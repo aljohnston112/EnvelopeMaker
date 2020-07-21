@@ -34,6 +34,6 @@ Sine::Sine(std::pair<double, double> p0, std::pair<double, double> p1) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double Sine::f(double x) {
+double Sine::fun(double x) {
     return a * std::sin(x) + b;
 }

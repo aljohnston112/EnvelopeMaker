@@ -8,14 +8,16 @@
 #include <vector>
 #include "Envelope.h"
 
+template <typename T>
 struct FrequencyEnvelope : Envelope {
-    FrequencyEnvelope(const std::vector<double> freqsIn) {
+    FrequencyEnvelope(Function& ffunction, const std::vector<T> freqsIn) {
         freqs = freqsIn;
+        function = &ffunction;
     };
 
-    std::vector<double> *getFrequencies() { return &freqs; };
+    std::vector<T> *getFrequencies() { return &freqs; };
 private:
-    std::vector<double> freqs;
+    std::vector<T> freqs;
 };
 
 #endif //HELLOOBOE_FREQUENCYENVELOPE_H

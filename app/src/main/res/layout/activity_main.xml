@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout_main_cols"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
     android:id="@+id/linear_layout_main_cols"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimaryDark">
+    </androidx.appcompat.widget.Toolbar>
 
     <HorizontalScrollView
         android:id="@+id/horizontal_scroll_view_main"
@@ -33,14 +46,16 @@
 
         </LinearLayout>
     </HorizontalScrollView>
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-    </androidx.appcompat.widget.Toolbar>
 </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:srcCompat="@drawable/ic_play_arrow_white_24dp"
+        android:contentDescription="@string/floating_action_button_desc"
+        android:layout_margin="16dp"
+        app:tint="@null"
+        android:backgroundTint="@color/colorPrimaryDark" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

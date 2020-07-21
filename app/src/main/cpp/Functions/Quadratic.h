@@ -11,7 +11,7 @@
 struct Quadratic : public Function {
     Quadratic(std::pair<double, double> p0, std::pair<double, double> vertex);
 
-    double f(double x);
+    double fun(double x);
 
 private:
     //a(x^2)+bx+c

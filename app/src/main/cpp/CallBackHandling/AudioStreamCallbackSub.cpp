@@ -22,13 +22,13 @@ AudioStreamCallbackSub::onAudioReady(oboe::AudioStream *audioStream, void *audio
     int bytePerSample = audioStream->getBytesPerSample();
     if (bytePerSample == 2) {
         auto *outputData = static_cast<int16_t *>(audioData);
-        std::vector<int16_t> out = cci.get(numFrames);
+        std::vector<int16_t> out = callbackContainerI.get(numFrames);
         for (int i = 0; i < numFrames; i++) {
             outputData[i] = out[i];
         }
     } else {
         auto *outputData = static_cast<float *>(audioData);
-        std::vector<float> out = ccf.get(numFrames);
+        std::vector<float> out = callbackContainerF.get(numFrames);
         for (int i = 0; i < numFrames; i++) {
             outputData[i] = out[i];
         }

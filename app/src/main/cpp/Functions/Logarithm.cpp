@@ -43,6 +43,6 @@ Logarithm::Logarithm(std::pair<double, double> p0, std::pair<double, double> p1)
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double Logarithm::f(double x) {
+double Logarithm::fun(double x) {
     return a * log(x) + b;
 }

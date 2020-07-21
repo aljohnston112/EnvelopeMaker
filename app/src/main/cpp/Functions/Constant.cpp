@@ -11,7 +11,7 @@ Constant::Constant(double cnst) {
     setMax(cnst);
 }
 
-double Constant::f(double x) {
+double Constant::fun(double x) {
     return c;
 }
 

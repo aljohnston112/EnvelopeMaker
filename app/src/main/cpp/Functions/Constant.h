@@ -10,7 +10,7 @@
 struct Constant : public Function {
     Constant(double cnst);
 
-    double f(double x);
+    double fun(double x);
 
 private:
     double c;

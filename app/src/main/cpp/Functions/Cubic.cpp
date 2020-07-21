@@ -32,6 +32,6 @@ Cubic::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "c:%.20f", c);
 }
 
-double Cubic::f(double x) {
+double Cubic::fun(double x) {
     return (a * x * x * x) + (b * x * x) + (c * x) + d;
 }

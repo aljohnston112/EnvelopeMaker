@@ -11,7 +11,7 @@ struct Cubic : public Function {
     Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
           std::pair<double, double> vertex2);
 
-    double f(double x);
+    double fun(double x);
 
 private:
     //a(x^3)+b(x^2)+cx+d

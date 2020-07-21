@@ -7,9 +7,13 @@
     <string name="load_envelope_button">Load Envelope</string>
     <string name="settings_button">Settings</string>
     <string name="load_file_text">Load Envelope</string>
+    <string name="save_file_text">Save Envelope</string>
+    <string name="save_file_hint">Envelope Name</string>
+    <string name="save_button_text">Save</string>
     <string name="settings_text">Settings</string>
     <string name="amplitude_envelope">Amplitude Envelope</string>
     <string name="frequency_envelope">Frequency Envelope</string>
+    <string name="floating_action_button_desc">Play</string>
 
     <!--For activity_*_maker-->
     <!--For activity_*_maker's Spinner-->
@@ -47,5 +51,13 @@
         <item>Quadratic</item>
         <item>Sine</item>
     </string-array>
+    <string name="Constant">Constant</string>
+    <string name="Exponential">Exponential</string>
+    <string name="Linear">Linear</string>
+    <string name="Logarithm">Logarithm</string>
+    <string name="Nth_Root">Nth Root</string>
+    <string name="Power">Power</string>
+    <string name="Quadratic">Quadratic</string>
+    <string name="Sine">Sine</string>
 
 </resources>

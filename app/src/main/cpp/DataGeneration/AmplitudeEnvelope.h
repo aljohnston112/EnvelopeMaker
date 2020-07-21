@@ -9,15 +9,18 @@
 #include "../Functions/Function.h"
 #include "Envelope.h"
 
+template <typename T>
 struct AmplitudeEnvelope : Envelope {
-    AmplitudeEnvelope(const std::vector<double> ampsIn) {
+
+    AmplitudeEnvelope(Function& ffunction, const std::vector<T>& ampsIn) {
         amps = ampsIn;
+        function = &ffunction;
     };
 
-    std::vector<double> *getAmplitudes() { return &amps; };
+    std::vector<T> *getAmplitudes() { return &amps; };
 
 private:
-    std::vector<double> amps;
+    std::vector<T> amps;
 };
 
 #endif //HELLOOBOE_AMPLITUDEENVELOPE_H

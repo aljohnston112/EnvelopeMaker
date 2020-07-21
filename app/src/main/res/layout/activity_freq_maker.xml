@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
+        app:errorEnabled="true"
         android:hint="@string/start_freq_text"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_freq_length"
         app:layout_constraintEnd_toStartOf="@+id/text_input_layout_end_freq"
@@ -72,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
         android:hint="@string/end_freq_text"
         app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_start_freq"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,10 +96,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:labelFor="@id/auto_complete_text_view_freq_function"
+        app:errorEnabled="true"
+        android:hint="@string/pick_a_function_text"
+    android:labelFor="@id/auto_complete_text_view_freq_function"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_start_freq"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_freq_title"
-        app:placeholderText="@string/pick_a_function_text">
+        app:layout_constraintTop_toBottomOf="@+id/text_view_freq_title">
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_text_view_freq_function"
@@ -114,6 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
         android:hint="@string/length_seconds_text"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_max_freq"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_start_freq">
@@ -133,6 +137,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
+        app:errorEnabled="true"
         android:hint="@string/min_freq_text"
         app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_max_freq"
         app:layout_constraintEnd_toStartOf="@+id/text_input_layout_max_freq"
@@ -155,6 +160,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
+        app:errorEnabled="true"
         android:hint="@string/max_freq_text"
         app:layout_constraintBottom_toTopOf="@+id/button_create"
         app:layout_constraintEnd_toEndOf="parent"

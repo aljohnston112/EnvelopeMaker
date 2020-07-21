@@ -5,16 +5,29 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.AttributeSet;
 import android.view.View;
 
 public class ViewFunction extends View {
 
-    Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint borderColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint textColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-    boolean isConstant;
-    boolean isAddNew;
-    boolean isAmp;
+    public static final String COL_NUMBER_KEY = "590";
+    public static final int ACTIVITY_AMP_MAKER = 591;
+    public static final int ACTIVITY_FREQ_MAKER = 592;
+    public static final String FLOAT_DATA = "593";
+    public static final String SHORT_DATA = "594";
+    public static final String COL_DATA = "595";
+    public static final String MIN_DATA = "596";
+    public static final String MAX_DATA = "597";
+
+    private Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint borderColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private int borderStrokeWidth = 4;
+    private Paint textColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private boolean isConstant;
+    private  boolean isAddNew;
+    private boolean isAmp;
+    private boolean selected;
+    private int col;
     private double minY = 0;
     private double maxY = 10;
     private int height;
@@ -28,10 +41,15 @@ public class ViewFunction extends View {
         init();
     }
 
-    public ViewFunction(Context context, boolean isAmp) {
+    public ViewFunction(Context context, boolean isAmp, int col) {
         super(context);
         this.isAmp = isAmp;
+        this.col = col;
         init();
+    }
+
+    public ViewFunction(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
 
     private void init() {
@@ -40,11 +58,12 @@ public class ViewFunction extends View {
         isConstant = false;
         setBackgroundColor(Color.WHITE);
         lineColor.setStrokeWidth(8);
-        lineColor.setColor(Color.BLUE);
-        borderColor.setStrokeWidth(4);
+        lineColor.setColor(getResources().getColor(R.color.colorPrimaryDark));
+        borderColor.setStrokeWidth(borderStrokeWidth);
         borderColor.setColor(Color.BLACK);
         textColor.setTextSize(64);
         textColor.setColor(Color.BLACK);
+        selected = false;
     }
 
     @Override
@@ -82,6 +101,14 @@ public class ViewFunction extends View {
         return xtoYRatio;
     }
 
+    public int getCol(){
+        return col;
+    }
+
+    public boolean isSelected(){
+        return selected;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int w;
@@ -99,6 +126,9 @@ public class ViewFunction extends View {
             w = (int) Math.round(MeasureSpec.getSize(heightMeasureSpec) * xtoYRatio);
         }
         h = MeasureSpec.getSize(heightMeasureSpec);
+        if(w%2 == 1) {
+            w--;
+        }
         setMeasuredDimension(w, h);
     }
 
@@ -107,7 +137,7 @@ public class ViewFunction extends View {
         height = getHeight();
         width = getWidth();
         if (!isAddNew) {
-            double xScale = 1.0;
+            double xScale;
             if (NativeMethods.audioDataIsFloat()) {
                 xScale = ((double) width) / ((double) dataF.length - 1);
             } else {
@@ -133,14 +163,41 @@ public class ViewFunction extends View {
                 canvas.drawText(endText, width - textWidth - 2, (int) Math.round(height / 2.0), textColor);
             }
         } else {
-            canvas.drawRect((int) Math.round(3.0 * width / 8.0), 0, (int) Math.round(5.0 * width / 8.0), height, lineColor);
-            canvas.drawRect(0, (int) Math.round(3.0 * height / 8.0), height, (int) Math.round(5.0 * width / 8.0), lineColor);
+            canvas.drawRect((int) Math.round(3.5 * width / 8.0), (int) Math.round(2.0 * width / 8.0),
+                    (int) Math.round(4.5 * width / 8.0), (int) Math.round(6.0 * width / 8.0), lineColor);
+            canvas.drawRect((int) Math.round(2.0 * height / 8.0), (int) Math.round(3.5 * height / 8.0),
+                    (int) Math.round(6.0 * width / 8.0), (int) Math.round(4.5 * width / 8.0), lineColor);
         }
+       drawBorder(canvas);
+    }
+
+    private void drawBorder(Canvas canvas) {
         // Draw the border
+        borderColor.setStrokeWidth(borderStrokeWidth);
+        if(selected){
+            borderStrokeWidth *=4;
+            borderColor.setStrokeWidth(borderStrokeWidth);
+        }
+        //Right
         canvas.drawLine(width, 0, width, height, borderColor);
-        canvas.drawLine(width, height, 0, height, borderColor);
-        canvas.drawLine(0, 0, width, 0, borderColor);
+        //Left
         canvas.drawLine(0, height, 0, 0, borderColor);
+        // Bottom
+        if(isAmp){
+            borderColor.setStrokeWidth((float) (borderStrokeWidth/2.0));
+        }
+        canvas.drawLine(width, height, 0, height, borderColor);
+        //Top
+        if(!isAmp){
+            borderColor.setStrokeWidth((float) (borderStrokeWidth/2.0));
+        } else {
+            borderColor.setStrokeWidth(borderStrokeWidth);
+        }
+        canvas.drawLine(0, 0, width, 0, borderColor);
+        if(selected){
+            borderStrokeWidth /=4;
+            borderColor.setStrokeWidth(borderStrokeWidth);
+        }
     }
 
     void setData(double minY, double maxY, float[] values) {
@@ -212,21 +269,42 @@ public class ViewFunction extends View {
 
         @Override
         public void onClick(View view) {
-            if (isAmp) {
-                getContext().startActivity(new Intent(getContext(), ActivityAmpMaker.class));
-            } else {
-                getContext().startActivity(new Intent(getContext(), ActivityFreqMaker.class));
+            if (!((ActivityMain) getContext()).isLongClicked) {
+                if (isAmp) {
+                    Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
+                    intent.putExtra(COL_NUMBER_KEY, ((ViewFunction)view).getCol());
+                    ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_AMP_MAKER);
+                } else {
+                    Intent intent = new Intent(getContext(), ActivityFreqMaker.class);
+                    intent.putExtra(COL_NUMBER_KEY, ((ViewFunction)view).getCol());
+                    ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_FREQ_MAKER);
+                }
+            } else{
+                if(selected){
+                    selected = false;
+                } else {
+                    selected = true;
+                }
+                invalidate();
             }
         }
+
     }
 
     private class OnLongClickListenerViewFunction implements OnLongClickListener {
 
         @Override
         public boolean onLongClick(View view) {
-            ((ActivityMain) getContext()).longClicked();
-            return false;
+            ((ActivityMain) getContext()).longClicked(true);
+            selected = true;
+            invalidate();
+            return true;
         }
+    }
+
+    public void select(boolean select){
+        selected = select;
+        invalidate();
     }
 
 }

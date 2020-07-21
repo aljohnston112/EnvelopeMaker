@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout_save"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActivitySaveFile">
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_input_layout_save"
+        app:layout_constraintStart_toStartOf="@+id/text_input_layout_save"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_save" />
+
+    <TextView
+        android:id="@+id/text_view_save"
+        style="@style/TextAppearance.MdcTypographyStyles.Headline3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/save_file_text"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_save"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_save"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/save_file_hint"
+        app:layout_constraintBottom_toTopOf="@+id/button_save"
+        app:layout_constraintEnd_toEndOf="@+id/text_view_save"
+        app:layout_constraintStart_toStartOf="@+id/text_view_save"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_save">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_save"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

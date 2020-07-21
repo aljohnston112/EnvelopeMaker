@@ -9,8 +9,9 @@
 #include <string>
 #include "../DataGeneration/WaveMaker.h"
 
+template <typename T>
 struct SaveFiles {
-    bool insert(std::string name, WaveMaker env) {
+    bool insert(std::string name, WaveMaker<T> env) {
         if (envs.find(name) == envs.end()) {
             envs.insert(std::pair{name, env});
             return true;
@@ -18,7 +19,7 @@ struct SaveFiles {
         return false;
     };
 private:
-    std::map<std::string, WaveMaker> envs{};
+    std::map<std::string, WaveMaker<T>> envs{};
 };
 
 #endif //HELLOOBOE_SAVEFILES_H

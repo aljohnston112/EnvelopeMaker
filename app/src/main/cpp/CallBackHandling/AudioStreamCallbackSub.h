@@ -11,7 +11,7 @@
 #include "CallbackContainerI.h"
 
 struct AudioStreamCallbackSub : public oboe::AudioStreamCallback {
-    AudioStreamCallbackSub() {};
+    AudioStreamCallbackSub() : callbackContainerF(), callbackContainerI() {};
 
     ~AudioStreamCallbackSub() {};
 
@@ -23,16 +23,16 @@ struct AudioStreamCallbackSub : public oboe::AudioStreamCallback {
     void onErrorAfterClose(oboe::AudioStream *, oboe::Result) override;
 
     void insertF(std::vector<float> data) {
-        ccf.insert(data);
+        callbackContainerF.insert(data);
     }
 
     void insertI(std::vector<int16_t> data) {
-        cci.insert(data);
+        callbackContainerI.insert(data);
     }
 
 private:
-    CallbackContainerF ccf{};
-    CallbackContainerI cci{};
+    CallbackContainerF callbackContainerF;
+    CallbackContainerI callbackContainerI;
 };
 
 #endif //HELLOOBOE_AUDIOSTREAMCALLBACKSUB_H

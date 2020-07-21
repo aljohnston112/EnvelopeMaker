@@ -8,6 +8,8 @@
 #include <vector>
 
 struct CallbackContainerI {
+    CallbackContainerI() : data() {};
+
     void insert(std::vector<int16_t> pushData);
 
     std::vector<int16_t> get(int frames);
