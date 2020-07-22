@@ -8,10 +8,6 @@ public class NativeMethods {
 
     public static native boolean audioDataIsFloat();
 
-    public static native float[] loadDataFloat();
-
-    public static native short[] loadDataShort();
-
     public static native double getMinAmp();
 
     public static native double getMaxAmp();
@@ -21,6 +17,8 @@ public class NativeMethods {
     public static native double getMaxFreq();
 
     public static native float[] loadConstant(double start, double length, int row, int col);
+
+    public static native void makeSound();
 
     /*
     public static native float[] loadExponential(double start, double end, double length, int row, int col);

@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class ActivityAmpMaker extends AppCompatActivity {
 
-    int col;
+    private int col;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -44,9 +44,8 @@ struct AudioStreamHolder {
             waveMakerF.getMinAmp();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMinAmp();
-        } else{
-            return nullptr;
         }
+            return NULL;
     }
 
     template <typename T>
@@ -55,9 +54,8 @@ struct AudioStreamHolder {
             waveMakerF.getMaxAmp();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMaxAmp();
-        } else{
-            return nullptr;
         }
+        return NULL;
     }
 
     template <typename T>
@@ -66,9 +64,8 @@ struct AudioStreamHolder {
             waveMakerF.getMinFreq();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMinFreq();
-        } else{
-            return nullptr;
         }
+        return NULL;
     }
 
     template <typename T>
@@ -77,44 +74,19 @@ struct AudioStreamHolder {
             waveMakerF.getMaxFreq();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMaxFreq();
-        } else{
-            return nullptr;
         }
+        return NULL;
     }
 
     template<typename T>
-    std::vector<T> LoadData() {
-        double magnitude = 0.5;
-        double frequency = 444.0;
-        double radians = 0.0;
-        double seconds = 2.0;
-        int samplesPerSecond = managedStream->getSampleRate();
-        int points = length(seconds, samplesPerSecond);
-        double x0 = 0.0;
-        double y0 = 222.0;
-        double x1 = 8.0;
-        double y1 = 444.0;
-
-        Exponential exponential{std::pair{x0, y0}, std::pair{x1, y1}};
-        FrequencyEnvelope<T> frequencyEnvelope{exponential, exponential.Function::fun<T>(x0, x1, points)};
-
-        x0 = 0.0;
-        y0 = 1.0;
-        x1 = 8.0;
-        y1 = 0.0;
-
-        Linear linear{std::pair{x0, y0}, std::pair{x1, y1}};
-        AmplitudeEnvelope<T> amplitudeEnvelope{linear, linear.Function::fun<T>(x0, x1, points)};
-
-        auto data = make<T>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond);
+    void loadData() {
         if constexpr(std::is_same<T, float>::value) {
             audioStreamCallbackSub.insertF(
-                    make<T>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond));
+                    waveMakerF.make(sampleRate));
         } else if constexpr(std::is_same<T, int16_t>::value) {
             audioStreamCallbackSub.insertI(
-                    make<T>(amplitudeEnvelope, frequencyEnvelope, radians, samplesPerSecond));
+                    waveMakerI.make(sampleRate));
         }
-        return data;
     };
 
 private:
@@ -123,7 +95,7 @@ private:
     bool isFloatData;
     float sampleRate;
 
-    // Not initialized
+    // Initialized in Constructor
     AudioStreamCallbackSub audioStreamCallbackSub;
     WaveMaker<float> waveMakerF;
     WaveMaker<int16_t> waveMakerI;

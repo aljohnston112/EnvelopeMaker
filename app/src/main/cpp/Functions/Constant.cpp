@@ -6,7 +6,7 @@
 
 Constant::Constant(double cnst) {
     c = cnst;
-    addPoint(std::pair{0, cnst});
+    addPoint(std::pair<double, double>{0, cnst});
     setMin(cnst);
     setMax(cnst);
 }

@@ -29,14 +29,7 @@ struct WaveMaker {
         for(int i = 0; i < index; i++){
             iterator++;
         }
-        try {
-            amps.insert(iterator, ae);
-        } catch (std::exception& exception){
-            std::string message{exception.what()};
-            __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", message.c_str());
-        } catch(...){
-            __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Oh no");
-        }
+            amps.insert(iterator, &ae);
     };
 
     void insert(FrequencyEnvelope<T>& fe, int index) {
@@ -47,35 +40,37 @@ struct WaveMaker {
         for(int i = 0; i < index; i++){
             iterator++;
         }
-        freqs.insert(iterator, fe); };
+        freqs.insert(iterator, &fe); };
 
-    void erase(typename std::list<AmplitudeEnvelope<T>>::iterator index) { amps.erase(index); }
+    void erase(typename std::list<AmplitudeEnvelope<T>>::iterator index) { amps.erase(index); };
 
-    void erase(typename std::list<FrequencyEnvelope<T>>::iterator index) { freqs.erase(index); }
+    void erase(typename std::list<FrequencyEnvelope<T>>::iterator index) { freqs.erase(index); };
 
-    std::vector<T> make(int index, int samplesPerSecond) {
+    std::vector<T> make(int samplesPerSecond) {
         double radians = 0;
         std::vector<float> data{};
         auto amp = amps.begin();
         auto freq = freqs.begin();
         double amplitude;
         for (int i = 0; i < amps.size(); i++) {
-            if (amp->getAmplitudes()->size() != 0) {
-                if (freq->getFrequencies()->size() != 0) {
-                    data.insert(data.size() - 1,
-                                ::make<T>(amp->getAmplitudes(), freq->getFrequencies(), radians,
-                                          samplesPerSecond));
+            if ((*amp)->getAmplitudes()->size() != 0) {
+                if ((*freq)->getFrequencies()->size() != 0) {
+                    std::vector<T> concat{::make<T>(**amp, **freq, radians,
+                            samplesPerSecond)};
+                    data.insert(data.end(),
+                                concat.begin(), concat.end());
                 } else {
-                    for (int j = 0; j < amp->getAmplitudes()->size(); j++) {
+                    for (int j = 0; j < (*amp)->getAmplitudes()->size(); j++) {
                         data.push_back(0.0);
                     }
                 }
             } else {
                 amplitude = 1.0;
-                if (freq->getFrequencies()->size() != 0) {
-                    data.insert(data.size() - 1,
-                                ::make<T>(amplitude, freq->getFrequencies(), radians,
-                                          samplesPerSecond));
+                std::vector<T> concat{::make<T>(amplitude, (**freq), radians,
+                        samplesPerSecond)};
+                if ((*freq)->getFrequencies()->size() != 0) {
+                    data.insert(data.end(),
+                                concat.begin(), concat.end());
                 }
             }
         }
@@ -84,7 +79,7 @@ struct WaveMaker {
     double getMaxAmp() {
         std::vector<double> ampsList{};
         for (auto a : amps) {
-            ampsList.push_back(a.getMax());
+            ampsList.push_back((*a).getMax());
         }
         return *(std::max_element(ampsList.begin(), ampsList.end()));
     };
@@ -92,7 +87,7 @@ struct WaveMaker {
     double getMaxFreq() {
         std::vector<double> freqsList{};
         for (auto f : freqs) {
-            freqsList.push_back(f.getMax());
+            freqsList.push_back((*f).getMax());
         }
         return *(std::max_element(freqsList.begin(), freqsList.end()));
     };
@@ -100,7 +95,7 @@ struct WaveMaker {
     double getMinAmp() {
         std::vector<double> ampsList{};
         for (auto a : amps) {
-            ampsList.push_back(a.getMin());
+            ampsList.push_back((*a).getMin());
         }
         return *(std::min_element(ampsList.begin(), ampsList.end()));
     };
@@ -108,14 +103,14 @@ struct WaveMaker {
     double getMinFreq() {
         std::vector<double> freqsList{};
         for (auto f : freqs) {
-            freqsList.push_back(f.getMin());
+            freqsList.push_back((*f).getMin());
         }
         return *(std::min_element(freqsList.begin(), freqsList.end()));
     };
 
 private:
-    std::list<AmplitudeEnvelope<T>> amps;
-    std::list<FrequencyEnvelope<T>> freqs;
+    std::list<AmplitudeEnvelope<T>*> amps;
+    std::list<FrequencyEnvelope<T>*> freqs;
 };
 
 #endif //HELLOOBOE_WAVEMAKER_H

@@ -10,7 +10,7 @@ void CallbackContainerI::insert(std::vector<int16_t> pushData) {
 
 std::vector<int16_t> CallbackContainerI::get(int frames) {
     std::vector<int16_t> out{};
-    uint sub = 0;
+    int sub = 0;
     if (data.size() < frames) {
         sub = frames - data.size();
     }

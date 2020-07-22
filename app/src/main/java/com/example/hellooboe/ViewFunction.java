@@ -204,6 +204,8 @@ public class ViewFunction extends View {
         this.minY = minY;
         this.maxY = maxY;
         this.dataF = values;
+        isAddNew = false;
+        isConstant = false;
         invalidate();
     }
 
@@ -211,12 +213,16 @@ public class ViewFunction extends View {
         this.minY = minY;
         this.maxY = maxY;
         this.dataS = values;
+        isAddNew = false;
+        isConstant = false;
         invalidate();
     }
 
     void setData(double minY, double maxY) {
         this.minY = Math.min(minY, this.minY);
         this.maxY = Math.max(maxY, this.maxY);
+        isAddNew = false;
+        isConstant = false;
         invalidate();
     }
 
@@ -263,6 +269,7 @@ public class ViewFunction extends View {
 
     void setAsAddNew() {
         isAddNew = true;
+        isConstant = false;
     }
 
     private class OnClickListenerViewFunction implements OnClickListener {

@@ -10,7 +10,7 @@ void CallbackContainerF::insert(std::vector<float> pushData) {
 
 std::vector<float> CallbackContainerF::get(int frames) {
     std::vector<float> out{};
-    uint sub = 0;
+    int sub = 0;
     if (data.size() < frames) {
         sub = frames - data.size();
     }

@@ -20,8 +20,8 @@ struct Function {
             double t;
             for (int i = 0; i < points; i++) {
                 t = fun(x0 + (i * dx));
-                min = std::min(t, min);
-                max = std::max(t, max);
+                min = std::min<double>(t, min);
+                max = std::max<double>(t, max);
                 out.push_back(t);
             }
         return out;

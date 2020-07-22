@@ -30,35 +30,9 @@ Java_com_example_hellooboe_NativeMethods_destroyStream(JNIEnv *env, jclass thiz)
 }
 
 extern "C"
-JNIEXPORT jfloatArray JNICALL
-Java_com_example_hellooboe_NativeMethods_loadDataFloat(JNIEnv *env, jclass thiz) {
-    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading data");
-    jfloatArray outData;
-    if (audioStreamHolder->audioDataIsFloat()) {
-        std::vector<float> data = audioStreamHolder->LoadData<float>();
-        outData = env->NewFloatArray(data.size());
-        jsize size = env->GetArrayLength(outData);
-        env->SetFloatArrayRegion(outData, 0, size, data.data());
-    }
-    return outData;
-}
-
-extern "C"
-JNIEXPORT jshortArray JNICALL
-Java_com_example_hellooboe_NativeMethods_loadDataShort(JNIEnv *env, jclass thiz) {
-    jshortArray outData;
-    if (!audioStreamHolder->audioDataIsFloat()) {
-        std::vector<int16_t> data = audioStreamHolder->LoadData<int16_t>();
-        outData = env->NewShortArray(data.size());
-        jsize size = env->GetArrayLength(outData);
-        env->SetShortArrayRegion(outData, 0, size, data.data());
-    }
-    return outData;
-}
-
-extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_example_hellooboe_NativeMethods_getMinAmp(JNIEnv *env, jclass thiz) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "min amp");
     if (audioStreamHolder->audioDataIsFloat()) {
         return audioStreamHolder->getMinAmp<float>();
     } else {
@@ -69,6 +43,7 @@ Java_com_example_hellooboe_NativeMethods_getMinAmp(JNIEnv *env, jclass thiz) {
 extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_example_hellooboe_NativeMethods_getMaxAmp(JNIEnv *env, jclass thiz) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "max amp");
     if (audioStreamHolder->audioDataIsFloat()) {
         return audioStreamHolder->getMaxAmp<float>();
     } else {
@@ -79,6 +54,7 @@ Java_com_example_hellooboe_NativeMethods_getMaxAmp(JNIEnv *env, jclass thiz) {
 extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_example_hellooboe_NativeMethods_getMinFreq(JNIEnv *env, jclass thiz) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "min freq");
     if (audioStreamHolder->audioDataIsFloat()) {
         return audioStreamHolder->getMinFreq<float>();
     } else {
@@ -89,6 +65,7 @@ Java_com_example_hellooboe_NativeMethods_getMinFreq(JNIEnv *env, jclass thiz) {
 extern "C"
 JNIEXPORT jdouble JNICALL
 Java_com_example_hellooboe_NativeMethods_getMaxFreq(JNIEnv *env, jclass thiz) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "max freq");
     if (audioStreamHolder->audioDataIsFloat()) {
         return audioStreamHolder->getMaxFreq<float>();
     } else {
@@ -109,7 +86,7 @@ AudioStreamHolder::~AudioStreamHolder() {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Destroyed stream");
 }
 
-void AudioStreamHolder::initAudioStream() {
+void AudioStreamHolder::initAudioStream(){
     oboe::AudioStreamBuilder builder{};
     builder.setDirection(oboe::Direction::Output);
     builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
@@ -133,6 +110,7 @@ JNIEXPORT jfloatArray JNICALL
 Java_com_example_hellooboe_NativeMethods_loadConstant(JNIEnv *env, jclass clazz, jdouble start,
                                                       jdouble length, jint row,
                                                       jint col) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading constant");
     // x1, x2, numPoints
     Constant constant{start};
     std::vector<float> data{
@@ -140,22 +118,33 @@ Java_com_example_hellooboe_NativeMethods_loadConstant(JNIEnv *env, jclass clazz,
     if (row == 0) {
         AmplitudeEnvelope amplitudeEnvelope{constant, data};
         audioStreamHolder->getWaveMaker<float>().insert(amplitudeEnvelope, col);
-
     } else if (row == 1) {
         FrequencyEnvelope frequencyEnvelope{constant, data};
         audioStreamHolder->getWaveMaker<float>().insert(frequencyEnvelope, col);
     }
-
     jfloatArray outData;
     if (audioStreamHolder->audioDataIsFloat()) {
         outData = env->NewFloatArray(data.size());
         jsize size = env->GetArrayLength(outData);
         env->SetFloatArrayRegion(outData, 0, size, data.data());
     }
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loaded constant");
     return outData;
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_example_hellooboe_NativeMethods_audioDataIsFloat(JNIEnv *env, jclass clazz) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "audioDataIsFloat");
     return audioStreamHolder->audioDataIsFloat();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_hellooboe_NativeMethods_makeSound(JNIEnv *env, jclass clazz) {
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Making sound");
+    if(audioStreamHolder->audioDataIsFloat()) {
+        audioStreamHolder->loadData<float>();
+    } else{
+        audioStreamHolder->loadData<int16_t>();
+    }
 }
