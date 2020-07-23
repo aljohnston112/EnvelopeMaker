@@ -11,13 +11,9 @@
 template <typename T>
 struct FrequencyEnvelope : Envelope {
 
-    FrequencyEnvelope<T>() : freqs() {};
-
-    ~FrequencyEnvelope<T>() {};
-
-    FrequencyEnvelope<T>(Function &ffunction, const std::vector<T> freqsIn) {
-        freqs = freqsIn;
-        function = &ffunction;
+    FrequencyEnvelope<T>(Function *ffunction, double length, float sampleRate) {
+        freqs = ffunction->Function::fun<T>(0, 1, (length * sampleRate));
+        function = ffunction;
     };
 
     FrequencyEnvelope<T>(FrequencyEnvelope<T> const &frequencyEnvelope) : freqs(

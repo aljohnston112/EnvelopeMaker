@@ -42,6 +42,7 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 NativeMethods.makeSound();
+                NativeMethods.startStream();
             }
         });
     }
@@ -148,12 +149,11 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        int col = data.getIntExtra(ViewFunction.COL_DATA, -1);
+        double min = NativeMethods.getMinAmp() - 1;
+        double max = NativeMethods.getMaxAmp() + 1;
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ViewFunction.ACTIVITY_AMP_MAKER) {
-                int col = data.getIntExtra(ViewFunction.COL_DATA, -1);
-                double min = NativeMethods.getMinAmp() - 1;
-                double max = NativeMethods.getMaxAmp() + 1;
                 if (col != -1 && min != Double.NaN && max != Double.NaN) {
                     if (NativeMethods.audioDataIsFloat()) {
                         float[] dataF = data.getFloatArrayExtra(ViewFunction.FLOAT_DATA);
@@ -162,7 +162,7 @@ public class ActivityMain extends AppCompatActivity {
                         short[] dataS = data.getShortArrayExtra(ViewFunction.SHORT_DATA);
                         ((ViewFunction) linearLayoutAmpRow.getChildAt(col)).setData(min, max, dataS);
                     }
-                    ViewFunction viewFunctionAmp = new ViewFunction(this, true, col+1);
+                    ViewFunction viewFunctionAmp = new ViewFunction(this, true, col + 1);
                     viewFunctionAmp.setAsAddNew();
                     linearLayoutAmpRow.addView(viewFunctionAmp);
                     if (linearLayoutFreqRow.getChildCount() < linearLayoutAmpRow.getChildCount()) {
@@ -175,9 +175,6 @@ public class ActivityMain extends AppCompatActivity {
                     }
                 }
             } else if (requestCode == ViewFunction.ACTIVITY_FREQ_MAKER) {
-                int col = data.getIntExtra(ViewFunction.COL_DATA, -1);
-                double min = NativeMethods.getMinFreq() - 1;
-                double max = NativeMethods.getMaxFreq() + 1;
                 if (col != -1 && min != Double.NaN && max != Double.NaN) {
                     if (NativeMethods.audioDataIsFloat()) {
                         float[] dataF = data.getFloatArrayExtra(ViewFunction.FLOAT_DATA);
@@ -188,13 +185,13 @@ public class ActivityMain extends AppCompatActivity {
                     }
                     ViewFunction viewFunctionFreq = new ViewFunction(this, false, col+1);
                     viewFunctionFreq.setAsAddNew();
-                    linearLayoutAmpRow.addView(viewFunctionFreq);
+                    linearLayoutFreqRow.addView(viewFunctionFreq);
                     if (linearLayoutAmpRow.getChildCount() < linearLayoutFreqRow.getChildCount()) {
                         int toAdd = linearLayoutFreqRow.getChildCount() - linearLayoutAmpRow.getChildCount();
                         for (int i = 0; i < toAdd; i++) {
                             ViewFunction viewFunctionAmp = new ViewFunction(this, true, linearLayoutAmpRow.getChildCount());
                             viewFunctionAmp.setAsAddNew();
-                            linearLayoutFreqRow.addView(viewFunctionAmp);
+                            linearLayoutAmpRow.addView(viewFunctionAmp);
                         }
                     }
                 }

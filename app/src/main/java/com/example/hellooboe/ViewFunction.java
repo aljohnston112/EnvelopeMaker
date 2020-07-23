@@ -168,7 +168,7 @@ public class ViewFunction extends View {
             canvas.drawRect((int) Math.round(2.0 * height / 8.0), (int) Math.round(3.5 * height / 8.0),
                     (int) Math.round(6.0 * width / 8.0), (int) Math.round(4.5 * width / 8.0), lineColor);
         }
-       drawBorder(canvas);
+        drawBorder(canvas);
     }
 
     private void drawBorder(Canvas canvas) {
@@ -201,26 +201,28 @@ public class ViewFunction extends View {
     }
 
     void setData(double minY, double maxY, float[] values) {
+        int numPoints = (int) Math.round(width / 2.0);
+        int skip = values.length / numPoints;
         this.minY = minY;
         this.maxY = maxY;
-        this.dataF = values;
+        this.dataF = new float[numPoints];
+        for (int i = 0; i < dataF.length; i++) {
+            dataF[i] = values[i * skip];
+        }
         isAddNew = false;
         isConstant = false;
         invalidate();
     }
 
     void setData(double minY, double maxY, short[] values) {
+        int numPoints = (int) Math.round(width / 2.0);
+        int skip = values.length / numPoints;
         this.minY = minY;
         this.maxY = maxY;
-        this.dataS = values;
-        isAddNew = false;
-        isConstant = false;
-        invalidate();
-    }
-
-    void setData(double minY, double maxY) {
-        this.minY = Math.min(minY, this.minY);
-        this.maxY = Math.max(maxY, this.maxY);
+        this.dataF = new float[numPoints];
+        for (int i = 0; i < dataF.length; i++) {
+            dataF[i] = values[i * skip];
+        }
         isAddNew = false;
         isConstant = false;
         invalidate();
@@ -270,6 +272,7 @@ public class ViewFunction extends View {
     void setAsAddNew() {
         isAddNew = true;
         isConstant = false;
+        invalidate();
     }
 
     private class OnClickListenerViewFunction implements OnClickListener {
@@ -287,11 +290,7 @@ public class ViewFunction extends View {
                     ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_FREQ_MAKER);
                 }
             } else{
-                if(selected){
-                    selected = false;
-                } else {
-                    selected = true;
-                }
+                selected = !selected;
                 invalidate();
             }
         }

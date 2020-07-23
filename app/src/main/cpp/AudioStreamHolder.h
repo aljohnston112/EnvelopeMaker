@@ -23,17 +23,25 @@ struct AudioStreamHolder {
 
     bool audioDataIsFloat() { return isFloatData; };
 
-    float getSampleRate(){
+    float getSampleRate() {
         return sampleRate;
     }
 
-    template <typename T>
-    WaveMaker<T>& getWaveMaker() {
+    void startStream() {
+        managedStream->start();
+    }
+
+    void stopStream() {
+        managedStream->stop();
+    }
+
+    template<typename T>
+    WaveMaker<T> &getWaveMaker() {
         if constexpr(std::is_same<T, float>::value) {
             return waveMakerF;
-        } else  if constexpr(std::is_same<T, int16_t >::value){
+        } else if constexpr(std::is_same<T, int16_t>::value) {
             return waveMakerI;
-        } else{
+        } else {
             return nullptr;
         }
     }
@@ -41,7 +49,7 @@ struct AudioStreamHolder {
     template <typename T>
     T getMinAmp() {
         if constexpr(std::is_same<T, float>::value) {
-            waveMakerF.getMinAmp();
+            return waveMakerF.getMinAmp();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMinAmp();
         }
@@ -51,7 +59,7 @@ struct AudioStreamHolder {
     template <typename T>
     T getMaxAmp() {
         if constexpr(std::is_same<T, float>::value) {
-            waveMakerF.getMaxAmp();
+            return waveMakerF.getMaxAmp();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMaxAmp();
         }
@@ -61,7 +69,7 @@ struct AudioStreamHolder {
     template <typename T>
     T getMinFreq() {
         if constexpr(std::is_same<T, float>::value) {
-            waveMakerF.getMinFreq();
+            return waveMakerF.getMinFreq();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMinFreq();
         }
@@ -71,7 +79,7 @@ struct AudioStreamHolder {
     template <typename T>
     T getMaxFreq() {
         if constexpr(std::is_same<T, float>::value) {
-            waveMakerF.getMaxFreq();
+            return waveMakerF.getMaxFreq();
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMaxFreq();
         }

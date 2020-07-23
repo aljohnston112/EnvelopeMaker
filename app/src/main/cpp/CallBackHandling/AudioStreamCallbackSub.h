@@ -11,9 +11,14 @@
 #include "CallbackContainerI.h"
 
 struct AudioStreamCallbackSub : public oboe::AudioStreamCallback {
-    AudioStreamCallbackSub() : callbackContainerF(), callbackContainerI() {};
+    AudioStreamCallbackSub() : callbackContainerF(), callbackContainerI() {
+    };
 
     ~AudioStreamCallbackSub() {};
+
+    void setStream(oboe::ManagedStream *mmanagedStream) {
+        managedStream = mmanagedStream;
+    }
 
     oboe::DataCallbackResult
     onAudioReady(oboe::AudioStream *audioStream, void *audioData, int32_t numFrames) override;
@@ -33,6 +38,7 @@ struct AudioStreamCallbackSub : public oboe::AudioStreamCallback {
 private:
     CallbackContainerF callbackContainerF;
     CallbackContainerI callbackContainerI;
+    oboe::ManagedStream *managedStream;
 };
 
 #endif //HELLOOBOE_AUDIOSTREAMCALLBACKSUB_H

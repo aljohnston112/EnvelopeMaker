@@ -47,15 +47,17 @@
         </LinearLayout>
     </HorizontalScrollView>
 </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        app:srcCompat="@drawable/ic_play_arrow_white_24dp"
-        android:contentDescription="@string/floating_action_button_desc"
         android:layout_margin="16dp"
-        app:tint="@null"
-        android:backgroundTint="@color/colorPrimaryDark" />
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:contentDescription="@string/floating_action_button_desc"
+        android:onClick="onMainFABClicked"
+        app:srcCompat="@drawable/ic_play_arrow_white_24dp"
+        app:tint="@null" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

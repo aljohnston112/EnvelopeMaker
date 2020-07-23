@@ -14,12 +14,14 @@ std::vector<int16_t> CallbackContainerI::get(int frames) {
     if (data.size() < frames) {
         sub = frames - data.size();
     }
-    for (int i = 0; i < frames - sub; i++) {
-        out.push_back(data[i]);
+    if (data.size()) {
+        for (int i = 0; i < frames - sub; i++) {
+            out.push_back(data[i]);
+        }
+        for (int i = 0; i < sub; i++) {
+            out.push_back(0);
+        }
+        data.erase(data.begin(), data.begin() + frames - sub);
     }
-    for (int i = 0; i < sub; i++) {
-        out.push_back(0);
-    }
-    data.erase(data.begin(), data.begin() + frames - sub);
     return out;
 }

@@ -30,13 +30,13 @@ public class ActivityFreqMaker extends AppCompatActivity {
     }
 
     public void onButtonFreqMakerCreate(View view) {
-        AutoCompleteTextView autoCompleteTextViewFreqFunction = findViewById(R.id.auto_complete_text_view_amp_function);
+        AutoCompleteTextView autoCompleteTextViewFreqFunction = findViewById(R.id.auto_complete_text_view_freq_function);
         String function = autoCompleteTextViewFreqFunction.getText().toString();
-        TextInputEditText textInputEditTextStartFreq = findViewById(R.id.text_input_edit_start_amp);
-        TextInputEditText textInputEditTextEndFreq = findViewById(R.id.edit_text_end_amp);
-        TextInputEditText textInputEditTextFreqLength = findViewById(R.id.edit_text_amp_length);
-        TextInputEditText textInputEditTextMinFreq = findViewById(R.id.edit_text_min_amp);
-        TextInputEditText textInputEditTextMaxFreq = findViewById(R.id.edit_text_max_amp);
+        TextInputEditText textInputEditTextStartFreq = findViewById(R.id.edit_text_start_freq);
+        TextInputEditText textInputEditTextEndFreq = findViewById(R.id.edit_text_end_freq);
+        TextInputEditText textInputEditTextFreqLength = findViewById(R.id.edit_text_freq_length);
+        TextInputEditText textInputEditTextMinFreq = findViewById(R.id.edit_text_min_freq);
+        TextInputEditText textInputEditTextMaxFreq = findViewById(R.id.edit_text_max_freq);
         String startFreqString = textInputEditTextStartFreq.getText().toString();
         double startFreq = -1;
         if (!startFreqString.isEmpty()) {
@@ -47,10 +47,10 @@ public class ActivityFreqMaker extends AppCompatActivity {
         if (!endFreqString.isEmpty()) {
             endFreq = Double.valueOf(endFreqString);
         }
-        String ampLengthString = textInputEditTextFreqLength.getText().toString();
-        double ampLength = -1;
-        if (!ampLengthString.isEmpty()) {
-            ampLength = Double.valueOf(ampLengthString);
+        String freqLengthString = textInputEditTextFreqLength.getText().toString();
+        double freqLength = -1;
+        if (!freqLengthString.isEmpty()) {
+            freqLength = Double.valueOf(freqLengthString);
         }
         String minFreqString = textInputEditTextMinFreq.getText().toString();
         double minFreq = -1;
@@ -66,13 +66,13 @@ public class ActivityFreqMaker extends AppCompatActivity {
         boolean mustReturn = false;
         if (startFreq == -1) {
             mustReturn = true;
-            TextInputLayout textInputLayoutStartFreq = findViewById(R.id.text_input_layout_start_amp);
-            textInputLayoutStartFreq.setError("Positive amplitude needed");
+            TextInputLayout textInputLayoutStartFreq = findViewById(R.id.text_input_layout_start_freq);
+            textInputLayoutStartFreq.setError("Frequency needed");
         }
 
-        if (ampLength == -1) {
+        if (freqLength == -1) {
             mustReturn = true;
-            TextInputLayout textInputLayoutStartFreq = findViewById(R.id.text_input_layout_amp_length);
+            TextInputLayout textInputLayoutStartFreq = findViewById(R.id.text_input_layout_freq_length);
             textInputLayoutStartFreq.setError("Positive length needed");
         }
 
@@ -81,7 +81,7 @@ public class ActivityFreqMaker extends AppCompatActivity {
         }
 
         if (function.contentEquals(getResources().getString(R.string.Constant))) {
-            float[] data = NativeMethods.loadConstant(startFreq, ampLength, 0, col);
+            float[] data = NativeMethods.loadConstant(startFreq, freqLength, 1, col);
             double min = NativeMethods.getMinFreq();
             double max = NativeMethods.getMaxFreq();
             Intent intent = new Intent();

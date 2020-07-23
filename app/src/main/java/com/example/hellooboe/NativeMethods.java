@@ -6,6 +6,10 @@ public class NativeMethods {
 
     public static native void destroyStream();
 
+    public static native void startStream();
+
+    public static native void stopStream();
+
     public static native boolean audioDataIsFloat();
 
     public static native double getMinAmp();

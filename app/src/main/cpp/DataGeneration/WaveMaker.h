@@ -21,26 +21,27 @@ struct WaveMaker {
 
     void push_back(FrequencyEnvelope<T> fe) { freqs.push_back(fe); };
 
-    void insert(AmplitudeEnvelope<T>& ae, int index) {
-        if(index < 0 || index > amps.size()){
+    void insert(AmplitudeEnvelope<T> *ae, int index) {
+        if (index < 0 || index > amps.size()) {
             throw std::range_error("index passed to insert() was out of bounds");
         }
         auto iterator = amps.begin();
-        for(int i = 0; i < index; i++){
+        for (int i = 0; i < index; i++) {
             iterator++;
         }
-            amps.insert(iterator, &ae);
+        amps.insert(iterator, ae);
     };
 
-    void insert(FrequencyEnvelope<T>& fe, int index) {
-        if(index < 0 || index > freqs.size()) {
+    void insert(FrequencyEnvelope<T> *fe, int index) {
+        if (index < 0 || index > freqs.size()) {
             throw std::range_error("index passed to insert() was out of bounds");
         }
         auto iterator = freqs.begin();
-        for(int i = 0; i < index; i++){
+        for (int i = 0; i < index; i++) {
             iterator++;
         }
-        freqs.insert(iterator, &fe); };
+        freqs.insert(iterator, fe);
+    };
 
     void erase(typename std::list<AmplitudeEnvelope<T>>::iterator index) { amps.erase(index); };
 
@@ -48,14 +49,14 @@ struct WaveMaker {
 
     std::vector<T> make(int samplesPerSecond) {
         double radians = 0;
-        std::vector<float> data{};
+        std::vector<T> data{};
         auto amp = amps.begin();
         auto freq = freqs.begin();
         double amplitude;
         for (int i = 0; i < amps.size(); i++) {
-            if ((*amp)->getAmplitudes()->size() != 0) {
-                if ((*freq)->getFrequencies()->size() != 0) {
-                    std::vector<T> concat{::make<T>(**amp, **freq, radians,
+            if ((amp != amps.end()) && (*amp)->getAmplitudes()->size() != 0) {
+                if ((freq != freqs.end()) && (*freq)->getFrequencies()->size() != 0) {
+                    std::vector<T> concat{::make < T > (**amp, **freq, radians,
                             samplesPerSecond)};
                     data.insert(data.end(),
                                 concat.begin(), concat.end());
@@ -66,14 +67,15 @@ struct WaveMaker {
                 }
             } else {
                 amplitude = 1.0;
-                std::vector<T> concat{::make<T>(amplitude, (**freq), radians,
-                        samplesPerSecond)};
-                if ((*freq)->getFrequencies()->size() != 0) {
+                if ((freq != freqs.end()) && (*freq)->getFrequencies()->size() != 0) {
+                    std::vector<T> concat{::make < T > (amplitude, (**freq), radians,
+                            samplesPerSecond)};
                     data.insert(data.end(),
                                 concat.begin(), concat.end());
                 }
             }
         }
+        return data;
     }
 
     double getMaxAmp() {
@@ -84,20 +86,20 @@ struct WaveMaker {
         return *(std::max_element(ampsList.begin(), ampsList.end()));
     };
 
-    double getMaxFreq() {
-        std::vector<double> freqsList{};
-        for (auto f : freqs) {
-            freqsList.push_back((*f).getMax());
-        }
-        return *(std::max_element(freqsList.begin(), freqsList.end()));
-    };
-
     double getMinAmp() {
         std::vector<double> ampsList{};
         for (auto a : amps) {
             ampsList.push_back((*a).getMin());
         }
         return *(std::min_element(ampsList.begin(), ampsList.end()));
+    };
+
+    double getMaxFreq() {
+        std::vector<double> freqsList{};
+        for (auto f : freqs) {
+            freqsList.push_back((*f).getMax());
+        }
+        return *(std::max_element(freqsList.begin(), freqsList.end()));
     };
 
     double getMinFreq() {
@@ -108,9 +110,25 @@ struct WaveMaker {
         return *(std::min_element(freqsList.begin(), freqsList.end()));
     };
 
+    AmplitudeEnvelope<T> *getAmpEnv(int col) {
+        auto out = amps.begin();
+        for (int i = 0; i < col; i++) {
+            out++;
+        }
+        return (*out);
+    };
+
+    FrequencyEnvelope<T> *getFreqEnv(int col) {
+        auto out = freqs.begin();
+        for (int i = 0; i < col; i++) {
+            out++;
+        }
+        return (*out);
+    };
+
 private:
-    std::list<AmplitudeEnvelope<T>*> amps;
-    std::list<FrequencyEnvelope<T>*> freqs;
+    std::list<AmplitudeEnvelope<T> *> amps;
+    std::list<FrequencyEnvelope<T> *> freqs;
 };
 
 #endif //HELLOOBOE_WAVEMAKER_H

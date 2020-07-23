@@ -77,7 +77,6 @@ AudioStreamHolder::AudioStreamHolder() : audioStreamCallbackSub(),
                                          waveMakerF(),
                                          waveMakerI() {
     initAudioStream();
-    managedStream->requestStart();
 }
 
 AudioStreamHolder::~AudioStreamHolder() {
@@ -86,7 +85,7 @@ AudioStreamHolder::~AudioStreamHolder() {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Destroyed stream");
 }
 
-void AudioStreamHolder::initAudioStream(){
+void AudioStreamHolder::initAudioStream() {
     oboe::AudioStreamBuilder builder{};
     builder.setDirection(oboe::Direction::Output);
     builder.setPerformanceMode(oboe::PerformanceMode::LowLatency);
@@ -103,6 +102,7 @@ void AudioStreamHolder::initAudioStream(){
     int bytePerSample = managedStream->getBytesPerSample();
     isFloatData = bytePerSample != 2;
     sampleRate = managedStream->getSampleRate();
+    this->audioStreamCallbackSub.setStream(&managedStream);
 }
 
 extern "C"
@@ -111,22 +111,33 @@ Java_com_example_hellooboe_NativeMethods_loadConstant(JNIEnv *env, jclass clazz,
                                                       jdouble length, jint row,
                                                       jint col) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading constant");
-    // x1, x2, numPoints
-    Constant constant{start};
-    std::vector<float> data{
-            constant.Function::fun<float>(0, 1, (length * audioStreamHolder->getSampleRate()))};
-    if (row == 0) {
-        AmplitudeEnvelope amplitudeEnvelope{constant, data};
-        audioStreamHolder->getWaveMaker<float>().insert(amplitudeEnvelope, col);
-    } else if (row == 1) {
-        FrequencyEnvelope frequencyEnvelope{constant, data};
-        audioStreamHolder->getWaveMaker<float>().insert(frequencyEnvelope, col);
-    }
     jfloatArray outData;
-    if (audioStreamHolder->audioDataIsFloat()) {
-        outData = env->NewFloatArray(data.size());
-        jsize size = env->GetArrayLength(outData);
-        env->SetFloatArrayRegion(outData, 0, size, data.data());
+    if (row == 0) {
+        if (audioStreamHolder->audioDataIsFloat()) {
+            audioStreamHolder->getWaveMaker<float>().insert(
+                    new AmplitudeEnvelope<float>{new Constant{start}, length,
+                                                 audioStreamHolder->getSampleRate()}, col);
+            std::vector<float> *data{
+                    audioStreamHolder->getWaveMaker<float>().getAmpEnv(col)->getAmplitudes()};
+            outData = env->NewFloatArray(data->size());
+            jsize size = env->GetArrayLength(outData);
+            env->SetFloatArrayRegion(outData, 0, size, data->data());
+        } else {
+            // TODO
+        }
+    } else if (row == 1) {
+        if (audioStreamHolder->audioDataIsFloat()) {
+            audioStreamHolder->getWaveMaker<float>().insert(
+                    new FrequencyEnvelope<float>{new Constant{start}, length,
+                                                 audioStreamHolder->getSampleRate()}, col);
+            std::vector<float> *data{
+                    audioStreamHolder->getWaveMaker<float>().getFreqEnv(col)->getFrequencies()};
+            outData = env->NewFloatArray(data->size());
+            jsize size = env->GetArrayLength(outData);
+            env->SetFloatArrayRegion(outData, 0, size, data->data());
+        } else {
+            // TODO
+        }
     }
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loaded constant");
     return outData;
@@ -142,9 +153,21 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_hellooboe_NativeMethods_makeSound(JNIEnv *env, jclass clazz) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Making sound");
-    if(audioStreamHolder->audioDataIsFloat()) {
+    if (audioStreamHolder->audioDataIsFloat()) {
         audioStreamHolder->loadData<float>();
-    } else{
+    } else {
         audioStreamHolder->loadData<int16_t>();
     }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_hellooboe_NativeMethods_startStream(JNIEnv *env, jclass clazz) {
+    audioStreamHolder->startStream();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_hellooboe_NativeMethods_stopStream(JNIEnv *env, jclass clazz) {
+    audioStreamHolder->stopStream();
 }

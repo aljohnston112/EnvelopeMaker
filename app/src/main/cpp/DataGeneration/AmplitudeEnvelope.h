@@ -13,13 +13,9 @@
 template <typename T>
 struct AmplitudeEnvelope : Envelope {
 
-    AmplitudeEnvelope<T>() : amps() {};
-
-    ~AmplitudeEnvelope<T>() {};
-
-    AmplitudeEnvelope<T>(Function &ffunction, const std::vector<T> &ampsIn) {
-        amps = ampsIn;
-        function = &ffunction;
+    AmplitudeEnvelope<T>(Function *ffunction, double length, float sampleRate) {
+        amps = ffunction->Function::fun<T>(0, 1, (length * sampleRate));
+        function = ffunction;
     };
 
     AmplitudeEnvelope<T>(AmplitudeEnvelope<T> const &amplitudeEnvelope) : amps(
