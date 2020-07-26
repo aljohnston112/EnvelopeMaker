@@ -16,16 +16,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 public class ActivityAmpMaker extends AppCompatActivity {
 
     private int col;
-
-    String function;
-    double startAmp = -1;
-    double endAmp = -1;
-    double minAmp = -1;
-    double maxAmp = -1;
-    double ampLength = -1;
 
     ConstraintLayout constraintLayoutAmp;
 
@@ -46,6 +41,13 @@ public class ActivityAmpMaker extends AppCompatActivity {
     Button buttonCreate;
     Button buttonCancel;
 
+    String function;
+    double start = -1;
+    double end = -1;
+    double length = -1;
+    double min = -1;
+    double max = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,35 @@ public class ActivityAmpMaker extends AppCompatActivity {
         findViews();
         setUpFunctionAutoComplete();
         resizeButtons();
+        populate();
         col = getIntent().getIntExtra(ViewFunction.COL_NUMBER_KEY, -1);
+    }
+
+    private void populate() {
+        function = getIntent().getStringExtra(ViewFunction.FUNCTION_DATA);
+        if (function != null) {
+            autoCompleteTextViewAmpFunction.setText(function);
+        }
+        start = getIntent().getDoubleExtra(ViewFunction.START_DATA, -1);
+        if (start != -1) {
+            textInputEditStartAmp.setText(String.valueOf(start));
+        }
+        end = getIntent().getDoubleExtra(ViewFunction.END_DATA, -1);
+        if (end != -1) {
+            textInputEditEndAmp.setText(String.valueOf(end));
+        }
+        length = getIntent().getDoubleExtra(ViewFunction.LENGTH_DATA, -1);
+        if (length != -1) {
+            textInputEditAmpLength.setText(String.valueOf(length));
+        }
+        min = getIntent().getDoubleExtra(ViewFunction.MIN_DATA, -1);
+        if (min != -1) {
+            textInputEditMinAmp.setText(String.valueOf(min));
+        }
+        max = getIntent().getDoubleExtra(ViewFunction.MAX_DATA, -1);
+        if (max != -1) {
+            textInputEditMaxAmp.setText(String.valueOf(max));
+        }
     }
 
     private void findViews() {
@@ -103,32 +133,32 @@ public class ActivityAmpMaker extends AppCompatActivity {
 
     public void onButtonAmpMakerCreate(View view) {
         function = autoCompleteTextViewAmpFunction.getText().toString();
-        String startAmpString = textInputEditStartAmp.getText().toString();
+        String startAmpString = Objects.requireNonNull(textInputEditStartAmp.getText()).toString();
         if (!startAmpString.isEmpty()) {
-            startAmp = Double.valueOf(startAmpString);
+            start = Double.parseDouble(startAmpString);
         }
-        String endAmpString = textInputEditEndAmp.getText().toString();
+        String endAmpString = Objects.requireNonNull(textInputEditEndAmp.getText()).toString();
         if (!endAmpString.isEmpty()) {
-            endAmp = Double.valueOf(endAmpString);
+            end = Double.parseDouble(endAmpString);
         }
-        String ampLengthString = textInputEditAmpLength.getText().toString();
+        String ampLengthString = Objects.requireNonNull(textInputEditAmpLength.getText()).toString();
         if (!ampLengthString.isEmpty()) {
-            ampLength = Double.valueOf(ampLengthString);
+            length = Double.parseDouble(ampLengthString);
         }
-        String minAmpString = textInputEditMinAmp.getText().toString();
+        String minAmpString = Objects.requireNonNull(textInputEditMinAmp.getText()).toString();
         if (!minAmpString.isEmpty()) {
-            minAmp = Double.valueOf(minAmpString);
+            min = Double.parseDouble(minAmpString);
         }
-        String maxAmpString = textInputEditMaxAmp.getText().toString();
+        String maxAmpString = Objects.requireNonNull(textInputEditMaxAmp.getText()).toString();
         if (!maxAmpString.isEmpty()) {
-            maxAmp = Double.valueOf(maxAmpString);
+            max = Double.parseDouble(maxAmpString);
         }
         boolean mustReturn = false;
-        if (startAmp == -1) {
+        if (start == -1) {
             mustReturn = true;
             textInputLayoutStartAmp.setError("Positive amplitude needed");
         }
-        if (ampLength == -1) {
+        if (length == -1) {
             mustReturn = true;
             TextInputLayout textInputLayoutStartAmp = findViewById(R.id.text_input_layout_amp_length);
             textInputLayoutStartAmp.setError("Positive length needed");
@@ -137,14 +167,17 @@ public class ActivityAmpMaker extends AppCompatActivity {
             return;
         }
         if (function.contentEquals(getResources().getString(R.string.Constant))) {
-            float[] data = NativeMethods.loadConstant(startAmp, ampLength, 0, col);
+            float[] data = NativeMethods.loadConstant(start, length, 0, col);
             double min = NativeMethods.getMinAmp();
             double max = NativeMethods.getMaxAmp();
             Intent intent = new Intent();
             intent.putExtra(ViewFunction.FLOAT_DATA, data);
-            intent.putExtra(ViewFunction.MIN_DATA, min);
-            intent.putExtra(ViewFunction.MAX_DATA, max);
+            intent.putExtra(ViewFunction.MIN_Y_DATA, min);
+            intent.putExtra(ViewFunction.MAX_Y_DATA, max);
             intent.putExtra(ViewFunction.COL_DATA, col);
+            intent.putExtra(ViewFunction.FUNCTION_DATA, function);
+            intent.putExtra(ViewFunction.START_DATA, start);
+            intent.putExtra(ViewFunction.LENGTH_DATA, length);
             setResult(Activity.RESULT_OK, intent);
             finish();
         } else if (function.contentEquals(getResources().getString(R.string.Exponential))) {

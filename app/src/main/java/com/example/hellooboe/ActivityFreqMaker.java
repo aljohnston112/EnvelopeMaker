@@ -16,6 +16,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 public class ActivityFreqMaker extends AppCompatActivity {
 
     private int col;
@@ -29,9 +31,9 @@ public class ActivityFreqMaker extends AppCompatActivity {
 
     ConstraintLayout constraintLayoutFreq;
 
+    TextInputLayout textInputLayoutFreqFunction;
     TextInputLayout textInputLayoutStartFreq;
     TextInputLayout textInputLayoutEndFreq;
-    TextInputLayout textInputLayoutFreqFunction;
     TextInputLayout textInputLayoutFreqLength;
     TextInputLayout textInputLayoutMinFreq;
     TextInputLayout textInputLayoutMaxFreq;
@@ -103,25 +105,25 @@ public class ActivityFreqMaker extends AppCompatActivity {
 
     public void onButtonFreqMakerCreate(View view) {
         function = autoCompleteTextViewFreqFunction.getText().toString();
-        String startFreqString = textInputEditTextStartFreq.getText().toString();
+        String startFreqString = Objects.requireNonNull(textInputEditTextStartFreq.getText()).toString();
         if (!startFreqString.isEmpty()) {
-            startFreq = Double.valueOf(startFreqString);
+            startFreq = Double.parseDouble(startFreqString);
         }
-        String endFreqString = textInputEditTextEndFreq.getText().toString();
+        String endFreqString = Objects.requireNonNull(textInputEditTextEndFreq.getText()).toString();
         if (!endFreqString.isEmpty()) {
-            endFreq = Double.valueOf(endFreqString);
+            endFreq = Double.parseDouble(endFreqString);
         }
-        String freqLengthString = textInputEditTextFreqLength.getText().toString();
+        String freqLengthString = Objects.requireNonNull(textInputEditTextFreqLength.getText()).toString();
         if (!freqLengthString.isEmpty()) {
-            freqLength = Double.valueOf(freqLengthString);
+            freqLength = Double.parseDouble(freqLengthString);
         }
-        String minFreqString = textInputEditTextMinFreq.getText().toString();
+        String minFreqString = Objects.requireNonNull(textInputEditTextMinFreq.getText()).toString();
         if (!minFreqString.isEmpty()) {
-            minFreq = Double.valueOf(minFreqString);
+            minFreq = Double.parseDouble(minFreqString);
         }
-        String maxFreqString = textInputEditTextMaxFreq.getText().toString();
+        String maxFreqString = Objects.requireNonNull(textInputEditTextMaxFreq.getText()).toString();
         if (!maxFreqString.isEmpty()) {
-            maxFreq = Double.valueOf(maxFreqString);
+            maxFreq = Double.parseDouble(maxFreqString);
         }
         boolean mustReturn = false;
         if (startFreq == -1) {
@@ -141,8 +143,8 @@ public class ActivityFreqMaker extends AppCompatActivity {
             double max = NativeMethods.getMaxFreq();
             Intent intent = new Intent();
             intent.putExtra(ViewFunction.FLOAT_DATA, data);
-            intent.putExtra(ViewFunction.MIN_DATA, min);
-            intent.putExtra(ViewFunction.MAX_DATA, max);
+            intent.putExtra(ViewFunction.MIN_Y_DATA, min);
+            intent.putExtra(ViewFunction.MAX_Y_DATA, max);
             intent.putExtra(ViewFunction.COL_DATA, col);
             setResult(Activity.RESULT_OK, intent);
             finish();

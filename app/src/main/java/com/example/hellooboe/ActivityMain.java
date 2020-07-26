@@ -159,6 +159,23 @@ public class ActivityMain extends AppCompatActivity {
                         short[] dataS = data.getShortArrayExtra(ViewFunction.SHORT_DATA);
                         ((ViewFunction) linearLayoutAmpRow.getChildAt(col)).setData(min, max, dataS);
                     }
+                    //TODO copy to frequency maker
+                    try {
+                        ((ViewFunction) linearLayoutAmpRow.getChildAt(col))
+                                .setFunction(data.getStringExtra(ViewFunction.FUNCTION_DATA));
+                    } catch (NullPointerException ignored) {
+                    }
+                    ((ViewFunction) linearLayoutAmpRow.getChildAt(col))
+                            .setStart(data.getDoubleExtra(ViewFunction.START_DATA, -1));
+                    ((ViewFunction) linearLayoutAmpRow.getChildAt(col))
+                            .setEnd(data.getDoubleExtra(ViewFunction.END_DATA, -1));
+                    ((ViewFunction) linearLayoutAmpRow.getChildAt(col))
+                            .setLength(data.getDoubleExtra(ViewFunction.LENGTH_DATA, -1));
+                    ((ViewFunction) linearLayoutAmpRow.getChildAt(col))
+                            .setMin(data.getDoubleExtra(ViewFunction.MIN_DATA, -1));
+                    ((ViewFunction) linearLayoutAmpRow.getChildAt(col))
+                            .setMax(data.getDoubleExtra(ViewFunction.MAX_DATA, -1));
+
                     ViewFunction viewFunctionAmp = new ViewFunction(this, true, col + 1);
                     viewFunctionAmp.setAsAddNew();
                     linearLayoutAmpRow.addView(viewFunctionAmp);

@@ -19,8 +19,15 @@ public class ViewFunction extends View {
     public static final String FLOAT_DATA = "593";
     public static final String SHORT_DATA = "594";
     public static final String COL_DATA = "595";
-    public static final String MIN_DATA = "596";
-    public static final String MAX_DATA = "597";
+    public static final String MIN_Y_DATA = "596";
+    public static final String MAX_Y_DATA = "597";
+
+    public static final String FUNCTION_DATA = "605";
+    public static final String START_DATA = "600";
+    public static final String END_DATA = "601";
+    public static final String LENGTH_DATA = "602";
+    public static final String MIN_DATA = "603";
+    public static final String MAX_DATA = "604";
 
     private Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint borderColor = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -41,6 +48,72 @@ public class ViewFunction extends View {
     // The points to draw lines between
     private float[] dataF = null;
     private short[] dataS = null;
+
+    String function = null;
+
+    double start = -1;
+    double end = -1;
+    double length = -1;
+    double min = -1;
+    double max = -1;
+
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        if ((!function.contentEquals(getResources().getString(R.string.Constant)))
+                && (!function.contentEquals(getResources().getString(R.string.Exponential)))
+                && (!function.contentEquals(getResources().getString(R.string.Linear)))
+                && (!function.contentEquals(getResources().getString(R.string.Logarithm)))
+                && (!function.contentEquals(getResources().getString(R.string.Nth_Root)))
+                && (!function.contentEquals(getResources().getString(R.string.Power)))
+                && (!function.contentEquals(getResources().getString(R.string.Quadratic)))
+                && (function.contentEquals(getResources().getString(R.string.Sine)))) {
+            throw new IllegalArgumentException("function passed to setFunction() is not a function from R.string");
+        }
+        this.function = function;
+    }
+
+    public double getStart() {
+        return start;
+    }
+
+    public void setStart(double start) {
+        this.start = start;
+    }
+
+    public double getEnd() {
+        return end;
+    }
+
+    public void setEnd(double end) {
+        this.end = end;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public void setMax(double max) {
+        this.max = max;
+    }
 
     public ViewFunction(Context context) {
         super(context);
@@ -192,8 +265,8 @@ public class ViewFunction extends View {
             textWidthStart = textColor.measureText(startText);
             textWidthEnd = textColor.measureText(endText);
         }
-        canvas.drawText(startText, borderStrokeWidth / 2, (int) Math.round(height / 2.0), textColor);
-        canvas.drawText(endText, width - textWidthEnd - borderStrokeWidth / 2, (int) Math.round(height / 2.0), textColor);
+        canvas.drawText(startText, (int) Math.round(borderStrokeWidth / 2.0), (int) Math.round(height / 2.0), textColor);
+        canvas.drawText(endText, (int) Math.round(width - textWidthEnd - borderStrokeWidth / 2.0), (int) Math.round(height / 2.0), textColor);
     }
 
     private void drawBorder(Canvas canvas) {
@@ -315,9 +388,34 @@ public class ViewFunction extends View {
         public void onClick(View view) {
             if (!((ActivityMain) getContext()).isLongClicked) {
                 if (isAmp) {
-                    Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
-                    intent.putExtra(COL_NUMBER_KEY, ((ViewFunction)view).getCol());
-                    ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_AMP_MAKER);
+                    if (function == null) {
+                        Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
+                        intent.putExtra(COL_NUMBER_KEY, ((ViewFunction) view).getCol());
+                        ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_AMP_MAKER);
+                    } else if (function.contentEquals(getResources().getString(R.string.Constant))
+                            && start != -1 && length != -1) {
+                        Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
+                        intent.putExtra(COL_NUMBER_KEY, ((ViewFunction) view).getCol());
+                        intent.putExtra(FUNCTION_DATA, ((ViewFunction) view).getFunction());
+                        intent.putExtra(START_DATA, ((ViewFunction) view).getStart());
+                        intent.putExtra(LENGTH_DATA, ((ViewFunction) view).getLength());
+                        ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_AMP_MAKER_FILL);
+                    } else if (function.contentEquals(getResources().getString(R.string.Exponential))) {
+
+                    } else if (function.contentEquals(getResources().getString(R.string.Linear))) {
+
+                    } else if (function.contentEquals(getResources().getString(R.string.Logarithm))) {
+
+                    } else if (function.contentEquals(getResources().getString(R.string.Nth_Root))) {
+
+                    } else if (function.contentEquals(getResources().getString(R.string.Power))) {
+
+                    } else if (function.contentEquals(getResources().getString(R.string.Quadratic))) {
+
+                    } else if (function.contentEquals(getResources().getString(R.string.Sine))) {
+
+                    }
+
                 } else {
                     Intent intent = new Intent(getContext(), ActivityFreqMaker.class);
                     intent.putExtra(COL_NUMBER_KEY, ((ViewFunction)view).getCol());
