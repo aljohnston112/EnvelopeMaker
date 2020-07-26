@@ -20,24 +20,66 @@ public class ActivityAmpMaker extends AppCompatActivity {
 
     private int col;
 
+    String function;
+    double startAmp = -1;
+    double endAmp = -1;
+    double minAmp = -1;
+    double maxAmp = -1;
+    double ampLength = -1;
+
+    ConstraintLayout constraintLayoutAmp;
+
+    TextInputLayout textInputLayoutAmpFunction;
+    TextInputLayout textInputLayoutStartAmp;
+    TextInputLayout textInputLayoutEndAmp;
+    TextInputLayout textInputLayoutAmpLength;
+    TextInputLayout textInputLayoutMinAmp;
+    TextInputLayout textInputLayoutMaxAmp;
+
+    AutoCompleteTextView autoCompleteTextViewAmpFunction;
+    TextInputEditText textInputEditStartAmp;
+    TextInputEditText textInputEditEndAmp;
+    TextInputEditText textInputEditAmpLength;
+    TextInputEditText textInputEditMinAmp;
+    TextInputEditText textInputEditMaxAmp;
+
+    Button buttonCreate;
+    Button buttonCancel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amp_maker);
-        TextInputLayout textInputLayoutAmp = findViewById(R.id.text_input_layout_amp_function);
-        ArrayAdapter<CharSequence> arrayAdapterAmp = ArrayAdapter.createFromResource(this,
-                R.array.functions, R.layout.auto_complete_text_view_function);
-        AutoCompleteTextView autoCompleteTextViewAmpFunction = (AutoCompleteTextView) textInputLayoutAmp.getEditText();
-        assert autoCompleteTextViewAmpFunction != null;
-        autoCompleteTextViewAmpFunction.setAdapter(arrayAdapterAmp);
-        textInputLayoutAmp.requestFocus();
+        findViews();
+        setUpFunctionAutoComplete();
+        resizeButtons();
         col = getIntent().getIntExtra(ViewFunction.COL_NUMBER_KEY, -1);
-        ConstraintLayout constraintLayoutAmp = findViewById(R.id.constraint_layout_amp);
+    }
+
+    private void findViews() {
+        constraintLayoutAmp = findViewById(R.id.constraint_layout_amp);
+
+        textInputLayoutAmpFunction = findViewById(R.id.text_input_layout_amp_function);
+        textInputLayoutStartAmp = findViewById(R.id.text_input_layout_start_amp);
+        textInputLayoutEndAmp = findViewById(R.id.text_input_layout_end_amp);
+        textInputLayoutAmpLength = findViewById(R.id.text_input_layout_amp_length);
+        textInputLayoutMinAmp = findViewById(R.id.text_input_layout_min_amp);
+        textInputLayoutMaxAmp = findViewById(R.id.text_input_layout_max_amp);
+
+        autoCompleteTextViewAmpFunction = findViewById(R.id.auto_complete_text_view_amp_function);
+        textInputEditStartAmp = findViewById(R.id.text_input_edit_start_amp);
+        textInputEditEndAmp = findViewById(R.id.edit_text_end_amp);
+        textInputEditAmpLength = findViewById(R.id.edit_text_amp_length);
+        textInputEditMinAmp = findViewById(R.id.edit_text_min_amp);
+        textInputEditMaxAmp = findViewById(R.id.edit_text_max_amp);
+
+        buttonCreate = findViewById(R.id.button_create_amp);
+        buttonCancel = findViewById(R.id.button_cancel_amp);
+    }
+
+    private void resizeButtons() {
         final ViewTreeObserver obs = constraintLayoutAmp.getViewTreeObserver();
         obs.addOnPreDrawListener(() -> {
-            Button buttonCreate = findViewById(R.id.button_create_amp);
-            Button buttonCancel = findViewById(R.id.button_cancel_amp);
-            TextInputLayout textInputLayoutStartAmp = findViewById(R.id.text_input_layout_start_amp);
             ViewGroup.LayoutParams params = buttonCreate.getLayoutParams();
             params.height = textInputLayoutStartAmp.getHeight();
             buttonCreate.requestLayout();
@@ -50,57 +92,50 @@ public class ActivityAmpMaker extends AppCompatActivity {
         });
     }
 
+    private void setUpFunctionAutoComplete() {
+        ArrayAdapter<CharSequence> arrayAdapterAmp = ArrayAdapter.createFromResource(this,
+                R.array.functions, R.layout.auto_complete_text_view_function);
+        AutoCompleteTextView autoCompleteTextViewAmpFunction = (AutoCompleteTextView) textInputLayoutAmpFunction.getEditText();
+        assert autoCompleteTextViewAmpFunction != null;
+        autoCompleteTextViewAmpFunction.setAdapter(arrayAdapterAmp);
+        textInputLayoutAmpFunction.requestFocus();
+    }
+
     public void onButtonAmpMakerCreate(View view) {
-        AutoCompleteTextView autoCompleteTextViewAmpFunction = findViewById(R.id.auto_complete_text_view_amp_function);
-        String function = autoCompleteTextViewAmpFunction.getText().toString();
-        TextInputEditText textInputEditTextStartAmp = findViewById(R.id.text_input_edit_start_amp);
-        TextInputEditText textInputEditTextEndAmp = findViewById(R.id.edit_text_end_amp);
-        TextInputEditText textInputEditTextAmpLength = findViewById(R.id.edit_text_amp_length);
-        TextInputEditText textInputEditTextMinAmp = findViewById(R.id.edit_text_min_amp);
-        TextInputEditText textInputEditTextMaxAmp = findViewById(R.id.edit_text_max_amp);
-        String startAmpString = textInputEditTextStartAmp.getText().toString();
-        double startAmp = -1;
+        function = autoCompleteTextViewAmpFunction.getText().toString();
+        String startAmpString = textInputEditStartAmp.getText().toString();
         if (!startAmpString.isEmpty()) {
             startAmp = Double.valueOf(startAmpString);
         }
-        String endAmpString = textInputEditTextEndAmp.getText().toString();
-        double endAmp = -1;
+        String endAmpString = textInputEditEndAmp.getText().toString();
         if (!endAmpString.isEmpty()) {
             endAmp = Double.valueOf(endAmpString);
         }
-        String ampLengthString = textInputEditTextAmpLength.getText().toString();
-        double ampLength = -1;
+        String ampLengthString = textInputEditAmpLength.getText().toString();
         if (!ampLengthString.isEmpty()) {
             ampLength = Double.valueOf(ampLengthString);
         }
-        String minAmpString = textInputEditTextMinAmp.getText().toString();
-        double minAmp = -1;
+        String minAmpString = textInputEditMinAmp.getText().toString();
         if (!minAmpString.isEmpty()) {
             minAmp = Double.valueOf(minAmpString);
         }
-        String maxAmpString = textInputEditTextMaxAmp.getText().toString();
-        double maxAmp = -1;
+        String maxAmpString = textInputEditMaxAmp.getText().toString();
         if (!maxAmpString.isEmpty()) {
             maxAmp = Double.valueOf(maxAmpString);
         }
-
         boolean mustReturn = false;
         if (startAmp == -1) {
             mustReturn = true;
-            TextInputLayout textInputLayoutStartAmp = findViewById(R.id.text_input_layout_start_amp);
             textInputLayoutStartAmp.setError("Positive amplitude needed");
         }
-
         if (ampLength == -1) {
             mustReturn = true;
             TextInputLayout textInputLayoutStartAmp = findViewById(R.id.text_input_layout_amp_length);
             textInputLayoutStartAmp.setError("Positive length needed");
         }
-
         if (mustReturn) {
             return;
         }
-
         if (function.contentEquals(getResources().getString(R.string.Constant))) {
             float[] data = NativeMethods.loadConstant(startAmp, ampLength, 0, col);
             double min = NativeMethods.getMinAmp();
