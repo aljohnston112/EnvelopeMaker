@@ -42,7 +42,8 @@ struct AudioStreamHolder {
         } else if constexpr(std::is_same<T, int16_t>::value) {
             return waveMakerI;
         } else {
-            return nullptr;
+            throw std::invalid_argument(
+                    "typename passed to getWaveMaker must be a float or int16_t");
         }
     }
 
@@ -53,7 +54,7 @@ struct AudioStreamHolder {
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMinAmp();
         }
-            return NULL;
+        throw std::logic_error("Template argument used for getMinAmp() must be a float or int16_t");
     }
 
     template <typename T>
@@ -63,7 +64,7 @@ struct AudioStreamHolder {
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMaxAmp();
         }
-        return NULL;
+        throw std::logic_error("Template argument used for getMaxAmp() must be a float or int16_t");
     }
 
     template <typename T>
@@ -73,7 +74,8 @@ struct AudioStreamHolder {
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMinFreq();
         }
-        return NULL;
+        throw std::logic_error(
+                "Template argument used for getMinFreq() must be a float or int16_t");
     }
 
     template <typename T>
@@ -83,16 +85,17 @@ struct AudioStreamHolder {
         } else  if constexpr(std::is_same<T, int16_t >::value){
             return waveMakerI.getMaxFreq();
         }
-        return NULL;
+        throw std::logic_error(
+                "Template argument used for getMaxFreq() must be a float or int16_t");
     }
 
     template<typename T>
     void loadData() {
         if constexpr(std::is_same<T, float>::value) {
-            audioStreamCallbackSub.insertF(
+            audioStreamCallbackSub.insert(
                     waveMakerF.make(sampleRate));
         } else if constexpr(std::is_same<T, int16_t>::value) {
-            audioStreamCallbackSub.insertI(
+            audioStreamCallbackSub.insert(
                     waveMakerI.make(sampleRate));
         }
     };

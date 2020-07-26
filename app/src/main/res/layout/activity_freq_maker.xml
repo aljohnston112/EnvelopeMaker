@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button_create"
+        android:id="@+id/button_create_freq"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -15,23 +15,24 @@
         android:onClick="onButtonFreqMakerCreate"
         android:text="@string/confirm_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_cancel"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancel_freq"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_max_freq" />
 
     <Button
-        android:id="@+id/button_cancel"
+        android:id="@+id/button_cancel_freq"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
+        android:onClick="onButtonFreqMakerCancel"
         android:text="@string/cancel_button"
-        app:layout_constraintBottom_toBottomOf="@+id/button_create"
+        app:layout_constraintBottom_toBottomOf="@+id/button_create_freq"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_create"
-        app:layout_constraintTop_toTopOf="@+id/button_create" />
+        app:layout_constraintStart_toEndOf="@+id/button_create_freq"
+        app:layout_constraintTop_toTopOf="@+id/button_create_freq" />
 
     <TextView
         android:id="@+id/text_view_freq_title"
@@ -163,7 +164,7 @@
         android:layout_marginEnd="8dp"
         app:errorEnabled="true"
         android:hint="@string/max_freq_text"
-        app:layout_constraintBottom_toTopOf="@+id/button_create"
+        app:layout_constraintBottom_toTopOf="@+id/button_create_freq"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_input_layout_min_freq"

@@ -6,6 +6,7 @@
 #define HELLOOBOE_FUNCTION_H
 
 #include <vector>
+#include <stdexcept>
 
 struct Function {
 

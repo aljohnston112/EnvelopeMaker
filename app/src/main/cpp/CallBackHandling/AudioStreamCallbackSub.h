@@ -27,12 +27,17 @@ struct AudioStreamCallbackSub : public oboe::AudioStreamCallback {
 
     void onErrorAfterClose(oboe::AudioStream *, oboe::Result) override;
 
-    void insertF(std::vector<float> data) {
-        callbackContainerF.insert(data);
+    template<typename T>
+    void insert(std::vector<T> data) {
+        if constexpr(std::is_same<T, float>::value) {
+            callbackContainerF.insert(data);
+        } else if constexpr(std::is_same<T, int16_t>::value) {
+            callbackContainerI.insert(data);
+        }
     }
 
-    void insertI(std::vector<int16_t> data) {
-        callbackContainerI.insert(data);
+    void insert(std::vector<int16_t> data) {
+
     }
 
 private:

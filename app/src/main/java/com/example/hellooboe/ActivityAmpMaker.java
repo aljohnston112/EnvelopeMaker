@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.LinearLayout;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,6 +32,22 @@ public class ActivityAmpMaker extends AppCompatActivity {
         autoCompleteTextViewAmpFunction.setAdapter(arrayAdapterAmp);
         textInputLayoutAmp.requestFocus();
         col = getIntent().getIntExtra(ViewFunction.COL_NUMBER_KEY, -1);
+        ConstraintLayout constraintLayoutAmp = findViewById(R.id.constraint_layout_amp);
+        final ViewTreeObserver obs = constraintLayoutAmp.getViewTreeObserver();
+        obs.addOnPreDrawListener(() -> {
+            Button buttonCreate = findViewById(R.id.button_create_amp);
+            Button buttonCancel = findViewById(R.id.button_cancel_amp);
+            TextInputLayout textInputLayoutStartAmp = findViewById(R.id.text_input_layout_start_amp);
+            ViewGroup.LayoutParams params = buttonCreate.getLayoutParams();
+            params.height = textInputLayoutStartAmp.getHeight();
+            buttonCreate.requestLayout();
+            ViewGroup.LayoutParams params2 = buttonCancel.getLayoutParams();
+            params2.height = textInputLayoutStartAmp.getHeight();
+            buttonCancel.requestLayout();
+            //We only care the first time it happens, so remove it
+            //Post your animation here, then return true
+            return true;
+        });
     }
 
     public void onButtonAmpMakerCreate(View view) {
@@ -108,7 +127,10 @@ public class ActivityAmpMaker extends AppCompatActivity {
         } else if (function.contentEquals(getResources().getString(R.string.Sine))) {
 
         }
-
-
     }
+
+    public void onButtonFAmpMakerCancel(View view) {
+        finish();
+    }
+
 }

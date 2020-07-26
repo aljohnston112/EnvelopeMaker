@@ -8,7 +8,6 @@
 #include "AmplitudeEnvelope.h"
 #include "FrequencyEnvelope.h"
 #include "SineWaveMaker.h"
-
 #include <list>
 #include <android/log.h>
 
@@ -52,29 +51,34 @@ struct WaveMaker {
         std::vector<T> data{};
         auto amp = amps.begin();
         auto freq = freqs.begin();
-        double amplitude;
+        std::vector<T> amplitudes{};
+        std::vector<T> frequencies{};
         for (int i = 0; i < amps.size(); i++) {
             if ((amp != amps.end()) && (*amp)->getAmplitudes()->size() != 0) {
-                if ((freq != freqs.end()) && (*freq)->getFrequencies()->size() != 0) {
-                    std::vector<T> concat{::make < T > (**amp, **freq, radians,
-                            samplesPerSecond)};
-                    data.insert(data.end(),
-                                concat.begin(), concat.end());
-                } else {
-                    for (int j = 0; j < (*amp)->getAmplitudes()->size(); j++) {
-                        data.push_back(0.0);
-                    }
-                }
-            } else {
-                amplitude = 1.0;
-                if ((freq != freqs.end()) && (*freq)->getFrequencies()->size() != 0) {
-                    std::vector<T> concat{::make < T > (amplitude, (**freq), radians,
-                            samplesPerSecond)};
-                    data.insert(data.end(),
-                                concat.begin(), concat.end());
-                }
+                amplitudes.insert(amplitudes.end(), (*((*amp)->getAmplitudes())).begin(),
+                                  (*((*amp)->getAmplitudes())).end());
             }
         }
+        for (int i = 0; i < freqs.size(); i++) {
+            if ((freq != freqs.end()) && (*freq)->getFrequencies()->size() != 0) {
+                frequencies.insert(frequencies.end(), (*((*freq)->getFrequencies())).begin(),
+                                   (*((*freq)->getFrequencies())).end());
+            }
+        }
+        if (frequencies.size() > amplitudes.size()) {
+            double amplitude = 1;
+            int add = frequencies.size() - amplitudes.size();
+            for (int i = 0; i < add; i++) {
+                amplitudes.push_back(amplitude);
+            }
+        } else if (frequencies.size() < amplitudes.size()) {
+            double frequency = 0;
+            int add = amplitudes.size() - frequencies.size();
+            for (int i = 0; i < add; i++) {
+                frequencies.push_back(frequency);
+            }
+        }
+        data = SINEWAVEMAKER_H_::make < T > (amplitudes, frequencies, radians, samplesPerSecond);
         return data;
     }
 
@@ -83,7 +87,8 @@ struct WaveMaker {
         for (auto a : amps) {
             ampsList.push_back((*a).getMax());
         }
-        return *(std::max_element(ampsList.begin(), ampsList.end()));
+        return (ampsList.begin() != ampsList.end()) ?
+               *(std::max_element(ampsList.begin(), ampsList.end())) : 0;
     };
 
     double getMinAmp() {
@@ -91,7 +96,8 @@ struct WaveMaker {
         for (auto a : amps) {
             ampsList.push_back((*a).getMin());
         }
-        return *(std::min_element(ampsList.begin(), ampsList.end()));
+        return (ampsList.begin() != ampsList.end()) ?
+               *(std::min_element(ampsList.begin(), ampsList.end())) : 0;
     };
 
     double getMaxFreq() {
@@ -99,7 +105,8 @@ struct WaveMaker {
         for (auto f : freqs) {
             freqsList.push_back((*f).getMax());
         }
-        return *(std::max_element(freqsList.begin(), freqsList.end()));
+        return (freqsList.begin() != freqsList.end()) ?
+               *(std::max_element(freqsList.begin(), freqsList.end())) : 0;
     };
 
     double getMinFreq() {
@@ -107,7 +114,8 @@ struct WaveMaker {
         for (auto f : freqs) {
             freqsList.push_back((*f).getMin());
         }
-        return *(std::min_element(freqsList.begin(), freqsList.end()));
+        return (freqsList.begin() != freqsList.end()) ?
+               *(std::min_element(freqsList.begin(), freqsList.end())) : 0;
     };
 
     AmplitudeEnvelope<T> *getAmpEnv(int col) {
@@ -125,6 +133,22 @@ struct WaveMaker {
         }
         return (*out);
     };
+
+    double getAmpTime(int index, int samplesPerSecond) {
+        auto out = amps.begin();
+        for (int i = 0; i < index; i++) {
+            out++;
+        }
+        return (*out)->getTime(samplesPerSecond);
+    }
+
+    double getFreqTime(int index, int samplesPerSecond) {
+        auto out = freqs.begin();
+        for (int i = 0; i < index; i++) {
+            out++;
+        }
+        return (*out)->getTime(samplesPerSecond);
+    }
 
 private:
     std::list<AmplitudeEnvelope<T> *> amps;

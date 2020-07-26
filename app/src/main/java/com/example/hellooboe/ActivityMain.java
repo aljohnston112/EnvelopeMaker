@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -30,28 +30,25 @@ public class ActivityMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_main));
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setSupportActionBar(findViewById(R.id.toolbar_main));
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         init();
         initFAB();
     }
 
     private void initFAB() {
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NativeMethods.makeSound();
-                NativeMethods.startStream();
-            }
+        fab.setOnClickListener(view -> {
+            NativeMethods.makeSound();
+            NativeMethods.startStream();
         });
     }
 
     private void init() {
         audioDataIsFloat = NativeMethods.audioDataIsFloat();
         isLongClicked = false;
-        linearLayoutAmpRow = (LinearLayout) findViewById(R.id.linear_layout_amp_row);
-        linearLayoutFreqRow = (LinearLayout) findViewById(R.id.linear_layout_freq_row);
+        linearLayoutAmpRow = findViewById(R.id.linear_layout_amp_row);
+        linearLayoutFreqRow = findViewById(R.id.linear_layout_freq_row);
         ViewFunction viewFunctionAmp = new ViewFunction(this, true, 0);
         viewFunctionAmp.setAsAddNew();
         viewFunctionsAmp.add(viewFunctionAmp);
@@ -84,7 +81,7 @@ public class ActivityMain extends AppCompatActivity {
     public void longClicked(boolean longClicked) {
         if (longClicked != isLongClicked) {
             isLongClicked = longClicked;
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+            Toolbar toolbar = findViewById(R.id.toolbar_main);
             MenuItem registrarCopy = toolbar.getMenu().findItem(R.id.action_copy);
             MenuItem registrarPaste = toolbar.getMenu().findItem(R.id.action_paste);
             MenuItem registrarDelete = toolbar.getMenu().findItem(R.id.action_delete);
@@ -105,13 +102,13 @@ public class ActivityMain extends AppCompatActivity {
         boolean goBack = true;
         if (isLongClicked) {
             for (ViewFunction v : viewFunctionsAmp) {
-                if (v.isSelected() == true) {
+                if (v.isSelected()) {
                     goBack = false;
                 }
                 v.select(false);
             }
             for (ViewFunction v : viewFunctionsFreq) {
-                if (v.isSelected() == true) {
+                if (v.isSelected()) {
                     goBack = false;
                 }
                 v.select(false);
@@ -149,10 +146,10 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        int col = data.getIntExtra(ViewFunction.COL_DATA, -1);
-        double min = NativeMethods.getMinAmp() - 1;
-        double max = NativeMethods.getMaxAmp() + 1;
         if (resultCode == Activity.RESULT_OK) {
+            double min = NativeMethods.getMinAmp() - 1;
+            double max = NativeMethods.getMaxAmp() + 1;
+            int col = data.getIntExtra(ViewFunction.COL_DATA, -1);
             if (requestCode == ViewFunction.ACTIVITY_AMP_MAKER) {
                 if (col != -1 && min != Double.NaN && max != Double.NaN) {
                     if (NativeMethods.audioDataIsFloat()) {
@@ -165,14 +162,6 @@ public class ActivityMain extends AppCompatActivity {
                     ViewFunction viewFunctionAmp = new ViewFunction(this, true, col + 1);
                     viewFunctionAmp.setAsAddNew();
                     linearLayoutAmpRow.addView(viewFunctionAmp);
-                    if (linearLayoutFreqRow.getChildCount() < linearLayoutAmpRow.getChildCount()) {
-                        int toAdd = linearLayoutAmpRow.getChildCount() - linearLayoutFreqRow.getChildCount();
-                        for (int i = 0; i < toAdd; i++) {
-                            ViewFunction viewFunctionFreq = new ViewFunction(this, false, linearLayoutFreqRow.getChildCount());
-                            viewFunctionFreq.setAsAddNew();
-                            linearLayoutFreqRow.addView(viewFunctionFreq);
-                        }
-                    }
                 }
             } else if (requestCode == ViewFunction.ACTIVITY_FREQ_MAKER) {
                 if (col != -1 && min != Double.NaN && max != Double.NaN) {
@@ -183,20 +172,11 @@ public class ActivityMain extends AppCompatActivity {
                         short[] dataS = data.getShortArrayExtra(ViewFunction.SHORT_DATA);
                         ((ViewFunction) linearLayoutFreqRow.getChildAt(col)).setData(min, max, dataS);
                     }
-                    ViewFunction viewFunctionFreq = new ViewFunction(this, false, col+1);
+                    ViewFunction viewFunctionFreq = new ViewFunction(this, false, col + 1);
                     viewFunctionFreq.setAsAddNew();
                     linearLayoutFreqRow.addView(viewFunctionFreq);
-                    if (linearLayoutAmpRow.getChildCount() < linearLayoutFreqRow.getChildCount()) {
-                        int toAdd = linearLayoutFreqRow.getChildCount() - linearLayoutAmpRow.getChildCount();
-                        for (int i = 0; i < toAdd; i++) {
-                            ViewFunction viewFunctionAmp = new ViewFunction(this, true, linearLayoutAmpRow.getChildCount());
-                            viewFunctionAmp.setAsAddNew();
-                            linearLayoutAmpRow.addView(viewFunctionAmp);
-                        }
-                    }
                 }
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 // TODO Write your code if there's no result
             }
         }

@@ -30,6 +30,10 @@ struct AmplitudeEnvelope : Envelope {
 
     std::vector<T> *getAmplitudes() { return &amps; };
 
+    double getTime(int samplesPerSecond) {
+        return ((double) amps.size() / (double) samplesPerSecond);
+    }
+
 
 private:
     std::vector<T> amps;

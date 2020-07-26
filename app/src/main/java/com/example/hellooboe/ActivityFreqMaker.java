@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,13 +24,29 @@ public class ActivityFreqMaker extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_freq_maker);
-        TextInputLayout textInputLayoutFreqFunction = (TextInputLayout) findViewById(R.id.text_input_layout_freq_function);
+        TextInputLayout textInputLayoutFreqFunction = findViewById(R.id.text_input_layout_freq_function);
         ArrayAdapter<CharSequence> arrayAdapterFreq = ArrayAdapter.createFromResource(this,
                 R.array.functions, R.layout.auto_complete_text_view_function);
         AutoCompleteTextView autoCompleteTextViewFreqFunction = (AutoCompleteTextView) textInputLayoutFreqFunction.getEditText();
         assert autoCompleteTextViewFreqFunction != null;
         autoCompleteTextViewFreqFunction.setAdapter(arrayAdapterFreq);
         textInputLayoutFreqFunction.requestFocus();
+        ConstraintLayout constraintLayoutAmp = findViewById(R.id.constraint_layout_freq);
+        final ViewTreeObserver obs = constraintLayoutAmp.getViewTreeObserver();
+        obs.addOnPreDrawListener(() -> {
+            Button buttonCreate = findViewById(R.id.button_create_freq);
+            Button buttonCancel = findViewById(R.id.button_cancel_freq);
+            TextInputLayout textInputLayoutStartFreq = findViewById(R.id.text_input_layout_start_freq);
+            ViewGroup.LayoutParams params = buttonCreate.getLayoutParams();
+            params.height = textInputLayoutStartFreq.getHeight();
+            buttonCreate.requestLayout();
+            ViewGroup.LayoutParams params2 = buttonCancel.getLayoutParams();
+            params2.height = textInputLayoutStartFreq.getHeight();
+            buttonCancel.requestLayout();
+            //We only care the first time it happens, so remove it
+            //Post your animation here, then return true
+            return true;
+        });
     }
 
     public void onButtonFreqMakerCreate(View view) {
@@ -106,8 +126,11 @@ public class ActivityFreqMaker extends AppCompatActivity {
         } else if (function.contentEquals(getResources().getString(R.string.Sine))) {
 
         }
-
-
     }
+
+    public void onButtonFreqMakerCancel(View view) {
+        finish();
+    }
+
 }
 

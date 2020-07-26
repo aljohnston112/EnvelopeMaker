@@ -28,6 +28,10 @@ struct FrequencyEnvelope : Envelope {
 
     std::vector<T> *getFrequencies() { return &freqs; };
 
+    double getTime(int samplesPerSecond) {
+        return ((double) freqs.size() / (double) samplesPerSecond);
+    }
+
 private:
     std::vector<T> freqs;
 };

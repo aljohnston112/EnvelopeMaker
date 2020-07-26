@@ -8,31 +8,32 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/button_create"
+        android:id="@+id/button_create_amp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
         android:text="@string/confirm_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_cancel"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancel_amp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_max_amp"
         android:onClick="onButtonAmpMakerCreate"/>
 
     <Button
-        android:id="@+id/button_cancel"
+        android:id="@+id/button_cancel_amp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
+        android:onClick="onButtonFAmpMakerCancel"
         android:text="@string/cancel_button"
-        app:layout_constraintBottom_toBottomOf="@+id/button_create"
+        app:layout_constraintBottom_toBottomOf="@+id/button_create_amp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_create"
-        app:layout_constraintTop_toTopOf="@+id/button_create" />
+        app:layout_constraintStart_toEndOf="@+id/button_create_amp"
+        app:layout_constraintTop_toTopOf="@+id/button_create_amp" />
 
     <TextView
         android:id="@+id/text_view_amp_title"
@@ -164,7 +165,7 @@
         android:layout_marginEnd="8dp"
         app:errorEnabled="true"
         android:hint="@string/max_amp_text"
-        app:layout_constraintBottom_toTopOf="@+id/button_create"
+        app:layout_constraintBottom_toTopOf="@+id/button_create_amp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_input_layout_min_amp"

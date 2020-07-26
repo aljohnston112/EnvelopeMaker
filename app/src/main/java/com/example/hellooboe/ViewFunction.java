@@ -7,12 +7,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 
 public class ViewFunction extends View {
 
-    public static final String COL_NUMBER_KEY = "590";
     public static final int ACTIVITY_AMP_MAKER = 591;
     public static final int ACTIVITY_FREQ_MAKER = 592;
+    public static final int ACTIVITY_AMP_MAKER_FILL = 598;
+    public static final int ACTIVITY_FREQ_MAKER_FILL = 599;
+    public static final String COL_NUMBER_KEY = "590";
     public static final String FLOAT_DATA = "593";
     public static final String SHORT_DATA = "594";
     public static final String COL_DATA = "595";
@@ -21,20 +24,23 @@ public class ViewFunction extends View {
 
     private Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint borderColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private int borderStrokeWidth = 4;
     private Paint textColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private boolean isConstant;
-    private  boolean isAddNew;
-    private boolean isAmp;
-    private boolean selected;
+    private int borderStrokeWidth = 4;
+
     private int col;
     private double minY = 0;
     private double maxY = 10;
     private int height;
     private int width;
+
+    private boolean isConstant;
+    private boolean isAddNew;
+    private boolean isAmp;
+    private boolean selected;
+
     // The points to draw lines between
-    private float[] dataF = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1};
-    private short[] dataS = {0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 1};
+    private float[] dataF = null;
+    private short[] dataS = null;
 
     public ViewFunction(Context context) {
         super(context);
@@ -69,9 +75,6 @@ public class ViewFunction extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         double xtoYRatio = getXToYRatio();
-        if (isAddNew) {
-            xtoYRatio = 1;
-        }
         width = (int) Math.round((double) h * xtoYRatio);
         height = h;
         if (width > w) {
@@ -92,13 +95,15 @@ public class ViewFunction extends View {
      * Gets the XtoYRatio of the data to keep drawing to scale.
      */
     public double getXToYRatio() {
-        double xtoYRatio;
-        if (NativeMethods.audioDataIsFloat()) {
-            xtoYRatio = ((double) dataF.length) / (maxY - minY);
+        double time = 1.0 / 4.0;
+        if (isAmp) {
+            if (dataF != null || dataS != null)
+                time = NativeMethods.getAmpTime(col, NativeMethods.getSampleRate());
         } else {
-            xtoYRatio = ((double) dataS.length) / (maxY - minY);
+            if (dataF != null || dataS != null)
+                time = NativeMethods.getFreqTime(col, NativeMethods.getSampleRate());
         }
-        return xtoYRatio;
+        return time * 4.0;
     }
 
     public int getCol(){
@@ -137,45 +142,65 @@ public class ViewFunction extends View {
         height = getHeight();
         width = getWidth();
         if (!isAddNew) {
-            double xScale;
-            if (NativeMethods.audioDataIsFloat()) {
-                xScale = ((double) width) / ((double) dataF.length - 1);
-            } else {
-                xScale = ((double) width) / ((double) dataS.length - 1);
-            }
-            double yScale = ((double) height) / ((double) (maxY - minY));
-            // Draw between the points
-            for (int i = 1; i < dataF.length; i++) {
-                canvas.drawLine((float) (((double) i - 1) * xScale), (float) (height - ((((double) dataF[i - 1]) * yScale) - minY)),
-                        (float) (((double) i) * xScale), (float) (height - ((((double) dataF[i]) * yScale) - minY)),
-                        lineColor);
-            }
-            // Draw the y values for the end points
-            if (NativeMethods.audioDataIsFloat()) {
-                String endText = String.format("(%.2f)", dataF[dataF.length - 1]);
-                float textWidth = textColor.measureText(endText);
-                canvas.drawText(String.format("(%.2f)", dataF[0]), 2, (int) Math.round(height / 2.0), textColor);
-                canvas.drawText(endText, width - textWidth - 2, (int) Math.round(height / 2.0), textColor);
-            } else {
-                String endText = String.format("(%.2f)", dataS[dataS.length - 1]);
-                float textWidth = textColor.measureText(endText);
-                canvas.drawText(String.format("(%.2f)", dataS[0]), 2, (int) Math.round(height / 2.0), textColor);
-                canvas.drawText(endText, width - textWidth - 2, (int) Math.round(height / 2.0), textColor);
-            }
+            drawBetweenPoints(canvas);
+            drawYValues(canvas);
         } else {
-            canvas.drawRect((int) Math.round(3.5 * width / 8.0), (int) Math.round(2.0 * width / 8.0),
-                    (int) Math.round(4.5 * width / 8.0), (int) Math.round(6.0 * width / 8.0), lineColor);
-            canvas.drawRect((int) Math.round(2.0 * height / 8.0), (int) Math.round(3.5 * height / 8.0),
-                    (int) Math.round(6.0 * width / 8.0), (int) Math.round(4.5 * width / 8.0), lineColor);
+            drawPlus(canvas);
         }
         drawBorder(canvas);
+    }
+
+    private void drawBetweenPoints(Canvas canvas) {
+        double xScale;
+        if (NativeMethods.audioDataIsFloat()) {
+            xScale = ((double) width) / ((double) dataF.length - 1);
+        } else {
+            xScale = ((double) width) / ((double) dataS.length - 1);
+        }
+        double yScale = ((double) height) / (maxY - minY);
+        // Draw between the points
+        for (int i = 1; i < dataF.length; i++) {
+            canvas.drawLine((float) (((double) i - 1) * xScale), (float) (height - ((((double) dataF[i - 1]) * yScale) - minY)),
+                    (float) (((double) i) * xScale), (float) (height - ((((double) dataF[i]) * yScale) - minY)),
+                    lineColor);
+        }
+    }
+
+    private void drawPlus(Canvas canvas) {
+        canvas.drawRect((int) Math.round(3.5 * width / 8.0), (int) Math.round(2.0 * width / 8.0),
+                (int) Math.round(4.5 * width / 8.0), (int) Math.round(6.0 * width / 8.0), lineColor);
+        canvas.drawRect((int) Math.round(2.0 * height / 8.0), (int) Math.round(3.5 * height / 8.0),
+                (int) Math.round(6.0 * width / 8.0), (int) Math.round(4.5 * width / 8.0), lineColor);
+    }
+
+    private void drawYValues(Canvas canvas) {
+        // Draw the y values for the end points
+        String startText;
+        String endText;
+        if (NativeMethods.audioDataIsFloat()) {
+            startText = String.format("(%.2f)", dataF[0]);
+            endText = String.format("(%.2f)", dataF[dataF.length - 1]);
+
+        } else {
+            startText = String.format("(%.2f)", dataF[0]);
+            endText = String.format("(%.2f)", dataS[dataS.length - 1]);
+        }
+        float textWidthStart = textColor.measureText(startText);
+        float textWidthEnd = textColor.measureText(endText);
+        while (((textWidthStart + textWidthEnd + borderStrokeWidth) * 2.0) > width) {
+            textColor.setTextSize(textColor.getTextSize() - 1);
+            textWidthStart = textColor.measureText(startText);
+            textWidthEnd = textColor.measureText(endText);
+        }
+        canvas.drawText(startText, borderStrokeWidth / 2, (int) Math.round(height / 2.0), textColor);
+        canvas.drawText(endText, width - textWidthEnd - borderStrokeWidth / 2, (int) Math.round(height / 2.0), textColor);
     }
 
     private void drawBorder(Canvas canvas) {
         // Draw the border
         borderColor.setStrokeWidth(borderStrokeWidth);
-        if(selected){
-            borderStrokeWidth *=4;
+        if (selected) {
+            borderStrokeWidth *= 4;
             borderColor.setStrokeWidth(borderStrokeWidth);
         }
         //Right
@@ -211,6 +236,9 @@ public class ViewFunction extends View {
         }
         isAddNew = false;
         isConstant = false;
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.width = (int) Math.round(height * getXToYRatio());
+        requestLayout();
         invalidate();
     }
 
@@ -225,6 +253,9 @@ public class ViewFunction extends View {
         }
         isAddNew = false;
         isConstant = false;
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.width = (int) Math.round(height * getXToYRatio());
+        requestLayout();
         invalidate();
     }
 
@@ -268,6 +299,9 @@ public class ViewFunction extends View {
         }
     }
 
+    boolean isAddNew() {
+        return isAddNew;
+    }
 
     void setAsAddNew() {
         isAddNew = true;

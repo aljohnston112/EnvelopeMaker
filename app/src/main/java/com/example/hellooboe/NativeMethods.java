@@ -24,6 +24,12 @@ public class NativeMethods {
 
     public static native void makeSound();
 
+    public static native double getAmpTime(int index, int samplesPerSecond);
+
+    public static native double getFreqTime(int index, int samplesPerSecond);
+
+    public static native int getSampleRate();
+
     /*
     public static native float[] loadExponential(double start, double end, double length, int row, int col);
 

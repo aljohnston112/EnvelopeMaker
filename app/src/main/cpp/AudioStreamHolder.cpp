@@ -171,3 +171,31 @@ JNIEXPORT void JNICALL
 Java_com_example_hellooboe_NativeMethods_stopStream(JNIEnv *env, jclass clazz) {
     audioStreamHolder->stopStream();
 }
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_hellooboe_NativeMethods_getAmpTime(JNIEnv *env, jclass clazz, jint index,
+                                                    jint samplesPerSecond) {
+    if (audioStreamHolder->audioDataIsFloat()) {
+        return audioStreamHolder->getWaveMaker<float>().getAmpTime(index, samplesPerSecond);
+    } else {
+        return audioStreamHolder->getWaveMaker<int>().getAmpTime(index, samplesPerSecond);
+    }
+}
+
+extern "C"
+JNIEXPORT jdouble JNICALL
+Java_com_example_hellooboe_NativeMethods_getFreqTime(JNIEnv *env, jclass clazz, jint index,
+                                                     jint samplesPerSecond) {
+    if (audioStreamHolder->audioDataIsFloat()) {
+        return audioStreamHolder->getWaveMaker<float>().getFreqTime(index, samplesPerSecond);
+    } else {
+        return audioStreamHolder->getWaveMaker<int>().getFreqTime(index, samplesPerSecond);
+    }
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_hellooboe_NativeMethods_getSampleRate(JNIEnv *env, jclass clazz) {
+    return audioStreamHolder->getSampleRate();
+}
