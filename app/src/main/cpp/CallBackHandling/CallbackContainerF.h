@@ -14,6 +14,8 @@ struct CallbackContainerF {
 
     std::vector<float> get(int frames);
 
+    void clear(){data.clear();};
+
 private:
     std::vector<float> data;
 };

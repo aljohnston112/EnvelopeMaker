@@ -59,5 +59,6 @@
     <string name="Power">Power</string>
     <string name="Quadratic">Quadratic</string>
     <string name="Sine">Sine</string>
+    <string name="cycle_text">Number of cycles</string>
 
 </resources>

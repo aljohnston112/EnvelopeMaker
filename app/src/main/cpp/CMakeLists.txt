@@ -22,9 +22,6 @@ add_library( # Sets the name of the library.
         CallBackHandling/CallbackContainerI.cpp
         CallBackHandling/CallbackContainerF.cpp
         DataGeneration/SineWaveMaker.h
-        DataGeneration/Envelope.h
-        DataGeneration/AmplitudeEnvelope.h
-        DataGeneration/FrequencyEnvelope.h
         Functions/Function.cpp
         Functions/Constant.cpp
         Functions/Linear.cpp

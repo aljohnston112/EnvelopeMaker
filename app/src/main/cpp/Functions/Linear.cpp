@@ -13,8 +13,8 @@ Linear::Linear(std::pair<double, double> p0, std::pair<double, double> p1) {
     addPoints({p0, p1});
     double min = std::min<double>({p0.second, p1.second});
     double max = std::max<double>({p0.second, p1.second});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     if ((p0.first - p1.first) == 0) {
         a = (p1.second - p0.second) / (p1.first - p0.first);
     } else {

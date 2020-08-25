@@ -8,7 +8,8 @@
 
 // TODO Find a way to make (0, 0) and (x1, 0) work
 
-Power::Power(std::pair<double, double> p0, std::pair<double, double> p1) {
+template <typename T>
+Power<T>::Power(std::pair<double, double> p0, std::pair<double, double> p1) {
     double x0 = p0.first;
     double y0 = p0.second;
     double x1 = p1.first;
@@ -20,8 +21,8 @@ Power::Power(std::pair<double, double> p0, std::pair<double, double> p1) {
     addPoints({p0, p1});
     double min = std::min<double>({y0, y1});
     double max = std::max<double>({y0, y1});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     if ((x0 != 0)) {
         a = pow(pow(y0, x0), (1.0 / (x0 * y1)));
     } else {

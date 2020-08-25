@@ -9,8 +9,6 @@
 #define SINEWAVEMAKER_H_
 
 #include "Wave.h"
-#include "AmplitudeEnvelope.h"
-#include "FrequencyEnvelope.h"
 #include  <vector>
 #include  <cstdint>
 #include <math.h>
@@ -44,69 +42,6 @@ inline std::vector<T> make(double magnitude, double frequency, double &radians, 
     for (int i = 0; i < samples; i++) {
         wave.push_back(magnitude
                        * sin((2.0 * (M_PI) * frequency * i / samplesPerSecond) + radians));
-    }
-    return wave;
-}
-
-template<typename T>
-std::vector<T>
-inline
-make(AmplitudeEnvelope<T> amplitudeEnvelope, double frequency, double radians, int samplesPerSecond) {
-    double amplitude = 1.0;
-    std::vector<double> *amps = amplitudeEnvelope.getAmplitudes();
-    double seconds = (double) (amps->size()) / samplesPerSecond;
-    std::vector<T> wave = make<T>(amplitude, frequency, radians, seconds, samplesPerSecond);
-    if (std::is_same<T, float>::value) {
-        for (int i = 0; i < wave.size(); i++) {
-            wave[i] = wave[i] * (*amps)[i];
-        }
-    }
-    if (std::is_same<T, int16_t>::value) {
-        for (int i = 0; i < wave.size(); i++) {
-            wave[i] = lround(wave[i] * (*amps)[i]);
-        }
-    }
-    return wave;
-}
-
-template<typename T>
-std::vector<T>
-inline
-make(double magnitude, FrequencyEnvelope<T> frequencyEnvelope, double radians, int samplesPerSecond) {
-    std::vector<T> *freqs = frequencyEnvelope.getFrequencies();
-    double rads = radians;
-    double seconds = 1.0 / samplesPerSecond;
-    std::vector<T> wave{};
-    int scrap;
-    for (int i = 0; i < freqs->size(); i++) {
-        std::vector<T> newWave = make<T>(magnitude, (*freqs)[i], rads, seconds,
-                                         samplesPerSecond, scrap);
-        wave.insert(wave.end(), newWave.begin(), newWave.end());
-        rads += 2.0 * M_PI * ((*freqs)[i]) * seconds;
-    }
-    return wave;
-}
-
-template<typename T>
-std::vector<T>
-inline
-make(AmplitudeEnvelope<T> amplitudeEnvelope, FrequencyEnvelope<T> frequencyEnvelope, double radians,
-     int samplesPerSecond) {
-    if (amplitudeEnvelope.getAmplitudes()->size() != frequencyEnvelope.getFrequencies()->size()) {
-        throw std::logic_error(
-                "amplitudeEnvelope and frequencyEnvelope passed to make are not the same length");
-    }
-    std::vector<T> *amps = amplitudeEnvelope.getAmplitudes();
-    std::vector<T> *freqs = frequencyEnvelope.getFrequencies();
-    double rads = radians;
-    double seconds = 1.0 / samplesPerSecond;
-    std::vector<T> wave{};
-    int scrap;
-    for (int i = 0; i < freqs->size(); i++) {
-        std::vector<T> newWave = make<T>((*amps)[i], (*freqs)[i], rads, seconds,
-                                         samplesPerSecond, scrap);
-        wave.insert(wave.end(), newWave.begin(), newWave.end());
-        rads += 2.0 * M_PI * ((*freqs)[i]) * seconds;
     }
     return wave;
 }

@@ -7,7 +7,8 @@
 
 #include "Function.h"
 
-struct Sine : public Function {
+template <typename T>
+struct Sine : public Function<T> {
     Sine(std::pair<double, double> p0, std::pair<double, double> p1);
 
     double fun(double x);

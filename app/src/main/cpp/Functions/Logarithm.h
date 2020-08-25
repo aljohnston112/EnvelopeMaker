@@ -7,7 +7,8 @@
 
 #include "Function.h"
 
-struct Logarithm : public Function {
+template <typename T>
+struct Logarithm : public Function<T> {
     Logarithm(std::pair<double, double> p0, std::pair<double, double> p1);
 
     double fun(double x);

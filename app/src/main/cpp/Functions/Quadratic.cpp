@@ -5,8 +5,8 @@
 #include "Quadratic.h"
 #include <exception>
 #include <android/log.h>
-
-Quadratic::Quadratic(std::pair<double, double> p0,
+template <typename T>
+Quadratic<T>::Quadratic(std::pair<double, double> p0,
                      std::pair<double, double> vertex) {
     double x0 = p0.first;
     double y0 = p0.second;
@@ -19,8 +19,8 @@ Quadratic::Quadratic(std::pair<double, double> p0,
     addPoints({p0, vertex});
     double min = std::min<double>({y0, yv});
     double max = std::max<double>({y0, yv});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     a = (yv - y0) / ((xv * xv) - (x0 * x0) + ((2.0 * xv) * (x0 - xv)));
     b = -2.0 * a * xv;
     c = y0 - (a * (x0 * x0)) - (b * x0);

@@ -8,7 +8,8 @@
 
 #include "Function.h"
 
-struct Quadratic : public Function {
+template <typename T>
+struct Quadratic : public Function<T> {
     Quadratic(std::pair<double, double> p0, std::pair<double, double> vertex);
 
     double fun(double x);

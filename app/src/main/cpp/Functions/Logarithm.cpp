@@ -10,7 +10,8 @@
 // Let user pick start value, shift to (1, start value) and shift end value to (time+1, end value)
 // Then map back to 0-time
 
-Logarithm::Logarithm(std::pair<double, double> p0, std::pair<double, double> p1) {
+template <typename T>
+Logarithm<T>::Logarithm(std::pair<double, double> p0, std::pair<double, double> p1) {
     double x0 = p0.first;
     double y0 = p0.second;
     double x1 = p1.first;
@@ -26,8 +27,8 @@ Logarithm::Logarithm(std::pair<double, double> p0, std::pair<double, double> p1)
     addPoints({p0, p1});
     double min = std::min<double>({y0, y1});
     double max = std::max<double>({y0, y1});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     if (x1 != 0) {
         a = (y0 - y1) / std::log((x0 / x1));
     } else {

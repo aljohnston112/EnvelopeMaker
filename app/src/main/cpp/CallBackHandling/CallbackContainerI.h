@@ -14,6 +14,8 @@ struct CallbackContainerI {
 
     std::vector<int16_t> get(int frames);
 
+    void clear(){data.clear();};
+
 private:
     std::vector<int16_t> data;
 };

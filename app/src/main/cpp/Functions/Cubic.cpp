@@ -22,8 +22,8 @@ Cubic::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
     addPoints({p0, vertex, vertex2});
     double min = std::min<double>({y0, yv0, yv1});
     double max = std::max<double>({y0, yv0, yv1});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     double m = ((x0 * x0 * xv1) + (xv0 * xv0 * x0) + (xv1 * xv1 * xv0)) -
                ((xv0 * xv0 * xv1) + (x0 * x0 * xv0) + (xv1 * xv1 * x0));
     //TODO lots of algebra

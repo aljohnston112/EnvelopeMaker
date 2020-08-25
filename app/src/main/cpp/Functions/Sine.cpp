@@ -21,8 +21,8 @@ Sine::Sine(std::pair<double, double> p0, std::pair<double, double> p1) {
     addPoints({p0, p1});
     double min = std::min<double>({y0, y1});
     double max = std::max<double>({y0, y1});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     if ((std::sin(x0)) - (std::sin(x1)) != 0) {
         a = (y0 - y1) / (sin(x0) - sin(x1));
     } else {

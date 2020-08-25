@@ -7,10 +7,17 @@
 
 #include "Function.h"
 
-struct Constant : public Function {
-    Constant(double cnst);
+template <typename T>
+struct Constant : public Function<T> {
 
-    double fun(double x);
+    Constant(double start, double length, int sampleRate) : Function<T>(start, start, length, sampleRate) {
+            Function<T>::minY = start;
+            Function<T>::maxY = start;
+    }
+
+    double fun(double x){
+            return c;
+    }
 
 private:
     double c;

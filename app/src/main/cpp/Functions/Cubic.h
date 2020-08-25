@@ -7,7 +7,8 @@
 
 #include "Function.h"
 
-struct Cubic : public Function {
+template <typename T>
+struct Cubic : public Function<T> {
     Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
           std::pair<double, double> vertex2);
 

@@ -20,7 +20,7 @@ public class NativeMethods {
 
     public static native double getMaxFreq();
 
-    public static native float[] loadConstant(double start, double length, int row, int col);
+    public static native float[] loadConstant(double start, double length, int row, int col, int width);
 
     public static native void makeSound();
 
@@ -29,6 +29,8 @@ public class NativeMethods {
     public static native double getFreqTime(int index, int samplesPerSecond);
 
     public static native int getSampleRate();
+
+    public static native void setData(int row, int col, double start, double end, double length, double cycles, double min, double max);
 
     /*
     public static native float[] loadExponential(double start, double end, double length, int row, int col);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraint_layout_amp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,13 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
+        android:onClick="onButtonAmpMakerCreate"
         android:text="@string/confirm_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_cancel_amp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_max_amp"
-        android:onClick="onButtonAmpMakerCreate"/>
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_min_amp" />
 
     <Button
         android:id="@+id/button_cancel_amp"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
-        android:onClick="onButtonFAmpMakerCancel"
+        android:onClick="onButtonAmpMakerCancel"
         android:text="@string/cancel_button"
         app:layout_constraintBottom_toBottomOf="@+id/button_create_amp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +40,8 @@
         style="@style/TextAppearance.MdcTypographyStyles.Headline4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text="@string/amplitude_envelope"
         android:textColor="@android:color/black"
@@ -53,9 +55,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
-        app:errorEnabled="true"
         android:hint="@string/start_amp_text"
+        app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_amp_length"
+        app:layout_constraintEnd_toEndOf="@+id/text_input_layout_amp_length"
         app:layout_constraintEnd_toStartOf="@+id/text_input_layout_end_amp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,12 +79,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
-        app:errorEnabled="true"
         android:hint="@string/end_amp_text"
+        app:errorEnabled="true"
         app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_start_amp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_input_layout_start_amp"
+        app:layout_constraintStart_toStartOf="@+id/text_input_layout_amp_cycles"
         app:layout_constraintTop_toTopOf="@+id/text_input_layout_start_amp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -99,9 +103,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:errorEnabled="true"
         android:hint="@string/pick_a_function_text"
         android:labelFor="@id/auto_complete_text_view_amp_function"
+        app:errorEnabled="true"
         app:layout_constraintBottom_toTopOf="@+id/text_input_layout_start_amp"
         app:layout_constraintTop_toBottomOf="@+id/text_view_amp_title">
 
@@ -116,13 +120,17 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_amp_length"
         style="@style/TextAppearance.MdcTypographyStyles.Body2"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:errorEnabled="true"
+        android:layout_marginEnd="4dp"
         android:hint="@string/length_seconds_text"
-        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_max_amp"
+        app:errorEnabled="true"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout_min_amp"
+        app:layout_constraintEnd_toEndOf="@+id/text_input_layout_min_amp"
+        app:layout_constraintEnd_toStartOf="@+id/text_input_layout_amp_cycles"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_input_layout_start_amp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -131,6 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -140,13 +149,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="4dp"
-        app:errorEnabled="true"
         android:hint="@string/min_amp_text"
-        app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_max_amp"
+        app:errorEnabled="true"
+        app:layout_constraintBottom_toTopOf="@+id/button_create_amp"
+        app:layout_constraintEnd_toEndOf="@+id/button_create_amp"
         app:layout_constraintEnd_toStartOf="@+id/text_input_layout_max_amp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_input_layout_max_amp">
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_amp_length">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_min_amp"
@@ -163,13 +173,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
-        app:errorEnabled="true"
         android:hint="@string/max_amp_text"
-        app:layout_constraintBottom_toTopOf="@+id/button_create_amp"
+        app:errorEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_min_amp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/text_input_layout_min_amp"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout_amp_length">
+        app:layout_constraintStart_toStartOf="@+id/button_cancel_amp"
+        app:layout_constraintTop_toTopOf="@+id/text_input_layout_min_amp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_max_amp"
@@ -178,6 +189,30 @@
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
 
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_amp_cycles"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:hint="@string/cycle_text"
+        app:errorEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_amp_length"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/text_input_layout_amp_length"
+        app:layout_constraintStart_toStartOf="@+id/text_input_layout_max_amp"
+        app:layout_constraintTop_toTopOf="@+id/text_input_layout_amp_length">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_amp_cycles"
+            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

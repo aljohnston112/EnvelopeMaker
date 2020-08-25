@@ -12,6 +12,7 @@
 #include <android/log.h>
 #include <utility>
 #include <vector>
+#include <cmath>
 
 AudioStreamHolder *audioStreamHolder;
 
@@ -109,35 +110,32 @@ extern "C"
 JNIEXPORT jfloatArray JNICALL
 Java_com_example_hellooboe_NativeMethods_loadConstant(JNIEnv *env, jclass clazz, jdouble start,
                                                       jdouble length, jint row,
-                                                      jint col) {
+                                                      jint col, jint width) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading constant");
     jfloatArray outData;
-    if (row == 0) {
-        if (audioStreamHolder->audioDataIsFloat()) {
+    std::vector<float> *data;
+    if (audioStreamHolder->audioDataIsFloat()) {
+        if (row == 0) {
             audioStreamHolder->getWaveMaker<float>().insert(
-                    new AmplitudeEnvelope<float>{new Constant{start}, length,
+                    new AmplitudeEnvelope<float>{new Constant{start, length}, length,
                                                  audioStreamHolder->getSampleRate()}, col);
-            std::vector<float> *data{
-                    audioStreamHolder->getWaveMaker<float>().getAmpEnv(col)->getAmplitudes()};
-            outData = env->NewFloatArray(data->size());
-            jsize size = env->GetArrayLength(outData);
-            env->SetFloatArrayRegion(outData, 0, size, data->data());
-        } else {
-            // TODO
-        }
-    } else if (row == 1) {
-        if (audioStreamHolder->audioDataIsFloat()) {
+            data = audioStreamHolder->getWaveMaker<float>().getAmpEnv(col)->getAmplitudes();
+        } else if (row == 1) {
             audioStreamHolder->getWaveMaker<float>().insert(
-                    new FrequencyEnvelope<float>{new Constant{start}, length,
+                    new FrequencyEnvelope<float>{new Constant{start, length}, length,
                                                  audioStreamHolder->getSampleRate()}, col);
-            std::vector<float> *data{
-                    audioStreamHolder->getWaveMaker<float>().getFreqEnv(col)->getFrequencies()};
-            outData = env->NewFloatArray(data->size());
-            jsize size = env->GetArrayLength(outData);
-            env->SetFloatArrayRegion(outData, 0, size, data->data());
-        } else {
-            // TODO
+            data = audioStreamHolder->getWaveMaker<float>().getFreqEnv(col)->getFrequencies();
         }
+        int skip = std::floor((double)data->size() / (double)width);
+        std::vector<float> reduced(width);
+        for (int i = 0; i < reduced.size(); i++) {
+            reduced[i] = (*data)[i * skip];
+        }
+        outData = env->NewFloatArray(reduced.size());
+        jsize size = env->GetArrayLength(outData);
+        env->SetFloatArrayRegion(outData, 0, size, reduced.data());
+    } else {
+        // TODO
     }
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loaded constant");
     return outData;
@@ -198,4 +196,23 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_com_example_hellooboe_NativeMethods_getSampleRate(JNIEnv *env, jclass clazz) {
     return audioStreamHolder->getSampleRate();
+}extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_hellooboe_NativeMethods_setData(JNIEnv *env, jclass clazz, jint row, jint col,
+                                                 jdouble start, jdouble end, jdouble length,
+                                                 jdouble cycles, jdouble min, jdouble max) {
+    bool isAmp;
+    if(row == 0){
+        isAmp = true;
+    } else if(row == 1){
+        isAmp = false;
+    } else {
+        throw std::range_error("row passed to setData() must be 0 or 1");
+
+    }
+    if(audioStreamHolder->audioDataIsFloat()) {
+        audioStreamHolder->getWaveMaker<float>().setData(isAmp, col, start, end, length, cycles, min, max);
+    } else {
+        audioStreamHolder->getWaveMaker<int16_t >().setData(isAmp, col, start, end, length, cycles, min, max);
+    }
 }

@@ -8,50 +8,58 @@
 #include <vector>
 #include <stdexcept>
 
+template <typename T>
 struct Function {
 
-    Function(): points(), max(std::numeric_limits<double>::min()), min(std::numeric_limits<double>::max()){};
+    Function(double start, double end, double length, int sampleRate)
+    : mstart(start), mend(end), mlength(length), msampleRate(sampleRate){};
 
-    template <typename T>
+    Function(double start, double end, double cycles, double min, double max, double length, int sampleRate)
+            : mstart(start), mend(end), mcycles(cycles), mmin(min), mmax(max), mlength(length), msampleRate(sampleRate){};
+
+    /**
     std::vector<T> fun(double x0, double x1, int points){
         double dx = (x1 - x0) / (points - 1);
         std::vector<T> out{};
-        max = std::numeric_limits<double>::min();
-        min = std::numeric_limits<double>::max();
+        maxY = std::numeric_limits<double>::min();
+        minY = std::numeric_limits<double>::max();
             double t;
             for (int i = 0; i < points; i++) {
                 t = fun(x0 + (i * dx));
-                min = std::min<double>(t, min);
-                max = std::max<double>(t, max);
+                minY = std::min<double>(t, minY);
+                maxY = std::max<double>(t, maxY);
                 out.push_back(t);
             }
         return out;
     }
+     */
 
     virtual double fun(double x) = 0;
 
-    void setMax(double mmax) { if (mmax > max) { max = mmax; }};
+    double getMaxY() { return maxY; };
 
-    void setMin(double mmin) { if (mmin < min) { min = mmin; }};
+    double getMinY() { return minY; };
 
-    double getMax() { return max; };
+    std::vector<T>* getData(){return &data;};
 
-    double getMin() { return min; };
-
-    void addPoint(std::pair<double, double> point) { points.push_back(point); };
-
-    void addPoints(std::vector<std::pair<double, double>> ppoints) {
-        for (auto p : ppoints) {
-            addPoint(p);
-        }
-    };
-
-    std::vector<std::pair<double, double>> *getPoints() { return &points; };
+    double getTime() {
+        return ((double) data.size() / (double) msampleRate);
+    }
 
 private:
-    std::vector<std::pair<double, double>> points;
-    double max;
-    double min;
+    std::vector<T> data;
+
+protected:
+    double mstart = -1;
+    double mend = -1;
+    double mlength = -1;
+    double mcycles = -1;
+    double mmin = -1;
+    double mmax = -1;
+    int msampleRate = -1;
+
+    double minY = std::numeric_limits<double>::max();
+    double maxY = std::numeric_limits<double>::min();
 };
 
 #endif //HELLOOBOE_FUNCTION_H

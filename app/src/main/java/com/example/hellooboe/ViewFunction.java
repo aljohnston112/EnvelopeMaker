@@ -26,8 +26,11 @@ public class ViewFunction extends View {
     public static final String START_DATA = "600";
     public static final String END_DATA = "601";
     public static final String LENGTH_DATA = "602";
+    public static final String CYCLES_DATA = "605";
     public static final String MIN_DATA = "603";
     public static final String MAX_DATA = "604";
+
+    public static final String WIDTH_DATA = "606";
 
     private Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint borderColor = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -35,8 +38,6 @@ public class ViewFunction extends View {
     private int borderStrokeWidth = 4;
 
     private int col;
-    private double minY = 0;
-    private double maxY = 10;
     private int height;
     private int width;
 
@@ -54,6 +55,7 @@ public class ViewFunction extends View {
     double start = -1;
     double end = -1;
     double length = -1;
+    double cycles = -1;
     double min = -1;
     double max = -1;
 
@@ -73,6 +75,7 @@ public class ViewFunction extends View {
             throw new IllegalArgumentException("function passed to setFunction() is not a function from R.string");
         }
         this.function = function;
+        
     }
 
     public double getStart() {
@@ -113,6 +116,14 @@ public class ViewFunction extends View {
 
     public void setMax(double max) {
         this.max = max;
+    }
+
+    public double getCycles() {
+        return cycles;
+    }
+
+    public void setCycles(double cycles) {
+        this.cycles = cycles;
     }
 
     public ViewFunction(Context context) {
@@ -230,11 +241,28 @@ public class ViewFunction extends View {
         } else {
             xScale = ((double) width) / ((double) dataS.length - 1);
         }
+        double minY;
+        double maxY;
+        if(isAmp){
+            minY = NativeMethods.getMinAmp()- (NativeMethods.getMinAmp()/4.0);
+            maxY = NativeMethods.getMaxAmp() + (NativeMethods.getMinAmp()/4.0);
+            minY  -= ((NativeMethods.getMaxAmp() - NativeMethods.getMinAmp())/4.0);
+            minY  += ((NativeMethods.getMaxAmp() - NativeMethods.getMinAmp())/4.0);
+        } else{
+            minY = NativeMethods.getMinFreq()- (NativeMethods.getMinFreq()/4.0);
+            maxY = NativeMethods.getMaxFreq() + (NativeMethods.getMinFreq()/4.0);
+            minY  -= ((NativeMethods.getMaxFreq() - NativeMethods.getMinFreq())/4.0);
+            minY  += ((NativeMethods.getMaxFreq() - NativeMethods.getMinFreq())/4.0);
+        }
+        if(minY == maxY){
+            minY +=1;
+            maxY +=1;
+        }
         double yScale = ((double) height) / (maxY - minY);
         // Draw between the points
         for (int i = 1; i < dataF.length; i++) {
-            canvas.drawLine((float) (((double) i - 1) * xScale), (float) (height - ((((double) dataF[i - 1]) * yScale) - minY)),
-                    (float) (((double) i) * xScale), (float) (height - ((((double) dataF[i]) * yScale) - minY)),
+            canvas.drawLine((float) (((double) i - 1) * xScale), (float) (height - (((((double) dataF[i - 1])- minY) * yScale))),
+                    (float) (((double) i) * xScale), (float) (height - (((((double) dataF[i] - minY)) * yScale))),
                     lineColor);
         }
     }
@@ -251,12 +279,22 @@ public class ViewFunction extends View {
         String startText;
         String endText;
         if (NativeMethods.audioDataIsFloat()) {
-            startText = String.format("(%.2f)", dataF[0]);
-            endText = String.format("(%.2f)", dataF[dataF.length - 1]);
+            if(isAmp) {
+                startText = String.format("(%.2f)", dataF[0]*100.0);
+                endText = String.format("(%.2f)", dataF[dataF.length - 1]*100.0);
+            } else {
+                startText = String.format("(%.2f)", dataF[0]);
+                endText = String.format("(%.2f)", dataF[dataF.length - 1]);
+            }
 
         } else {
-            startText = String.format("(%.2f)", dataF[0]);
-            endText = String.format("(%.2f)", dataS[dataS.length - 1]);
+            if(isAmp) {
+                startText = String.format("(%.2f)", dataS[0]*100.0);
+                endText = String.format("(%.2f)", dataS[dataS.length - 1]*100.0);
+            } else {
+                startText = String.format("(%.2f)", dataS[0]);
+                endText = String.format("(%.2f)", dataS[dataS.length - 1]);
+            }
         }
         float textWidthStart = textColor.measureText(startText);
         float textWidthEnd = textColor.measureText(endText);
@@ -298,14 +336,10 @@ public class ViewFunction extends View {
         }
     }
 
-    void setData(double minY, double maxY, float[] values) {
-        int numPoints = (int) Math.round(width / 2.0);
-        int skip = values.length / numPoints;
-        this.minY = minY;
-        this.maxY = maxY;
-        this.dataF = new float[numPoints];
-        for (int i = 0; i < dataF.length; i++) {
-            dataF[i] = values[i * skip];
+    void setData(float[] values) {
+        this.dataF = new float[values.length];
+        for(int i = 0; i < dataF.length; i++){
+            dataF[i] = values[i];
         }
         isAddNew = false;
         isConstant = false;
@@ -315,14 +349,10 @@ public class ViewFunction extends View {
         invalidate();
     }
 
-    void setData(double minY, double maxY, short[] values) {
-        int numPoints = (int) Math.round(width / 2.0);
-        int skip = values.length / numPoints;
-        this.minY = minY;
-        this.maxY = maxY;
-        this.dataF = new float[numPoints];
-        for (int i = 0; i < dataF.length; i++) {
-            dataF[i] = values[i * skip];
+    void setData(short[] values) {
+        this.dataS = new short[values.length];
+        for(int i = 0; i < dataS.length; i++){
+            dataS[i] = values[i];
         }
         isAddNew = false;
         isConstant = false;
@@ -388,14 +418,13 @@ public class ViewFunction extends View {
         public void onClick(View view) {
             if (!((ActivityMain) getContext()).isLongClicked) {
                 if (isAmp) {
+                    Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
+                    intent.putExtra(COL_NUMBER_KEY, ((ViewFunction) view).getCol());
+                    intent.putExtra(WIDTH_DATA, width);
                     if (function == null) {
-                        Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
-                        intent.putExtra(COL_NUMBER_KEY, ((ViewFunction) view).getCol());
                         ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_AMP_MAKER);
                     } else if (function.contentEquals(getResources().getString(R.string.Constant))
                             && start != -1 && length != -1) {
-                        Intent intent = new Intent(getContext(), ActivityAmpMaker.class);
-                        intent.putExtra(COL_NUMBER_KEY, ((ViewFunction) view).getCol());
                         intent.putExtra(FUNCTION_DATA, ((ViewFunction) view).getFunction());
                         intent.putExtra(START_DATA, ((ViewFunction) view).getStart());
                         intent.putExtra(LENGTH_DATA, ((ViewFunction) view).getLength());
@@ -418,12 +447,28 @@ public class ViewFunction extends View {
 
                 } else {
                     Intent intent = new Intent(getContext(), ActivityFreqMaker.class);
-                    intent.putExtra(COL_NUMBER_KEY, ((ViewFunction)view).getCol());
-                    ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_FREQ_MAKER);
+                    intent.putExtra(COL_NUMBER_KEY, ((ViewFunction) view).getCol());
+                    intent.putExtra(WIDTH_DATA, width);
+                    if (function == null) {
+                        ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_FREQ_MAKER);
+                    } else if (function.contentEquals(getResources().getString(R.string.Constant))
+                            && start != -1 && length != -1) {
+                        intent.putExtra(FUNCTION_DATA, ((ViewFunction) view).getFunction());
+                        intent.putExtra(START_DATA, ((ViewFunction) view).getStart());
+                        intent.putExtra(LENGTH_DATA, ((ViewFunction) view).getLength());
+                        ((ActivityMain) getContext()).startActivityForResult(intent, ACTIVITY_FREQ_MAKER_FILL);
+                    }
                 }
             } else{
-                selected = !selected;
-                invalidate();
+                if(!isAddNew) {
+                    selected = !selected;
+                    if(selected){
+                        ((ActivityMain) getContext()).selected(true);
+                    } else{
+                        ((ActivityMain) getContext()).selected(false);
+                    }
+                    invalidate();
+                }
             }
         }
 
@@ -433,9 +478,12 @@ public class ViewFunction extends View {
 
         @Override
         public boolean onLongClick(View view) {
-            ((ActivityMain) getContext()).longClicked(true);
-            selected = true;
-            invalidate();
+            if(!isAddNew) {
+                ((ActivityMain) getContext()).longClicked(true);
+                selected = true;
+                ((ActivityMain) getContext()).selected(true);
+                invalidate();
+            }
             return true;
         }
     }

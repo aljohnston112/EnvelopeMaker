@@ -7,7 +7,8 @@
 
 #include "Function.h"
 
-struct Power : public Function {
+template <typename T>
+struct Power : public Function<T> {
     Power(std::pair<double, double> p0, std::pair<double, double> p1);
 
     double fun(double x);

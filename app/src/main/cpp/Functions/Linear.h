@@ -8,7 +8,8 @@
 #include <utility>
 #include "Function.h"
 
-struct Linear : public Function {
+template <typename T>
+struct Linear : public Function<T> {
     Linear(std::pair<double, double> p0, std::pair<double, double> p1);
 
     double fun(double x);

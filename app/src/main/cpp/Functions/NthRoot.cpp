@@ -26,8 +26,8 @@ NthRoot::NthRoot(std::pair<double, double> p0, std::pair<double, double> p1) {
     addPoints({p0, p1});
     double min = std::min<double>({y0, y1});
     double max = std::max<double>({y0, y1});
-    setMin(min);
-    setMax(max);
+    setMinY(min);
+    setMaxY(max);
     b = std::log(x0 / x1) / std::log(y0 / y1);
     a = y0 / std::pow(x0, (1.0 / b));
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "a:%.20f", a);
