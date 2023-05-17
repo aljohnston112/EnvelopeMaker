@@ -5,7 +5,8 @@
 #include "Linear.h"
 #include <exception>
 
-Linear::Linear(std::pair<double, double> p0, std::pair<double, double> p1) {
+template<class T>
+Linear<T>::Linear(std::pair<double, double> p0, std::pair<double, double> p1) {
     if (p0.first == p1.first) {
         throw std::logic_error(
                 "pairs passed to Linear constructor must not have the same first values");
@@ -23,6 +24,7 @@ Linear::Linear(std::pair<double, double> p0, std::pair<double, double> p1) {
     b = p0.second - (a * p0.first);
 }
 
-double Linear::fun(double x) {
+template<class T>
+double Linear<T>::fun(double x) {
     return (a * x) + b;
 }

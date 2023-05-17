@@ -6,7 +6,8 @@
 #include <cmath>
 #include <android/log.h>
 
-Exponential::Exponential(std::pair<double, double> p0, std::pair<double, double> p1) {
+template<class T>
+Exponential<T>::Exponential(std::pair<double, double> p0, std::pair<double, double> p1) {
     double x0 = p0.first;
     double y0 = p0.second;
     double x1 = p1.first;
@@ -26,6 +27,7 @@ Exponential::Exponential(std::pair<double, double> p0, std::pair<double, double>
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double Exponential::fun(double x) {
+template<class T>
+double Exponential<T>::fun(double x) {
     return (a * exp(x)) + b;
 }

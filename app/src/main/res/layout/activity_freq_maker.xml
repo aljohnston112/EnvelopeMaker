@@ -37,7 +37,6 @@
 
     <TextView
         android:id="@+id/text_view_freq_title"
-        style="@style/TextAppearance.MdcTypographyStyles.Headline4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -50,7 +49,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_start_freq"
-        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -66,7 +65,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_edit_start_freq"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -74,7 +73,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_end_freq"
-        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -90,7 +89,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_end_freq"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -98,7 +97,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_freq_function"
-        style="@style/TextAppearance.MdcTypographyStyles.DropDown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -111,7 +109,7 @@
 
         <AutoCompleteTextView
             android:id="@+id/auto_complete_text_view_freq_function"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none" />
@@ -119,7 +117,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_freq_length"
-        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -135,7 +133,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_freq_length"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -144,7 +142,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_min_freq"
-        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -160,7 +158,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_min_freq"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -168,7 +166,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_max_freq"
-        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -184,7 +182,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_max_freq"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -193,7 +191,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_freq_cycles"
-        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -209,7 +207,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_text_freq_cycles"
-            style="@style/TextAppearance.MdcTypographyStyles.Body2"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />

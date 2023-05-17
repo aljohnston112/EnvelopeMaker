@@ -9,8 +9,8 @@
 // TODO Find a way to make (0, y0) and (x1, 0) work
 // For (0, y0) subtract y0 for (
 
-
-NthRoot::NthRoot(std::pair<double, double> p0, std::pair<double, double> p1) {
+template <typename T>
+NthRoot<T>::NthRoot(std::pair<double, double> p0, std::pair<double, double> p1) {
     double x0 = p0.first;
     double y0 = p0.second;
     double x1 = p1.first;
@@ -24,8 +24,8 @@ NthRoot::NthRoot(std::pair<double, double> p0, std::pair<double, double> p1) {
                 "pairs passed to NthRoot constructor can't be solve due to equal first or second values");
     }
     addPoints({p0, p1});
-    double min = std::min<double>({y0, y1});
-    double max = std::max<double>({y0, y1});
+    auto min = std::min<double>({y0, y1});
+    auto max = std::max<double>({y0, y1});
     setMinY(min);
     setMaxY(max);
     b = std::log(x0 / x1) / std::log(y0 / y1);
@@ -34,6 +34,7 @@ NthRoot::NthRoot(std::pair<double, double> p0, std::pair<double, double> p1) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double NthRoot::fun(double x) {
+template <typename T>
+double NthRoot<T>::fun(double x) {
     return a * pow(x, (1.0 / b));
 }

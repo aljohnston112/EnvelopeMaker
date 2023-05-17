@@ -1,57 +1,64 @@
-//
-// Created by Al on 7/7/2020.
-//
-
 #ifndef HELLOOBOE_WAVEMAKER_H
 #define HELLOOBOE_WAVEMAKER_H
 
 #include "SineWaveMaker.h"
 #include <list>
 
-template <typename T>
+template<typename T>
 struct WaveMaker {
 
-    WaveMaker(int sampleRate) : amps(), freqs(), msampleRate(sampleRate) {};
+    WaveMaker(
+            int sampleRate,
+            int numChannels
+    ) : sampleRate_(sampleRate),
+        numChannels_(numChannels),
+        amplitudeFunctions_(),
+        frequencyFunctions_() {};
 
     void insert_amp(Function<T> *ae, int index) {
-        if (index < 0 || index > amps.size()) {
+        if (index < 0 || index > amplitudeFunctions_.size()) {
             throw std::range_error("index passed to insert() was out of bounds");
         }
-        auto iterator = amps.begin();
+        auto iterator = amplitudeFunctions_.begin();
         for (int i = 0; i < index; i++) {
             iterator++;
         }
-        if(iterator != amps.end()) {
-            amps.erase(iterator);
+        if (iterator != amplitudeFunctions_.end()) {
+            amplitudeFunctions_.erase(iterator);
         }
-        amps.insert(iterator, ae);
-        make(msampleRate);
+        amplitudeFunctions_.insert(iterator, ae);
+        make(sampleRate_);
     };
 
     void insert_freq(Function<T> *fe, int index) {
-        if (index < 0 || index > freqs.size()) {
+        if (index < 0 || index > frequencyFunctions_.size()) {
             throw std::range_error("index passed to insert() was out of bounds");
         }
-        auto iterator = freqs.begin();
+        auto iterator = frequencyFunctions_.begin();
         for (int i = 0; i < index; i++) {
             iterator++;
         }
-        if(iterator != freqs.end()) {
-            freqs.erase(iterator);
+        if (iterator != frequencyFunctions_.end()) {
+            frequencyFunctions_.erase(iterator);
         }
-        freqs.insert(iterator, fe);
-        make(msampleRate);
+        frequencyFunctions_.insert(iterator, fe);
+        make(sampleRate_);
     };
 
-    void erase_amp(typename std::list<Function<T>>::iterator index) { amps.erase(index); make(msampleRate);};
+    void erase_amp(typename std::list<Function<T>>::iterator index) {
+        amplitudeFunctions_.erase(index);
+        make(sampleRate_);
+    };
 
-    void erase_freq(typename std::list<Function<T>>::iterator index) { freqs.erase(index); make(msampleRate);};
-
+    void erase_freq(typename std::list<Function<T>>::iterator index) {
+        frequencyFunctions_.erase(index);
+        make(sampleRate_);
+    };
 
 
     double getMaxAmp() {
         std::vector<double> ampsList{};
-        for (auto a : amps) {
+        for (auto a: amplitudeFunctions_) {
             ampsList.push_back((*a).getMax());
         }
         return (ampsList.begin() != ampsList.end()) ?
@@ -60,7 +67,7 @@ struct WaveMaker {
 
     double getMinAmp() {
         std::vector<double> ampsList{};
-        for (auto a : amps) {
+        for (auto a: amplitudeFunctions_) {
             ampsList.push_back((*a).getMin());
         }
         return (ampsList.begin() != ampsList.end()) ?
@@ -69,7 +76,7 @@ struct WaveMaker {
 
     double getMaxFreq() {
         std::vector<double> freqsList{};
-        for (auto f : freqs) {
+        for (auto f: frequencyFunctions_) {
             freqsList.push_back((*f).getMax());
         }
         return (freqsList.begin() != freqsList.end()) ?
@@ -78,18 +85,18 @@ struct WaveMaker {
 
     double getMinFreq() {
         std::vector<double> freqsList{};
-        for (auto f : freqs) {
+        for (auto f: frequencyFunctions_) {
             freqsList.push_back((*f).getMin());
         }
         return (freqsList.begin() != freqsList.end()) ?
                *(std::min_element(freqsList.begin(), freqsList.end())) : 0;
     };
 
-    std::vector<T>* getData(){return &data;};
+    std::vector<T> *getData() { return &data; };
 
     /**
     AmplitudeEnvelope<T> *getAmpEnv(int col) {
-        auto out = amps.begin();
+        auto out = amplitudeFunctions_.begin();
         for (int i = 0; i < col; i++) {
             out++;
         }
@@ -97,7 +104,7 @@ struct WaveMaker {
     };
 
     FrequencyEnvelope<T> *getFreqEnv(int col) {
-        auto out = freqs.begin();
+        auto out = frequencyFunctions_.begin();
         for (int i = 0; i < col; i++) {
             out++;
         }
@@ -105,7 +112,7 @@ struct WaveMaker {
     };
 
     double getAmpTime(int index, int samplesPerSecond) {
-        auto out = amps.begin();
+        auto out = amplitudeFunctions_.begin();
         for (int i = 0; i < index; i++) {
             out++;
         }
@@ -113,7 +120,7 @@ struct WaveMaker {
     }
 
     double getFreqTime(int index, int samplesPerSecond) {
-        auto out = freqs.begin();
+        auto out = frequencyFunctions_.begin();
         for (int i = 0; i < index; i++) {
             out++;
         }
@@ -121,27 +128,20 @@ struct WaveMaker {
     }
      */
 
-private:
-    std::list<Function<T> *> amps;
-    std::list<Function<T> *> freqs;
-
-    std::vector<T> data;
-    int msampleRate;
-
     void make(int samplesPerSecond) {
         double radians = 0;
-        auto amp = amps.begin();
-        auto freq = freqs.begin();
+        auto amp = amplitudeFunctions_.begin();
+        auto freq = frequencyFunctions_.begin();
         std::vector<T> amplitudes{};
         std::vector<T> frequencies{};
-        for (int i = 0; i < amps.size(); i++) {
-            if ((amp != amps.end()) && (*amp)->getData()->size() != 0) {
+        for (int i = 0; i < amplitudeFunctions_.size(); i++) {
+            if ((amp != amplitudeFunctions_.end()) && (*amp)->getData()->size() != 0) {
                 amplitudes.insert(amplitudes.end(), (*((*amp)->getData())).begin(),
                                   (*((*amp)->getData())).end());
             }
         }
-        for (int i = 0; i < freqs.size(); i++) {
-            if ((freq != freqs.end()) && (*freq)->getData()->size() != 0) {
+        for (int i = 0; i < frequencyFunctions_.size(); i++) {
+            if ((freq != frequencyFunctions_.end()) && (*freq)->getData()->size() != 0) {
                 frequencies.insert(frequencies.end(), (*((*freq)->getData())).begin(),
                                    (*((*freq)->getData())).end());
             }
@@ -161,6 +161,15 @@ private:
         }
         data = SINEWAVEMAKER_H_::make < T > (amplitudes, frequencies, radians, samplesPerSecond);
     }
+
+private:
+    int sampleRate_;
+    int numChannels_;
+
+    std::list<std::shared_ptr<Function<T>>> amplitudeFunctions_;
+    std::list<std::shared_ptr<Function<T>>> frequencyFunctions_;
+
+    std::vector<T> data;
 
 };
 

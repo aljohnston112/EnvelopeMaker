@@ -1,12 +1,8 @@
-//
-// Created by Al on 6/29/2020.
-//
-
 #ifndef HELLOOBOE_AUDIOSTREAMHOLDER_H
 #define HELLOOBOE_AUDIOSTREAMHOLDER_H
 
 #include <oboe/Oboe.h>
-#include "CallBackHandling/AudioStreamCallbackSub.h"
+#include "CallBackHandling/AudioStreamCallback.h"
 #include "Functions/Quadratic.h"
 #include "Functions/NthRoot.h"
 #include "Functions/Exponential.h"
@@ -17,99 +13,67 @@
 
 struct AudioStreamHolder {
 
-    AudioStreamHolder();
+    AudioStreamHolder(int sampleRate, int numChannels);
+
+
+
 
     ~AudioStreamHolder();
 
-    bool audioDataIsFloat() { return isFloatData; };
-
-    float getSampleRate() {
-        return sampleRate;
-    }
-
     void startStream() {
-        managedStream->start();
+        pAudioStream_->start();
     }
 
     void stopStream() {
-        managedStream->stop();
+        pAudioStream_->stop();
     }
 
     template<typename T>
     WaveMaker<T> &getWaveMaker() {
-        if constexpr(std::is_same<T, float>::value) {
-            return waveMakerF;
-        } else if constexpr(std::is_same<T, int16_t>::value) {
-            return waveMakerI;
-        } else {
-            throw std::invalid_argument(
-                    "typename passed to getWaveMaker must be a float or int16_t");
-        }
+        return waveMaker_;
     }
 
-    template <typename T>
+    template<typename T>
     T getMinAmp() {
-        if constexpr(std::is_same<T, float>::value) {
-            return waveMakerF.getMinAmp();
-        } else  if constexpr(std::is_same<T, int16_t >::value){
-            return waveMakerI.getMinAmp();
-        }
+        return waveMaker_.getMinAmp();
+
         throw std::logic_error("Template argument used for getMinAmp() must be a float or int16_t");
     }
 
-    template <typename T>
+    template<typename T>
     T getMaxAmp() {
-        if constexpr(std::is_same<T, float>::value) {
-            return waveMakerF.getMaxAmp();
-        } else  if constexpr(std::is_same<T, int16_t >::value){
-            return waveMakerI.getMaxAmp();
-        }
+        return waveMaker_.getMaxAmp();
+
         throw std::logic_error("Template argument used for getMaxAmp() must be a float or int16_t");
     }
 
-    template <typename T>
+    template<typename T>
     T getMinFreq() {
-        if constexpr(std::is_same<T, float>::value) {
-            return waveMakerF.getMinFreq();
-        } else  if constexpr(std::is_same<T, int16_t >::value){
-            return waveMakerI.getMinFreq();
-        }
+        return waveMaker_.getMinFreq();
+
         throw std::logic_error(
                 "Template argument used for getMinFreq() must be a float or int16_t");
     }
 
-    template <typename T>
+    template<typename T>
     T getMaxFreq() {
-        if constexpr(std::is_same<T, float>::value) {
-            return waveMakerF.getMaxFreq();
-        } else  if constexpr(std::is_same<T, int16_t >::value){
-            return waveMakerI.getMaxFreq();
-        }
+        return waveMaker_.getMaxFreq();
+
         throw std::logic_error(
                 "Template argument used for getMaxFreq() must be a float or int16_t");
     }
 
     template<typename T>
     void loadData() {
-        if constexpr(std::is_same<T, float>::value) {
-            audioStreamCallbackSub.insert(
-                    waveMakerF.make(sampleRate));
-        } else if constexpr(std::is_same<T, int16_t>::value) {
-            audioStreamCallbackSub.insert(
-                    waveMakerI.make(sampleRate));
-        }
+        audioStreamCallback_.insert(
+                waveMaker_.make(sampleRate));
+
     };
 
 private:
-    // Initialized when JNI calls init
-    oboe::ManagedStream managedStream;
-    bool isFloatData;
-    float sampleRate;
-
-    // Initialized in Constructor
-    AudioStreamCallbackSub audioStreamCallbackSub;
-    WaveMaker<float> waveMakerF;
-    WaveMaker<int16_t> waveMakerI;
+    WaveMaker<float> waveMaker_;
+    std::shared_ptr<oboe::AudioStream> pAudioStream_;
+    AudioStreamCallback audioStreamCallback_;
 
     void initAudioStream();
 };

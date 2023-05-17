@@ -7,7 +7,6 @@
 
     <TextView
         android:id="@+id/text_view_settings"
-        style="@style/TextAppearance.MdcTypographyStyles.Headline3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

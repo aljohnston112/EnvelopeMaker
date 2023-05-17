@@ -29,6 +29,7 @@ Quadratic<T>::Quadratic(std::pair<double, double> p0,
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "c:%.20f", c);
 }
 
-double Quadratic::fun(double x) {
+template<class T>
+double Quadratic<T>::fun(double x) {
     return (a * x * x) + (b * x) + c;
 }

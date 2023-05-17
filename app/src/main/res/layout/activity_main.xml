@@ -15,8 +15,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="?attr/actionBarSize">
     </androidx.appcompat.widget.Toolbar>
 
     <HorizontalScrollView
@@ -54,7 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:contentDescription="@string/floating_action_button_desc"
         android:onClick="onMainFABClicked"
         app:srcCompat="@drawable/ic_play_arrow_white_24dp"

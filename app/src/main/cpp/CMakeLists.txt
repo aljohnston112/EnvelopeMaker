@@ -3,7 +3,9 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.22.1)
+
+project("sound_sculptor")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -11,16 +13,17 @@ cmake_minimum_required(VERSION 3.4.1)
 # Gradle automatically packages shared libraries with your APK.
 
 add_library( # Sets the name of the library.
-        native-lib
+        sound_sculptor
 
         # Sets the library as a shared library.
         SHARED
 
         # Provides a relative path to your source file(s).
         AudioStreamHolder.cpp
-        CallBackHandling/AudioStreamCallbackSub.cpp
+        JavaNativeInterface.cpp
+        CallBackHandling/AudioStreamCallback.cpp
         CallBackHandling/CallbackContainerI.cpp
-        CallBackHandling/CallbackContainerF.cpp
+        CallBackHandling/CallbackContainer.cpp
         DataGeneration/SineWaveMaker.h
         Functions/Function.cpp
         Functions/Constant.cpp
@@ -48,27 +51,17 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
+find_package(
+        oboe REQUIRED CONFIG)
+
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        native-lib oboe
+        sound_sculptor
+        oboe::oboe
 
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})
-
-# Set the path to the Oboe directory.
-set(OBOE_DIR C:/Users/aljoh/Documents/Programming/Github/oboe)
-
-# Add the Oboe library as a subdirectory in your project.
-# add_subdirectory tells CMake to look in this directory to
-# compile oboe source files using oboe's CMake file.
-# ./oboe specifies where the compiled binaries will be stored
-add_subdirectory(${OBOE_DIR} ./oboe)
-
-# Specify the path to the Oboe header files.
-# This allows targets compiled with this CMake (application code)
-# to see public Oboe headers, in order to access its API.
-include_directories(${OBOE_DIR}/include)

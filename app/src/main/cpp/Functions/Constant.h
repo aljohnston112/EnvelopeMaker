@@ -10,7 +10,11 @@
 template <typename T>
 struct Constant : public Function<T> {
 
-    Constant(double start, double length, int sampleRate) : Function<T>(start, start, length, sampleRate) {
+    Constant(
+            double start,
+            double length,
+            int sampleRate
+            ) : Function<T>(start, start, length, sampleRate) {
             Function<T>::minY = start;
             Function<T>::maxY = start;
     }

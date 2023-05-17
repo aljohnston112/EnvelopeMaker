@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hellooboe">
+    package="io.fourth_finger.sound_sculptor">
 
     <application
         android:allowBackup="true"
@@ -8,20 +8,21 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ActivitySaveFile"></activity>
-        <activity android:name=".ActivityTitle">
+        android:theme="@style/Theme.SoundSculptor">
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivitySaveFile" />
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivityTitle"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityAmpMaker" />
-        <activity android:name=".ActivityFreqMaker" />
-        <activity android:name=".ActivitySettings" />
-        <activity android:name=".ActivityMain" />
-        <activity android:name=".ActivityLoadFile" />
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivityAmplitudeMaker" />
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivityFreqMaker" />
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivitySettings" />
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivityMain" />
+        <activity android:name="io.fourth_finger.sound_sculptor.ActivityLoadFile" />
     </application>
 
 </manifest>

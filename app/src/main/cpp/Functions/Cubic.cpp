@@ -6,7 +6,8 @@
 #include <list>
 #include "Cubic.h"
 
-Cubic::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
+template<class T>
+Cubic<T>::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
              std::pair<double, double> vertex2) {
     double x0 = p0.first;
     double y0 = p0.second;
@@ -32,6 +33,7 @@ Cubic::Cubic(std::pair<double, double> p0, std::pair<double, double> vertex,
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "c:%.20f", c);
 }
 
-double Cubic::fun(double x) {
+template<class T>
+double Cubic<T>::fun(double x) {
     return (a * x * x * x) + (b * x * x) + (c * x) + d;
 }

@@ -53,7 +53,7 @@ make(std::vector<T> amps, std::vector<T> freqs, double radians,
      int samplesPerSecond) {
     if (amps.size() != freqs.size()) {
         throw std::logic_error(
-                "amps and freqs passed to make are not the same length");
+                "amplitudeFunctions_ and frequencyFunctions_ passed to make are not the same length");
     }
     double rads = radians;
     double seconds = 1.0 / samplesPerSecond;

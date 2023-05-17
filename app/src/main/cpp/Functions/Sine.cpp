@@ -9,7 +9,8 @@
 // TODO figure out how to go from 0 to 0
 // TODO figure out how to scale results between max and min while preserving start and end values
 
-Sine::Sine(std::pair<double, double> p0, std::pair<double, double> p1) {
+template<class T>
+Sine<T>::Sine(std::pair<double, double> p0, std::pair<double, double> p1) {
     double x0 = p0.first;
     double y0 = p0.second;
     double x1 = p1.first;
@@ -34,6 +35,7 @@ Sine::Sine(std::pair<double, double> p0, std::pair<double, double> p1) {
     __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "b:%.20f", b);
 }
 
-double Sine::fun(double x) {
+template<class T>
+double Sine<T>::fun(double x) {
     return a * std::sin(x) + b;
 }
