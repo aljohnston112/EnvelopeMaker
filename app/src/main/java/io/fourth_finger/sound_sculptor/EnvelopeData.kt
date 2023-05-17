@@ -5,7 +5,9 @@ class EnvelopeData(
     val function: String,
     val column: Int,
     val start: Double,
+    val end: Double,
     val length: Double,
     val minY: Double,
-    val maxY: Double
+    val maxY: Double,
+    val cycles: Double
 )

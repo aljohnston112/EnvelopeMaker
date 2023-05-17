@@ -12,7 +12,6 @@ import kotlin.properties.Delegates
 
 class ActivityAmplitudeMaker : AppCompatActivity() {
 
-
     private lateinit var binding: ActivityAmplitudeMakerBinding
 
     private var column by Delegates.notNull<Int>()
@@ -119,9 +118,9 @@ class ActivityAmplitudeMaker : AppCompatActivity() {
             }
         }
         val start = intent.getDoubleExtra(FunctionView.START_KEY, -1.0)
-        val end = intent.getDoubleExtra(FunctionView.END_DATA, -1.0)
+        val end = intent.getDoubleExtra(FunctionView.END_KEY, -1.0)
         val length = intent.getDoubleExtra(FunctionView.LENGTH_KEY, -1.0)
-        val cycles = intent.getDoubleExtra(FunctionView.CYCLES_DATA, -1.0)
+        val cycles = intent.getDoubleExtra(FunctionView.CYCLES_Key, -1.0)
         val min = intent.getDoubleExtra(FunctionView.MIN_DATA, -1.0)
         val max = intent.getDoubleExtra(FunctionView.MAX_DATA, -1.0)
 
@@ -201,7 +200,7 @@ class ActivityAmplitudeMaker : AppCompatActivity() {
                     binding.editTextAmplitudeLength.error = "Positive length needed"
                 }
                 if (!dataIsBad) {
-                    data = NativeMethods.loadConstant(start, length, 0, column, functionViewWidth)
+                    data = NativeMethods.generateConstant(start, length, 0, column, functionViewWidth)
                 }
             } else if (function.contentEquals(resources.getString(R.string.Exponential))) {
                 // TODO
@@ -226,7 +225,9 @@ class ActivityAmplitudeMaker : AppCompatActivity() {
                 intent.putExtra(FunctionView.COLUMN_KEY, column)
                 intent.putExtra(FunctionView.FUNCTION_KEY, function)
                 intent.putExtra(FunctionView.START_KEY, start)
+                intent.putExtra(FunctionView.END_KEY, end)
                 intent.putExtra(FunctionView.LENGTH_KEY, length)
+                intent.putExtra(FunctionView.CYCLES_Key, cycles)
                 setResult(RESULT_OK, intent)
                 finish()
             }

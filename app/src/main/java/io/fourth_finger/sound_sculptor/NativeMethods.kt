@@ -19,7 +19,7 @@ object NativeMethods {
     val maxFreq: Double
         external get
 
-    external fun loadConstant(
+    external fun generateConstant(
         start: Double,
         length: Double,
         row: Int,

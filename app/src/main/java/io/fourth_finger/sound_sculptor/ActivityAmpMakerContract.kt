@@ -20,15 +20,18 @@ class ActivityAmpMakerContract: ActivityResultContract<FunctionView, EnvelopeDat
         return intent
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): String? {
-        return if (resultCode == Activity.RESULT_OK) {
-            val data = intent?.getFloatArrayExtra(FunctionView.FLOAT_ARRAY_KEY)
-            
+    override fun parseResult(resultCode: Int, intent: Intent?): EnvelopeData? {
+        return if (resultCode == Activity.RESULT_OK && intent != null) {
             EnvelopeData(
-
-            )
-            intent?.getStringExtra(
-                FunctionView.FUNCTION_KEY
+                envelopeArray = intent.getFloatArrayExtra(FunctionView.FLOAT_ARRAY_KEY)?: FloatArray(0),
+                function = intent.getStringExtra(FunctionView.FUNCTION_KEY)?:"",
+                column = intent.getIntExtra(FunctionView.COLUMN_KEY, -1),
+                start = intent.getDoubleExtra(FunctionView.START_KEY, -1.0),
+                end = intent.getDoubleExtra(FunctionView.END_KEY, -1.0),
+                length = intent.getDoubleExtra(FunctionView.LENGTH_KEY, -1.0),
+                minY = intent.getDoubleExtra(FunctionView.MIN_Y_KEY, -1.0),
+                maxY = intent.getDoubleExtra(FunctionView.MAX_Y_KEY, -1.0),
+                cycles = intent.getDoubleExtra(FunctionView.CYCLES_Key, -1.0)
             )
         } else {
             null

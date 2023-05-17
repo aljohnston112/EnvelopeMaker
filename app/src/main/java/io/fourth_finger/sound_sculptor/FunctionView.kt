@@ -5,100 +5,100 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.View
+import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 class FunctionView : View {
 
     var isAmplitude by Delegates.notNull<Boolean>()
+        private set
     var column by Delegates.notNull<Int>()
+        private set
 
-    constructor(context: Context) : super(context) {
-        throw NotImplementedError()
-    }
+    private var isConstant = false
+    private var isThisSelected = false
 
     private lateinit var lineColor: Paint
     private lateinit var borderColor: Paint
     private lateinit var textColor: Paint
 
-    constructor(context: Context, isAmplitude: Boolean, column: Int) : super(context) {
+    private var borderStrokeWidth = 4
+
+    private var desiredHeight = 0
+    private var desiredWidth = 0
+
+    var isNewlyAdded = false
+        private set
+
+    private lateinit var envelopeData: EnvelopeData
+
+    constructor(context: Context) : super(context) {
+        throw NotImplementedError()
+    }
+
+    constructor(
+        context: Context,
+        isAmplitude: Boolean,
+        column: Int
+    ) : super(context) {
         this.isAmplitude = isAmplitude
         this.column = column
+        isConstant = false
+        isThisSelected = false
+
+        setBackgroundColor(Color.WHITE)
 
         this.lineColor = Paint(Paint.ANTI_ALIAS_FLAG)
-        this.borderColor = Paint(Paint.ANTI_ALIAS_FLAG)
-        this.textColor = Paint(Paint.ANTI_ALIAS_FLAG)
-
-        setOnClickListener(FunctionViewOnClickListener())
-        setOnLongClickListener(OnLongClickListenerViewFunction())
-
-        isConstant = false
-        setBackgroundColor(Color.WHITE)
         lineColor.strokeWidth = 8f
         lineColor.color = resources.getColor(
             R.color.purple_700,
             context.theme
         )
+
+        this.borderColor = Paint(Paint.ANTI_ALIAS_FLAG)
         borderColor.strokeWidth = borderStrokeWidth.toFloat()
         borderColor.color = Color.BLACK
+
+        this.textColor = Paint(Paint.ANTI_ALIAS_FLAG)
         textColor.textSize = 64f
         textColor.color = Color.BLACK
-        selected = false
+
+        setOnClickListener(FunctionViewOnClickListener())
+        setOnLongClickListener(OnLongClickListenerViewFunction())
     }
 
-    private var borderStrokeWidth = 4
-
-    private var height = 0
-    private var width = 0
-    private var isConstant = false
-
-    var isAddNew = false
-        private set
-
-    private var selected = false
-
-    // The points to draw lines between
-    private var data: FloatArray? = null
-    var function: String? = null
-    var start = -1.0
-    var end = -1.0
-    var length = -1.0
-    var cycles = -1.0
-    var min = -1.0
-    var max = -1.0
-
-
-    fun getFunction(): String? {
-        return function
+    fun getFunction(): String {
+        return envelopeData.function
     }
 
-    fun setFunction(function: String?) {
+    fun setFunction(function: String) {
         require(
-            !(!function.contentEquals(resources.getString(R.string.Constant))
-                    && !function.contentEquals(resources.getString(R.string.Exponential))
-                    && !function.contentEquals(resources.getString(R.string.Linear))
-                    && !function.contentEquals(resources.getString(R.string.Logarithm))
-                    && !function.contentEquals(resources.getString(R.string.Nth_Root))
-                    && !function.contentEquals(resources.getString(R.string.Power))
-                    && !function.contentEquals(resources.getString(R.string.Quadratic))
-                    && function.contentEquals(resources.getString(R.string.Sine)))
+            function.contentEquals(resources.getString(R.string.Constant)) ||
+                    function.contentEquals(resources.getString(R.string.Exponential)) ||
+                    function.contentEquals(resources.getString(R.string.Linear)) ||
+                    function.contentEquals(resources.getString(R.string.Logarithm)) ||
+                    function.contentEquals(resources.getString(R.string.Nth_Root)) ||
+                    function.contentEquals(resources.getString(R.string.Power)) ||
+                    function.contentEquals(resources.getString(R.string.Quadratic)) ||
+                    function.contentEquals(resources.getString(R.string.Sine))
         ) { "function passed to setFunction() is not a function from R.string" }
         this.function = function
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         val xtoYRatio = xToYRatio
-        width = Math.round(h.toDouble() * xtoYRatio).toInt()
-        height = h
-        if (width > w) {
-            width = w
-            height = Math.round(w.toDouble() / xtoYRatio).toInt()
-            if (height > h) {
-                height = h
+        desiredWidth = (h.toDouble() * xtoYRatio).roundToInt()
+        desiredHeight = h
+        if (desiredWidth > w) {
+            desiredWidth = w
+            desiredHeight = (w.toDouble() / xtoYRatio).roundToInt()
+            if (desiredHeight > h) {
+                desiredHeight = h
             }
         }
         if (isConstant) {
-            width = w
-            height = h
+            desiredWidth = w
+            desiredHeight = h
         }
         invalidate()
     }
@@ -120,14 +120,14 @@ class FunctionView : View {
         }
 
     override fun isSelected(): Boolean {
-        return selected
+        return isThisSelected
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var w: Int
         val h: Int
         var xtoYRatio = xToYRatio
-        if (isAddNew) {
+        if (isNewlyAdded) {
             xtoYRatio = 1.0
         }
         w = Math.round(MeasureSpec.getSize(heightMeasureSpec) * xtoYRatio).toInt()
@@ -147,9 +147,9 @@ class FunctionView : View {
     }
 
     override fun onDraw(canvas: Canvas) {
-        height = getHeight()
-        width = getWidth()
-        if (!isAddNew) {
+        desiredHeight = getHeight()
+        desiredWidth = getWidth()
+        if (!isNewlyAdded) {
             drawBetweenPoints(canvas)
             drawYValues(canvas)
         } else {
@@ -161,9 +161,9 @@ class FunctionView : View {
     private fun drawBetweenPoints(canvas: Canvas) {
         val xScale: Double
         xScale = if (NativeMethods.audioDataIsFloat()) {
-            width.toDouble() / (data!!.size.toDouble() - 1)
+            desiredWidth.toDouble() / (data!!.size.toDouble() - 1)
         } else {
-            width.toDouble() / (dataS!!.size.toDouble() - 1)
+            desiredWidth.toDouble() / (dataS!!.size.toDouble() - 1)
         }
         var minY: Double
         var maxY: Double
@@ -182,14 +182,14 @@ class FunctionView : View {
             minY += 1.0
             maxY += 1.0
         }
-        val yScale = height.toDouble() / (maxY - minY)
+        val yScale = desiredHeight.toDouble() / (maxY - minY)
         // Draw between the points
         for (i in 1 until data!!.size) {
             canvas.drawLine(
                 ((i.toDouble() - 1) * xScale).toFloat(),
-                (height - (data!![i - 1].toDouble() - minY) * yScale).toFloat(),
+                (desiredHeight - (data!![i - 1].toDouble() - minY) * yScale).toFloat(),
                 (i.toDouble() * xScale).toFloat(),
-                (height - (data!![i].toDouble() - minY) * yScale).toFloat(),
+                (desiredHeight - (data!![i].toDouble() - minY) * yScale).toFloat(),
                 lineColor
             )
         }
@@ -197,17 +197,17 @@ class FunctionView : View {
 
     private fun drawPlus(canvas: Canvas) {
         canvas.drawRect(
-            Math.round(3.5 * width / 8.0).toInt().toFloat(),
-            Math.round(2.0 * width / 8.0).toInt().toFloat(),
-            Math.round(4.5 * width / 8.0).toInt().toFloat(),
-            Math.round(6.0 * width / 8.0).toInt().toFloat(),
+            Math.round(3.5 * desiredWidth / 8.0).toInt().toFloat(),
+            Math.round(2.0 * desiredWidth / 8.0).toInt().toFloat(),
+            Math.round(4.5 * desiredWidth / 8.0).toInt().toFloat(),
+            Math.round(6.0 * desiredWidth / 8.0).toInt().toFloat(),
             lineColor
         )
         canvas.drawRect(
-            Math.round(2.0 * height / 8.0).toInt().toFloat(),
-            Math.round(3.5 * height / 8.0).toInt().toFloat(),
-            Math.round(6.0 * width / 8.0).toInt().toFloat(),
-            Math.round(4.5 * width / 8.0).toInt().toFloat(),
+            Math.round(2.0 * desiredHeight / 8.0).toInt().toFloat(),
+            Math.round(3.5 * desiredHeight / 8.0).toInt().toFloat(),
+            Math.round(6.0 * desiredWidth / 8.0).toInt().toFloat(),
+            Math.round(4.5 * desiredWidth / 8.0).toInt().toFloat(),
             lineColor
         )
     }
@@ -235,7 +235,7 @@ class FunctionView : View {
         }
         var textWidthStart = textColor.measureText(startText)
         var textWidthEnd = textColor.measureText(endText)
-        while ((textWidthStart + textWidthEnd + borderStrokeWidth) * 2.0 > width) {
+        while ((textWidthStart + textWidthEnd + borderStrokeWidth) * 2.0 > desiredWidth) {
             textColor.textSize = textColor.textSize - 1
             textWidthStart = textColor.measureText(startText)
             textWidthEnd = textColor.measureText(endText)
@@ -243,13 +243,13 @@ class FunctionView : View {
         canvas.drawText(
             startText,
             Math.round(borderStrokeWidth / 2.0).toInt().toFloat(),
-            Math.round(height / 2.0).toInt().toFloat(),
+            Math.round(desiredHeight / 2.0).toInt().toFloat(),
             textColor
         )
         canvas.drawText(
             endText,
-            Math.round(width - textWidthEnd - borderStrokeWidth / 2.0).toInt().toFloat(),
-            Math.round(height / 2.0).toInt().toFloat(),
+            Math.round(desiredWidth - textWidthEnd - borderStrokeWidth / 2.0).toInt().toFloat(),
+            Math.round(desiredHeight / 2.0).toInt().toFloat(),
             textColor
         )
     }
@@ -257,27 +257,39 @@ class FunctionView : View {
     private fun drawBorder(canvas: Canvas) {
         // Draw the border
         borderColor.strokeWidth = borderStrokeWidth.toFloat()
-        if (selected) {
+        if (isThisSelected) {
             borderStrokeWidth *= 4
             borderColor.strokeWidth = borderStrokeWidth.toFloat()
         }
         //Right
-        canvas.drawLine(width.toFloat(), 0f, width.toFloat(), height.toFloat(), borderColor)
+        canvas.drawLine(
+            desiredWidth.toFloat(),
+            0f,
+            desiredWidth.toFloat(),
+            desiredHeight.toFloat(),
+            borderColor
+        )
         //Left
-        canvas.drawLine(0f, height.toFloat(), 0f, 0f, borderColor)
+        canvas.drawLine(0f, desiredHeight.toFloat(), 0f, 0f, borderColor)
         // Bottom
         if (isAmp) {
             borderColor.strokeWidth = (borderStrokeWidth / 2.0).toFloat()
         }
-        canvas.drawLine(width.toFloat(), height.toFloat(), 0f, height.toFloat(), borderColor)
+        canvas.drawLine(
+            desiredWidth.toFloat(),
+            desiredHeight.toFloat(),
+            0f,
+            desiredHeight.toFloat(),
+            borderColor
+        )
         //Top
         if (!isAmp) {
             borderColor.strokeWidth = (borderStrokeWidth / 2.0).toFloat()
         } else {
             borderColor.strokeWidth = borderStrokeWidth.toFloat()
         }
-        canvas.drawLine(0f, 0f, width.toFloat(), 0f, borderColor)
-        if (selected) {
+        canvas.drawLine(0f, 0f, desiredWidth.toFloat(), 0f, borderColor)
+        if (isThisSelected) {
             borderStrokeWidth /= 4
             borderColor.strokeWidth = borderStrokeWidth.toFloat()
         }
@@ -288,23 +300,10 @@ class FunctionView : View {
         for (i in data!!.indices) {
             data!![i] = values[i]
         }
-        isAddNew = false
+        isNewlyAdded = false
         isConstant = false
         val params = layoutParams
-        params.width = Math.round(height * xToYRatio).toInt()
-        requestLayout()
-        invalidate()
-    }
-
-    fun setData(values: ShortArray?) {
-        dataS = ShortArray(values!!.size)
-        for (i in dataS!!.indices) {
-            dataS!![i] = values[i]
-        }
-        isAddNew = false
-        isConstant = false
-        val params = layoutParams
-        params.width = Math.round(height * xToYRatio).toInt()
+        params.width = Math.round(desiredHeight * xToYRatio).toInt()
         requestLayout()
         invalidate()
     }
@@ -335,8 +334,8 @@ class FunctionView : View {
                 }
             }
         }
-        width = samples
-        height = samples
+        desiredWidth = samples
+        desiredHeight = samples
         isConstant = true
         invalidate()
     }
@@ -350,25 +349,13 @@ class FunctionView : View {
     }
 
     fun setAsAddNew() {
-        isAddNew = true
+        isNewlyAdded = true
         isConstant = false
         invalidate()
     }
 
-    private inner class OnLongClickListenerViewFunction : OnLongClickListener {
-        override fun onLongClick(view: View): Boolean {
-            if (!isAddNew) {
-                (context as ActivityMain).longClicked(true)
-                selected = true
-                (context as ActivityMain).selected(true)
-                invalidate()
-            }
-            return true
-        }
-    }
-
     fun select(select: Boolean) {
-        selected = select
+        isThisSelected = select
         invalidate()
     }
 
@@ -385,9 +372,9 @@ class FunctionView : View {
         const val MAX_Y_KEY = "597"
         const val FUNCTION_KEY = "605"
         const val START_KEY = "600"
-        const val END_DATA = "601"
+        const val END_KEY = "601"
         const val LENGTH_KEY = "602"
-        const val CYCLES_DATA = "605"
+        const val CYCLES_Key = "605"
         const val MIN_DATA = "603"
         const val MAX_DATA = "604"
         const val FUNCTION_View_WIDTH_KEY = "606"

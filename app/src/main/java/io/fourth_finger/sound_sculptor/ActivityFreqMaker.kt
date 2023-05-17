@@ -95,7 +95,7 @@ class ActivityFreqMaker : AppCompatActivity() {
         if (start != -1.0) {
             textInputEditStartFreq!!.setText(start.toString())
         }
-        end = intent.getDoubleExtra(FunctionView.Companion.END_DATA, -1.0)
+        end = intent.getDoubleExtra(FunctionView.Companion.END_KEY, -1.0)
         if (end != -1.0) {
             textInputEditEndFreq!!.setText(end.toString())
         }
@@ -103,7 +103,7 @@ class ActivityFreqMaker : AppCompatActivity() {
         if (length != -1.0) {
             textInputEditFreqLength!!.setText(length.toString())
         }
-        cycles = intent.getDoubleExtra(FunctionView.Companion.CYCLES_DATA, -1.0)
+        cycles = intent.getDoubleExtra(FunctionView.Companion.CYCLES_Key, -1.0)
         if (cycles != -1.0) {
             textInputEditFreqCycles!!.setText(cycles.toString())
         }
@@ -230,7 +230,7 @@ class ActivityFreqMaker : AppCompatActivity() {
             if (mustReturn) {
                 return
             }
-            data = NativeMethods.loadConstant(start, length, 1, col, width)
+            data = NativeMethods.generateConstant(start, length, 1, col, width)
         } else if (function.contentEquals(resources.getString(R.string.Exponential))) {
         } else if (function.contentEquals(
                 resources.getString(R.string.Linear)

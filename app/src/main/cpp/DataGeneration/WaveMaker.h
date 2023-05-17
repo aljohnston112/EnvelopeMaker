@@ -15,18 +15,23 @@ struct WaveMaker {
         amplitudeFunctions_(),
         frequencyFunctions_() {};
 
-    void insert_amp(Function<T> *ae, int index) {
+    void insert_amp(
+            Function<T> *envelopeFunction,
+            int index
+    ) {
         if (index < 0 || index > amplitudeFunctions_.size()) {
-            throw std::range_error("index passed to insert() was out of bounds");
+            throw std::range_error(
+                    "index passed to insert() was out of bounds"
+                    );
         }
-        auto iterator = amplitudeFunctions_.begin();
-        for (int i = 0; i < index; i++) {
-            iterator++;
-        }
+        auto iterator = std::next(
+                amplitudeFunctions_.begin(),
+                index
+                );
         if (iterator != amplitudeFunctions_.end()) {
             amplitudeFunctions_.erase(iterator);
         }
-        amplitudeFunctions_.insert(iterator, ae);
+        amplitudeFunctions_.insert(iterator, envelopeFunction);
         make(sampleRate_);
     };
 
@@ -128,22 +133,22 @@ struct WaveMaker {
     }
      */
 
-    void make(int samplesPerSecond) {
+    void make() {
         double radians = 0;
-        auto amp = amplitudeFunctions_.begin();
-        auto freq = frequencyFunctions_.begin();
+        auto amplitudeIterator = amplitudeFunctions_.begin();
+        auto frequencyEnvelope = frequencyFunctions_.begin();
         std::vector<T> amplitudes{};
         std::vector<T> frequencies{};
         for (int i = 0; i < amplitudeFunctions_.size(); i++) {
-            if ((amp != amplitudeFunctions_.end()) && (*amp)->getData()->size() != 0) {
-                amplitudes.insert(amplitudes.end(), (*((*amp)->getData())).begin(),
-                                  (*((*amp)->getData())).end());
+            if ((amplitudeIterator != amplitudeFunctions_.end()) && (*amplitudeIterator)->getData()->size() != 0) {
+                amplitudes.insert(amplitudes.end(), (*((*amplitudeIterator)->getData())).begin(),
+                                  (*((*amplitudeIterator)->getData())).end());
             }
         }
         for (int i = 0; i < frequencyFunctions_.size(); i++) {
-            if ((freq != frequencyFunctions_.end()) && (*freq)->getData()->size() != 0) {
-                frequencies.insert(frequencies.end(), (*((*freq)->getData())).begin(),
-                                   (*((*freq)->getData())).end());
+            if ((frequencyEnvelope != frequencyFunctions_.end()) && (*frequencyEnvelope)->getData()->size() != 0) {
+                frequencies.insert(frequencies.end(), (*((*frequencyEnvelope)->getData())).begin(),
+                                   (*((*frequencyEnvelope)->getData())).end());
             }
         }
         if (frequencies.size() > amplitudes.size()) {

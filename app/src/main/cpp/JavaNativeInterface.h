@@ -22,7 +22,45 @@ Java_io_fourth_1finger_sound_1sculptor_NativeMethods_createStream(
     audioStreamHolder = std::make_unique<AudioStreamHolder>();
 }
 
-
+extern "C"
+JNIEXPORT jfloatArray JNICALL
+Java_io_fourth_1finger_sound_1sculptor_NativeMethods_generateConstant(
+        JNIEnv *env,
+        jobject clazz,
+        jdouble start,
+        jdouble length, jint row,
+        jint col,
+        jint width
+) {
+    __android_log_print(
+            ANDROID_LOG_ERROR,
+            "TRACKERS",
+            "%s", "Loading constant"
+    );
+    jfloatArray outData;
+    std::vector<float> *data;
+    if (row == 0) {
+        audioStreamHolder->getWaveMaker<float>().insert(
+                new AmplitudeEnvelope<float>{new Constant{start, length}, length,
+                                             audioStreamHolder->getSampleRate()}, col);
+        data = audioStreamHolder->getWaveMaker<float>().getAmpEnv(col)->getAmplitudes();
+    } else if (row == 1) {
+        audioStreamHolder->getWaveMaker<float>().insert(
+                new FrequencyEnvelope<float>{new Constant{start, length}, length,
+                                             audioStreamHolder->getSampleRate()}, col);
+        data = audioStreamHolder->getWaveMaker<float>().getFreqEnv(col)->getFrequencies();
+    }
+    int skip = std::floor((double) data->size() / (double) width);
+    std::vector<float> reduced(width);
+    for (int i = 0; i < reduced.size(); i++) {
+        reduced[i] = (*data)[i * skip];
+    }
+    outData = env->NewFloatArray(reduced.size());
+    jsize size = env->GetArrayLength(outData);
+    env->SetFloatArrayRegion(outData, 0, size, reduced.data());
+    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loaded constant");
+    return outData;
+}
 
 
 
@@ -89,42 +127,6 @@ Java_io_fourth_1finger_sound_1sculptor_NativeMethods_getMaxFreq(JNIEnv *env, jcl
     } else {
         return audioStreamHolder->getMaxFreq<int16_t>();
     }
-}
-
-extern "C"
-JNIEXPORT jfloatArray JNICALL
-Java_io_fourth_1finger_sound_1sculptor_NativeMethods_loadConstant(JNIEnv *env, jclass clazz,
-                                                                  jdouble start,
-                                                                  jdouble length, jint row,
-                                                                  jint col, jint width) {
-    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loading constant");
-    jfloatArray outData;
-    std::vector<float> *data;
-    if (audioStreamHolder->audioDataIsFloat()) {
-        if (row == 0) {
-            audioStreamHolder->getWaveMaker<float>().insert(
-                    new AmplitudeEnvelope<float>{new Constant{start, length}, length,
-                                                 audioStreamHolder->getSampleRate()}, col);
-            data = audioStreamHolder->getWaveMaker<float>().getAmpEnv(col)->getAmplitudes();
-        } else if (row == 1) {
-            audioStreamHolder->getWaveMaker<float>().insert(
-                    new FrequencyEnvelope<float>{new Constant{start, length}, length,
-                                                 audioStreamHolder->getSampleRate()}, col);
-            data = audioStreamHolder->getWaveMaker<float>().getFreqEnv(col)->getFrequencies();
-        }
-        int skip = std::floor((double) data->size() / (double) width);
-        std::vector<float> reduced(width);
-        for (int i = 0; i < reduced.size(); i++) {
-            reduced[i] = (*data)[i * skip];
-        }
-        outData = env->NewFloatArray(reduced.size());
-        jsize size = env->GetArrayLength(outData);
-        env->SetFloatArrayRegion(outData, 0, size, reduced.data());
-    } else {
-        // TODO
-    }
-    __android_log_print(ANDROID_LOG_ERROR, "TRACKERS", "%s", "Loaded constant");
-    return outData;
 }
 
 extern "C"
